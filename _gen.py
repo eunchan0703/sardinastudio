@@ -298,7 +298,8 @@ def game_page(g, lang):
     if g["shots"]:
         w, h = (480, 270) if g["shot_wide"] else (270, 480)
         imgs = "\n".join(
-            f'        <img src="{u}=w{w * 2}" alt="" width="{w}" height="{h}" loading="lazy">'
+            # -rj = JPEG. 안 붙이면 CDN 이 PNG 를 준다 — 같은 장이 620KB vs 114KB
+            f'        <img src="{u}=w{w * 2}-rj" alt="" width="{w}" height="{h}" loading="lazy">'
             for u in g["shots"])
         shots = f"""
   <div class="section">
