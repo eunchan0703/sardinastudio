@@ -225,11 +225,17 @@ h1 {
   color: var(--ink-faint); opacity: .5; transition: transform .15s, opacity .15s;
 }
 .card:hover::after { transform: translateX(3px); opacity: 1; color: var(--c); }
-.badge {
-  margin-left: 10px; padding: 3px 9px; border-radius: 99px; vertical-align: 2px;
-  font-size: 11px; font-weight: 600; letter-spacing: .04em;
-  color: var(--ink-faint); border: 1px solid var(--line);
+.badge, .plat {
+  display: inline-flex; align-items: center; gap: 4px; vertical-align: 3px;
+  margin-left: 8px; padding: 3px 9px; border-radius: 99px;
+  font-size: 11px; font-weight: 600; letter-spacing: .02em; white-space: nowrap;
+  color: var(--ink-faint); border: 1px solid var(--line); background: var(--line-soft);
 }
+/* 안드로이드 마크 — 그 게임 색으로 물든다 */
+.plat { color: color-mix(in srgb, var(--c) 62%, var(--ink-faint));
+        border-color: color-mix(in srgb, var(--c) 22%, var(--line));
+        background: color-mix(in srgb, var(--c) 7%, #fff); }
+.plat svg { flex: none; opacity: .9; }
 
 /* ── 게임 한 쪽 ───────────────────────────────────── */
 .hero.game-hero { --c: var(--accent); }

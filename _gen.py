@@ -21,6 +21,10 @@ CSS_V = hashlib.md5(
     io.open(os.path.join(OUT, "style.css"), "rb").read()).hexdigest()[:8]
 MAIL = "sardina.chans@gmail.com"
 
+ANDROID_SPRITE = """<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="android" viewBox="0 0 24 24"><path fill="currentColor" d="M6 18c0 .55.45 1 1 1h1v3.5a1.5 1.5 0 0 0 3 0V19h2v3.5a1.5 1.5 0 0 0 3 0V19h1c.55 0 1-.45 1-1V8H6v10zM3.5 8A1.5 1.5 0 0 0 2 9.5v7a1.5 1.5 0 0 0 3 0v-7A1.5 1.5 0 0 0 3.5 8zm17 0A1.5 1.5 0 0 0 19 9.5v7a1.5 1.5 0 0 0 3 0v-7A1.5 1.5 0 0 0 20.5 8zm-4.97-5.84 1.3-1.3a.5.5 0 0 0-.71-.71l-1.48 1.48A6.9 6.9 0 0 0 12 1c-.96 0-1.86.23-2.66.63L7.85.15a.5.5 0 1 0-.71.71l1.31 1.31A5.9 5.9 0 0 0 6 7h12a5.9 5.9 0 0 0-2.47-4.84zM10 5H9V4h1v1zm5 0h-1V4h1v1z"/></symbol>
+</svg>"""
+
 # ── 게임 표 — 여기만 고친다 ─────────────────────────────────────────────
 GAMES = [
     dict(
@@ -235,6 +239,7 @@ def shell(lang, title, desc, body, here_other):
 </head>
 <body>
 <div class="wrap">
+{ANDROID_SPRITE}
 
 {topbar(lang, None, here_other)}
 
@@ -255,7 +260,10 @@ def index_page(lang):
         t = g[lang]
         icon = (f'<img class="icon" src="assets/{g["icon"]}" alt="" width="128" height="128">'
                 if g["icon"] else '<div class="icon blank"></div>')
-        badge = "" if g["store"] else f'<span class="badge">{s["soon"]}</span>'
+        plat = ('<span class="plat" title="Android">'
+                '<svg width="13" height="13"><use href="#android"/></svg>Android</span>')
+        badge = plat if g["store"] else (
+            plat + f'<span class="badge">{s["soon"]}</span>')
         cards.append(f"""      <a class="card" href="{page_name(g['slug'], lang)}" style="--c:{g['accent']}">
         {icon}
         <div>
