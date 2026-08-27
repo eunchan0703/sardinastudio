@@ -121,35 +121,54 @@ body::before {
 .page { max-width: var(--w-page); margin: 0 auto; padding: 0 var(--pad) 0; }
 .read { max-width: var(--w-read); margin: 0 auto; }
 
-/* ── 히어로 — 크기 대비를 극단적으로 ──────────────── */
+/* ── 히어로 — 화면 폭을 꽉 채우는 어두운 띠 ────────
+   로고가 흰 선그림이라 흰 바탕에서 안 보인다. 로고를 고치는 대신
+   깔개를 깐다 — 머리띠와 이어져 한 덩어리가 된다. */
 .hero {
-  padding: clamp(46px, 7vh, 76px) 0 clamp(28px, 4vh, 44px);
+  position: relative;
+  padding: clamp(52px, 8vh, 88px) 0 clamp(44px, 6vh, 70px);
   text-align: center;
 }
-.hero .logo {
-  width: clamp(96px, 11vw, 116px); aspect-ratio: 1; object-fit: contain;
-  margin: 0 auto 20px; display: block; padding: 18px;
-  border-radius: 26px; background: #fff;
-  border: 1px solid var(--line);
-  box-shadow: 0 14px 40px rgba(109,92,240,.20), 0 2px 6px rgba(20,22,28,.05);
+.hero::before {
+  content: ''; position: absolute; z-index: -1; top: 0; bottom: 0;
+  left: 50%; width: 100vw; margin-left: -50vw;
+  background:
+    radial-gradient(680px 340px at 22% 0%,  rgba(109, 92,240,.55), transparent 68%),
+    radial-gradient(620px 320px at 78% 6%,  rgba( 58,198,232,.30), transparent 68%),
+    radial-gradient(520px 300px at 55% 96%, rgba(240,122, 43,.22), transparent 70%),
+    linear-gradient(170deg, #171a26, #10121b 62%, #0d0f17);
 }
+.hero .logo {
+  width: clamp(84px, 10vw, 104px); aspect-ratio: 1; object-fit: contain;
+  margin: 0 auto 20px; display: block;
+  filter: drop-shadow(0 6px 22px rgba(0,0,0,.45));
+}
+.hero h1 { background: linear-gradient(180deg, #fff 30%, #c7ccdd);
+           -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero .lede { color: rgba(236,238,245,.78); }
+.hero .eyebrow { color: #b0a6ff; }
+.hero .meta { color: rgba(236,238,245,.5); }
+.hero .meta b { color: rgba(236,238,245,.8); }
 .eyebrow {
   font-size: 12px; font-weight: 600; letter-spacing: .16em;
   text-transform: uppercase; color: var(--accent); margin: 0 0 14px;
 }
 h1 {
-  font-size: clamp(32px, 5.2vw, 54px); line-height: 1.08;
+  font-size: clamp(32px, 5.2vw, 54px); line-height: 1.12;
   letter-spacing: -0.035em; margin: 0 0 16px; font-weight: 700;
+  text-wrap: balance;
   background: linear-gradient(180deg, #1a1d26 20%, #5a6274);
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 .lede {
-  font-size: clamp(16px, 1.6vw, 19px); color: var(--ink-soft);
-  margin: 0 auto; max-width: 30em;
+  font-size: clamp(15.5px, 1.5vw, 18px); line-height: 1.75; color: var(--ink-soft);
+  margin: 0 auto; max-width: 34em; text-wrap: balance;
 }
-.hero.doc { padding: clamp(56px, 9vh, 96px) 0 0; }
+.hero.doc { padding: clamp(52px, 8vh, 86px) 0 clamp(40px, 5vh, 60px); }
 .hero.doc h1 { font-size: clamp(30px, 4.4vw, 46px); }
-.hero.game-hero { padding: clamp(56px, 9vh, 96px) 0 0; }
+.hero.game-hero { padding: clamp(46px, 7vh, 78px) 0 0; }
+.hero.game-hero::before { display: none; }   /* 게임 쪽은 흰 바탕이 낫다 */
+.hero.game-hero .lede { color: var(--ink-soft); }
 .hero.game-hero h1 { font-size: clamp(34px, 5.4vw, 58px); margin-bottom: 14px; }
 
 .meta {
@@ -297,7 +316,7 @@ h1 {
 .summary p + p { margin-top: 10px; }
 
 nav.toc {
-  margin: 32px 0 0; padding: 22px 28px;
+  margin: var(--gap-sec) 0 0; padding: 22px 28px;
   border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg-lift);
 }
 nav.toc h2 {

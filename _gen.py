@@ -152,8 +152,8 @@ STR = dict(
         other_lang="EN", other_lang_href_suffix="-en.html", index="index.html",
         get="Google Play 에서 받기", soon="곧 출시",
         contact_note="버그·문의·개인정보 삭제 요청은 이 주소로 메일 주세요.",
-        studio="사르디나 스튜디오", shots="스크린샷", back="← 게임 목록",
-        title_suffix=" · 사르디나 스튜디오",
+        studio="Sardina Studio", shots="스크린샷", back="← 게임 목록",
+        title_suffix=" · Sardina Studio",
     ),
     en=dict(
         home="index-en.html", home_label="Home", games="Games", contact="Contact",
@@ -260,7 +260,7 @@ def index_page(lang):
     body = f"""<main class="page">
 
   <div class="hero">
-    <img class="logo" src="assets/logo_ink.png" alt="{s['studio']}">
+    <img class="logo" src="assets/logo_white.png" alt="{s['studio']}">
     <h1>Sardina Studio</h1>
   </div>
 
