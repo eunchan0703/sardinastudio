@@ -9,10 +9,10 @@
    · 타이포 «극단적 크기 대비» 가 디자인의 8할 — 중간 크기를 안 만든다 */
 
 :root {
-  --bg:        #fbfbfd;
+  --bg:        #f2f2f8;
   --bg-lift:   #ffffff;
-  --line:      #e5e6ec;
-  --line-soft: #f1f2f6;
+  --line:      #e2e2ee;
+  --line-soft: #ebebf4;
   --ink:       #14161c;
   --ink-soft:  #4c5364;
   --ink-faint: #838a9b;
@@ -44,10 +44,9 @@ body {
 body::before {
   content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
   background:
-    radial-gradient(820px 460px at 18% -8%,  rgba(109, 92,240,.22), transparent 66%),
-    radial-gradient(700px 420px at 82% -4%,  rgba(240,122, 43,.16), transparent 66%),
-    radial-gradient(620px 380px at 50% 12%,  rgba( 58,198,232,.14), transparent 70%),
-    radial-gradient(900px 520px at 92% 58%,  rgba(233,135,131,.10), transparent 72%);
+    radial-gradient(900px 520px at 12% 26%, rgba(109, 92,240,.10), transparent 68%),
+    radial-gradient(820px 480px at 92% 44%, rgba(233,135,131,.10), transparent 70%),
+    radial-gradient(760px 460px at 50% 88%, rgba( 58,198,232,.09), transparent 72%);
 }
 .wrap { position: relative; z-index: 1; }
 
@@ -57,7 +56,7 @@ body::before {
 /* ── 머리띠 ───────────────────────────────────────── */
 .topbar {
   position: sticky; top: 0; z-index: 10;
-  background: rgba(15,17,26,.92);
+  background: rgba(30,33,48,.90);
   backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--band-line);
 }
@@ -97,7 +96,7 @@ body::before {
 .navmenu { position: relative; }
 .dropdown {
   position: fixed; left: 0; right: 0; top: 52px;
-  background: rgba(20,22,31,.97);
+  background: rgba(30,33,48,.97);
   backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--band-line);
   opacity: 0; visibility: hidden; transform: translateY(-6px);
@@ -133,10 +132,10 @@ body::before {
   content: ''; position: absolute; z-index: -1; top: 0; bottom: 0;
   left: 50%; width: 100vw; margin-left: -50vw;
   background:
-    radial-gradient(680px 340px at 22% 0%,  rgba(109, 92,240,.55), transparent 68%),
-    radial-gradient(620px 320px at 78% 6%,  rgba( 58,198,232,.30), transparent 68%),
-    radial-gradient(520px 300px at 55% 96%, rgba(240,122, 43,.22), transparent 70%),
-    linear-gradient(170deg, #171a26, #10121b 62%, #0d0f17);
+    radial-gradient(700px 360px at 20% -4%, rgba(126,110,255,.62), transparent 68%),
+    radial-gradient(640px 340px at 80% 4%,  rgba( 72,205,236,.38), transparent 68%),
+    radial-gradient(560px 320px at 56% 98%, rgba(244,133, 60,.28), transparent 70%),
+    linear-gradient(170deg, #262a3d, #1d2130 60%, #191c29);
 }
 .hero .logo {
   width: clamp(84px, 10vw, 104px); aspect-ratio: 1; object-fit: contain;
@@ -200,7 +199,7 @@ h1 {
   display: flex; align-items: center; gap: 20px; text-decoration: none;
   padding: 20px 24px 20px 26px; border: 1px solid var(--line); border-radius: 18px;
   background: var(--bg-lift); color: inherit;
-  box-shadow: 0 1px 2px rgba(20,22,28,.04);
+  box-shadow: 0 1px 2px rgba(30,33,48,.05);
   transition: border-color .18s, box-shadow .18s, transform .18s;
 }
 /* 왼쪽 색 띠 — 게임마다 다른 색이라 목록이 한눈에 갈린다 */
@@ -280,7 +279,8 @@ h1 {
 .shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
 .shots img {
   width: 100%; height: auto; display: block; border-radius: 12px;
-  border: 1px solid var(--line); background: var(--bg);
+  border: 1px solid var(--line); background: var(--bg-lift);
+  box-shadow: 0 2px 10px rgba(30,33,48,.07);
 }
 .shots.wide { grid-template-columns: repeat(2, 1fr); }
 
@@ -318,6 +318,7 @@ h1 {
 nav.toc {
   margin: var(--gap-sec) 0 0; padding: 22px 28px;
   border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg-lift);
+  box-shadow: 0 1px 2px rgba(30,33,48,.05);
 }
 nav.toc h2 {
   font-size: 11.5px; letter-spacing: .12em; text-transform: uppercase;
@@ -356,10 +357,11 @@ strong { font-weight: 600; color: var(--ink); }
 }
 
 .table { margin: 20px 0; border: 1px solid var(--line);
-         border-radius: var(--radius); overflow: hidden; }
+         border-radius: var(--radius); overflow: hidden;
+         background: var(--bg-lift); box-shadow: 0 1px 2px rgba(30,33,48,.05); }
 table { border-collapse: collapse; width: 100%; font-size: 15px; }
 thead th {
-  background: var(--bg-lift); font-size: 11.5px; font-weight: 600;
+  background: var(--line-soft); font-size: 11.5px; font-weight: 600;
   letter-spacing: .08em; color: var(--ink-faint); text-transform: uppercase;
   text-align: left; padding: 12px 18px; border-bottom: 1px solid var(--line);
 }
@@ -370,7 +372,7 @@ tbody tr:last-child td { border-bottom: 0; }
 
 .callout {
   margin: 22px 0; padding: 16px 22px;
-  border-left: 2px solid var(--accent); background: var(--bg-lift);
+  border-left: 3px solid var(--accent); background: var(--bg-lift);
   border-radius: 0 var(--radius) var(--radius) 0;
   font-size: 15px; color: var(--ink-soft);
 }
@@ -385,6 +387,7 @@ tbody tr:last-child td { border-bottom: 0; }
 .contact {
   margin: 24px 0 0; padding: 24px 28px;
   border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg-lift);
+  box-shadow: 0 1px 2px rgba(30,33,48,.05);
 }
 .contact .who { font-weight: 600; margin: 0 0 4px; color: var(--ink); }
 .contact .mail { font-size: 18px; margin: 0; }
@@ -393,17 +396,24 @@ tbody tr:last-child td { border-bottom: 0; }
 /* ── 푸터 — 방침은 여기 (조사 근거) ───────────────── */
 footer {
   margin-top: var(--gap-sec);
-  background: var(--band); border-top: 1px solid var(--band-line);
+  border-top: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(109,92,240,.05), rgba(233,135,131,.05));
+}
+/* 머리띠의 색 띠와 짝 — 위아래가 같은 색으로 닫힌다 */
+footer::before {
+  content: ''; display: block; height: 2px; margin-top: -1px;
+  background: linear-gradient(90deg, #6d5cf0, #3ac6e8 34%, #f07a2b 68%, #e98783);
+  opacity: .55;
 }
 .footer-inner {
   max-width: var(--w-page); margin: 0 auto; padding: 32px var(--pad) 68px;
   display: flex; flex-wrap: wrap; gap: 10px 24px;
   align-items: center; justify-content: space-between;
-  font-size: 13px; color: var(--band-soft);
+  font-size: 13px; color: var(--ink-faint);
 }
 .footer-links { display: flex; flex-wrap: wrap; gap: 6px 20px; }
-footer a { color: var(--band-soft); border: 0; }
-footer a:hover { color: var(--band-ink); }
+footer a { color: var(--ink-soft); border: 0; font-weight: 500; }
+footer a:hover { color: var(--accent); }
 
 /* ── 반응형 ───────────────────────────────────────── */
 @media (max-width: 860px) {
