@@ -10,9 +10,15 @@
 # 페이지 트래픽도 늘지 않는다. 주소는 스토어 페이지의 «스크린샷 이미지» img
 # 에서 뽑았다(_shots 값).
 
-import io, os, re
+import hashlib, io, os, re
 
 OUT = os.path.dirname(os.path.abspath(__file__))
+
+# 스타일시트 주소에 내용 해시를 붙인다. 브라우저·CDN 이 옛 CSS 를 물고 있어
+# «고쳤는데 화면이 그대로» 가 반복됐다 — 내용이 바뀌면 주소가 바뀌므로
+# 강제 새로고침 없이도 새 것을 받는다.
+CSS_V = hashlib.md5(
+    io.open(os.path.join(OUT, "style.css"), "rb").read()).hexdigest()[:8]
 MAIL = "sardina.chans@gmail.com"
 
 # ── 게임 표 — 여기만 고친다 ─────────────────────────────────────────────
@@ -225,7 +231,7 @@ def shell(lang, title, desc, body, here_other):
 <title>{title}</title>
 <meta name="description" content="{desc}">
 <link rel="icon" href="assets/logo_icon.png">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v={CSS_V}">
 </head>
 <body>
 <div class="wrap">
@@ -368,5 +374,7 @@ for lang, name in (("ko", "privacy.html"), ("en", "privacy-en.html")):
                  lambda m: topbar(lang, None, other), src, flags=re.S)
     src = re.sub(r"<footer>.*?</footer>",
                  lambda m: footer(lang), src, flags=re.S)
+    src = re.sub(r'href="style\.css(\?v=[a-f0-9]+)?"',
+                 f'href="style.css?v={CSS_V}"', src)
     io.open(p, "w", encoding="utf-8", newline="\n").write(src)
     print("  ", name, "(머리말·바닥글만)")
