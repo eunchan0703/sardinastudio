@@ -18,12 +18,16 @@
   --ink-faint: #838a9b;
   --accent:    #6d5cf0;
   --accent-2:  #4a92e8;
+  --band:      #14161f;
+  --band-ink:  #eceef5;
+  --band-soft: #9aa1b5;
+  --band-line: #262a37;
   --radius:    14px;
 
   --w-page:    1120px;
   --w-read:    780px;
   --pad:       32px;
-  --gap-sec:   clamp(72px, 12vh, 132px);
+  --gap-sec:   clamp(52px, 7vh, 82px);
 }
 
 * { box-sizing: border-box; }
@@ -52,9 +56,9 @@ body::before {
 /* ── 머리띠 ───────────────────────────────────────── */
 .topbar {
   position: sticky; top: 0; z-index: 10;
-  background: rgba(251,251,253,.78);
+  background: rgba(20,22,31,.88);
   backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--band-line);
 }
 .topbar-inner {
   max-width: var(--w-page); margin: 0 auto; padding: 13px var(--pad);
@@ -62,28 +66,28 @@ body::before {
 }
 .brand {
   display: flex; align-items: center; gap: 10px;
-  text-decoration: none; border: 0; color: var(--ink);
+  text-decoration: none; border: 0; color: var(--band-ink);
   font-size: 14.5px; font-weight: 600; letter-spacing: .01em;
 }
 .brand img { width: 26px; height: 26px; object-fit: contain; opacity: .92; }
 .navlinks { display: flex; align-items: center; gap: 4px; }
 .navlinks > a, .navmenu > a {
   font-size: 13.5px; font-weight: 500; text-decoration: none; border: 0;
-  color: var(--ink-faint); padding: 6px 13px; border-radius: 99px;
+  color: var(--band-soft); padding: 6px 13px; border-radius: 99px;
   transition: background .15s, color .15s; white-space: nowrap; display: block;
 }
-.navlinks > a:hover, .navmenu > a:hover { background: var(--line-soft); color: var(--ink-soft); }
-.navlinks a[aria-current="true"] { color: var(--ink); background: var(--line-soft); }
-.navlinks a.lang { color: var(--ink-faint); font-weight: 600; letter-spacing: .04em; }
+.navlinks > a:hover, .navmenu > a:hover {
+  background: rgba(255,255,255,.07); color: var(--band-ink); }
+.navlinks a.lang { color: var(--band-soft); font-weight: 600; letter-spacing: .04em; }
 
 /* Games 드롭다운 — 슈퍼셀 방식: 머리띠 아래 띠로 게임이 펼쳐진다.
    JS 없이 :hover / :focus-within 으로만 (트래픽 0). */
 .navmenu { position: relative; }
 .dropdown {
   position: fixed; left: 0; right: 0; top: 52px;
-  background: rgba(255,255,255,.97);
+  background: rgba(20,22,31,.97);
   backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--band-line);
   opacity: 0; visibility: hidden; transform: translateY(-6px);
   transition: opacity .16s, transform .16s, visibility .16s;
 }
@@ -95,12 +99,11 @@ body::before {
   display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: center;
 }
 .dropdown-inner a {
-  font-size: 14px; font-weight: 500; color: var(--ink-soft);
+  font-size: 14px; font-weight: 500; color: var(--band-soft);
   text-decoration: none; border: 0; padding: 7px 14px; border-radius: 8px;
   transition: background .14s, color .14s; white-space: nowrap;
 }
-.dropdown-inner a:hover { background: var(--line-soft); color: var(--ink); }
-.dropdown-inner .soon { color: var(--ink-faint); pointer-events: none; }
+.dropdown-inner a:hover { background: rgba(255,255,255,.08); color: var(--band-ink); }
 
 /* ── 폭 ───────────────────────────────────────────── */
 .page { max-width: var(--w-page); margin: 0 auto; padding: 0 var(--pad) 0; }
@@ -108,12 +111,12 @@ body::before {
 
 /* ── 히어로 — 크기 대비를 극단적으로 ──────────────── */
 .hero {
-  padding: clamp(80px, 15vh, 160px) 0 clamp(60px, 10vh, 110px);
+  padding: clamp(46px, 7vh, 76px) 0 clamp(28px, 4vh, 44px);
   text-align: center;
 }
 .hero .logo {
-  width: clamp(76px, 11vw, 104px); aspect-ratio: 1; object-fit: contain;
-  margin: 0 auto 26px; display: block; opacity: .93;
+  width: clamp(64px, 8vw, 84px); aspect-ratio: 1; object-fit: contain;
+  margin: 0 auto 18px; display: block; opacity: .95;
   filter: drop-shadow(0 10px 30px rgba(109,92,240,.22));
 }
 .eyebrow {
@@ -121,8 +124,8 @@ body::before {
   text-transform: uppercase; color: var(--accent); margin: 0 0 14px;
 }
 h1 {
-  font-size: clamp(38px, 7.5vw, 76px); line-height: 1.08;
-  letter-spacing: -0.04em; margin: 0 0 20px; font-weight: 700;
+  font-size: clamp(32px, 5.2vw, 54px); line-height: 1.08;
+  letter-spacing: -0.035em; margin: 0 0 16px; font-weight: 700;
   background: linear-gradient(180deg, #1a1d26 20%, #5a6274);
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
@@ -155,7 +158,7 @@ h1 {
 .cards { display: grid; gap: 12px; }
 .card {
   display: flex; align-items: center; gap: 20px; text-decoration: none;
-  padding: 18px 22px; border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 18px 22px 18px 20px; border: 1px solid var(--line); border-radius: var(--radius);
   background: var(--bg-lift); color: inherit;
   box-shadow: 0 1px 2px rgba(20,22,28,.04);
   transition: border-color .15s, box-shadow .15s, transform .15s;
@@ -175,6 +178,12 @@ h1 {
   margin: 0 0 4px; color: var(--ink);
 }
 .card p { font-size: 14.5px; color: var(--ink-faint); margin: 0; }
+.card > div { flex: 1 1 auto; min-width: 0; }
+.card::after {
+  content: '›'; flex: 0 0 auto; font-size: 22px; line-height: 1;
+  color: var(--ink-faint); opacity: .5; transition: transform .15s, opacity .15s;
+}
+.card:hover::after { transform: translateX(3px); opacity: 1; color: var(--accent); }
 .badge {
   margin-left: 10px; padding: 3px 9px; border-radius: 99px; vertical-align: 2px;
   font-size: 11px; font-weight: 600; letter-spacing: .04em;
@@ -196,9 +205,11 @@ h1 {
 }
 .game-hero .facts li::before { display: none; }
 .blurb.wide {
-  font-size: 17px; line-height: 1.85; color: var(--ink-soft);
-  max-width: 56ch; margin: 0 auto; text-align: center;
+  font-size: 17px; line-height: 1.9; color: var(--ink-soft);
+  max-width: 54ch; margin: 0 auto; text-align: center;
 }
+/* 게임 쪽에는 절 제목이 없는 자리가 있어 위 여백만 준다 */
+.game-hero + .section { margin-top: clamp(30px, 4vh, 46px); }
 
 /* 스크린샷 — 우리가 담지 않고 스토어 CDN 을 가리킨다 (트래픽 0) */
 .shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
@@ -255,24 +266,26 @@ nav.toc a { color: var(--ink-soft); text-decoration: none; border: 0; }
 nav.toc a:hover { color: var(--accent); }
 
 section { margin-top: 56px; scroll-margin-top: 78px; }
-h2 {
+.read h2 {
   font-size: 21px; font-weight: 700; letter-spacing: -0.02em;
   margin: 0 0 4px; padding-bottom: 13px; border-bottom: 1px solid var(--line);
   display: flex; align-items: baseline; gap: 13px; color: var(--ink);
 }
-h2 .num { font-size: 12.5px; font-weight: 600; color: var(--accent);
+.read h2 .num { font-size: 12.5px; font-weight: 600; color: var(--accent);
           font-variant-numeric: tabular-nums; flex: none; letter-spacing: .04em; }
 h3 { font-size: 15.5px; font-weight: 600; color: var(--ink); margin: 30px 0 4px; }
 p { margin: 15px 0; color: var(--ink-soft); }
 strong { font-weight: 600; color: var(--ink); }
 
-a { color: var(--accent); text-decoration: none;
+.read a, .contact a, footer a, .navlinks a, .back a, .dropdown-inner a, .card {
+  text-decoration: none; }
+.read a, .contact a { color: var(--accent);
     border-bottom: 1px solid rgba(109,92,240,.32); }
-a:hover { border-bottom-color: currentColor; }
+.read a:hover, .contact a:hover { border-bottom-color: currentColor; }
 
-ul { margin: 15px 0; padding-left: 0; list-style: none; }
-ul li { position: relative; padding-left: 18px; margin: 9px 0; color: var(--ink-soft); }
-ul li::before {
+.read ul, .card ul { margin: 15px 0; padding-left: 0; list-style: none; }
+.read ul li { position: relative; padding-left: 18px; margin: 9px 0; color: var(--ink-soft); }
+.read ul li::before {
   content: ''; position: absolute; left: 2px; top: 13px;
   width: 4px; height: 4px; border-radius: 50%; background: var(--accent);
 }
@@ -309,17 +322,17 @@ tbody tr:last-child td { border-bottom: 0; }
 /* ── 푸터 — 방침은 여기 (조사 근거) ───────────────── */
 footer {
   margin-top: var(--gap-sec);
-  border-top: 1px solid var(--line);
+  background: var(--band); border-top: 1px solid var(--band-line);
 }
 .footer-inner {
   max-width: var(--w-page); margin: 0 auto; padding: 32px var(--pad) 68px;
   display: flex; flex-wrap: wrap; gap: 10px 24px;
   align-items: center; justify-content: space-between;
-  font-size: 13px; color: var(--ink-faint);
+  font-size: 13px; color: var(--band-soft);
 }
 .footer-links { display: flex; flex-wrap: wrap; gap: 6px 20px; }
-footer a { color: var(--ink-soft); border-bottom-color: transparent; }
-footer a:hover { border-bottom-color: var(--line); }
+footer a { color: var(--band-soft); border: 0; }
+footer a:hover { color: var(--band-ink); }
 
 /* ── 반응형 ───────────────────────────────────────── */
 @media (max-width: 860px) {

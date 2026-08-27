@@ -40,6 +40,7 @@ GAMES = [
             "https://play-lh.googleusercontent.com/Gx7TE359GExQnS5H4u6v67pArgjYBpCVvtt1KVg1vdBCOazkcX5oZOtWyQk9Ov5Os2sjxfMpw1mk06BpaSid",
             "https://play-lh.googleusercontent.com/kPeURQOfDJtQLodKMdKCePQgV0ItGO9smmbJOLFPQABhHOcR7f2Fcd77ElbDK8elRBBu9-Yvhi_AwuiS-i3I4W0",
             "https://play-lh.googleusercontent.com/LxNz7uhWk_BQt7jjoayAc55Dx3XyoGSOacIXJmx74gbGhSdoRF0Z_G1IiEIVwGabq5nJQfJ9Z85ttos-YfDO",
+            "https://play-lh.googleusercontent.com/pzOF79B9WyZNZVJYZNCp9KLge5VU-qtehb1jD1yj7QSXyYKnkqkwK1IgWUJf-g9-rgjNawmcKA28hMisEoeY",
         ],
     ),
     dict(
@@ -66,6 +67,7 @@ GAMES = [
             "https://play-lh.googleusercontent.com/YJLPNsr2TK0SSgSqXtcidsJc2QRHDlheD7D6I9b_HuJuFGlvsZ1cVUoe375aPE39rntO1zmAh-11KWoqkho_7w",
             "https://play-lh.googleusercontent.com/l4pgDHpSVbv0TdZluCAFDNQ6NdJZLEOPSJf211ztCGrVB7ZuSlANyqD8SSXCRjsdjse8VMa6msn1XdPLaPpN",
             "https://play-lh.googleusercontent.com/aq9WO7LbSHxqNTgenOa78LagqA-Avgis7z80Z0-Ve-C-1A-3oCQMxX3cUGZfY_hQZQelvhOF8QbkuEddZDUB",
+            "https://play-lh.googleusercontent.com/XbpNNYp-PKuCJwkItvbIGqOSn0496bc6AbB_E6Tg3wkIcWXiPkiI2KYP5LbcV3SNlEriEPggTnK4emTsANCC",
         ],
     ),
     dict(
@@ -74,9 +76,9 @@ GAMES = [
         ko=dict(
             name="워드리아",
             tagline="쓸어서 단어를 만들고, 판을 채웁니다.",
-            blurb="흩어진 알파벳을 손가락으로 쓸면 단어가 되고 빈칸이 한 줄씩 "
-                  "채워집니다. 쉽고 재미있게 두뇌를 영리하게 — 수많은 스테이지와 "
-                  "특별 스테이지, 다양한 보너스까지 전부 무료입니다. "
+            blurb="쉽고 재미있게 당신의 두뇌를 영리하게 만드세요. "
+                  "알파벳을 스와이프하여 단어를 조합하면 빈칸이 채워집니다. "
+                  "수많은 스테이지와 특별 스테이지, 다양한 보너스까지 전부 무료 — "
                   "인터넷이 없는 곳에서도 그대로 이어집니다.",
             facts=["워드 퍼즐", "오프라인 플레이", "무료", "Android"],
         ),
@@ -101,10 +103,10 @@ GAMES = [
         ko=dict(
             name="붐브릭",
             tagline="우주로 날아간 토끼 «개토» 와 함께 벽돌을 부숩니다.",
-            blurb="공을 튕겨 올려 우주에 떠 있는 벽돌을 하나씩 깨 나갑니다. "
-                  "레트로 감성의 도트 화면에 한 방 한 방이 시원하게 터지고, "
-                  "높은 점수를 노려 1등에 도전할 수 있습니다. "
-                  "출퇴근길·등하굣길 한 판이면 시간이 순삭입니다.",
+            blurb="개토와 함께 우주에 있는 벽돌을 부셔주세요! "
+                  "레트로 감성의 그래픽과 시원한 타격감을 느껴보세요. "
+                  "높은 점수를 획득해 1등에 도전하세요! "
+                  "출퇴근길·등하굣길 심심할 때 시간을 순삭하세요.",
             facts=["아케이드", "벽돌깨기", "레트로 도트", "Android"],
         ),
         en=dict(
