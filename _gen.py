@@ -13,7 +13,7 @@
 import io, os, re
 
 OUT = os.path.dirname(os.path.abspath(__file__))
-MAIL = "lee.silver.chan@gmail.com"
+MAIL = "sardina.chans@gmail.com"
 
 # ── 게임 표 — 여기만 고친다 ─────────────────────────────────────────────
 GAMES = [
