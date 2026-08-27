@@ -67,14 +67,40 @@ body::before {
 }
 .brand img { width: 26px; height: 26px; object-fit: contain; opacity: .92; }
 .navlinks { display: flex; align-items: center; gap: 4px; }
-.navlinks a {
+.navlinks > a, .navmenu > a {
   font-size: 13.5px; font-weight: 500; text-decoration: none; border: 0;
   color: var(--ink-faint); padding: 6px 13px; border-radius: 99px;
-  transition: background .15s, color .15s; white-space: nowrap;
+  transition: background .15s, color .15s; white-space: nowrap; display: block;
 }
-.navlinks a:hover { background: var(--line-soft); color: var(--ink-soft); }
+.navlinks > a:hover, .navmenu > a:hover { background: var(--line-soft); color: var(--ink-soft); }
 .navlinks a[aria-current="true"] { color: var(--ink); background: var(--line-soft); }
 .navlinks a.lang { color: var(--ink-faint); font-weight: 600; letter-spacing: .04em; }
+
+/* Games 드롭다운 — 슈퍼셀 방식: 머리띠 아래 띠로 게임이 펼쳐진다.
+   JS 없이 :hover / :focus-within 으로만 (트래픽 0). */
+.navmenu { position: relative; }
+.dropdown {
+  position: fixed; left: 0; right: 0; top: 52px;
+  background: rgba(12,13,18,.97);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+  opacity: 0; visibility: hidden; transform: translateY(-6px);
+  transition: opacity .16s, transform .16s, visibility .16s;
+}
+.navmenu:hover .dropdown, .navmenu:focus-within .dropdown {
+  opacity: 1; visibility: visible; transform: translateY(0);
+}
+.dropdown-inner {
+  max-width: var(--w-page); margin: 0 auto; padding: 14px var(--pad);
+  display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: center;
+}
+.dropdown-inner a {
+  font-size: 14px; font-weight: 500; color: var(--ink-soft);
+  text-decoration: none; border: 0; padding: 7px 14px; border-radius: 8px;
+  transition: background .14s, color .14s; white-space: nowrap;
+}
+.dropdown-inner a:hover { background: var(--line-soft); color: var(--ink); }
+.dropdown-inner .soon { color: var(--ink-faint); pointer-events: none; }
 
 /* ── 폭 ───────────────────────────────────────────── */
 .page { max-width: var(--w-page); margin: 0 auto; padding: 0 var(--pad) 0; }
@@ -174,10 +200,6 @@ h1 {
 .btn.ghost:hover { color: var(--ink); border-color: var(--ink-faint); box-shadow: none; }
 .btn.disabled { opacity: .45; pointer-events: none; }
 
-/* ── 스튜디오 소개 — 글로만 (Motion Twin 방식) ────── */
-.about { max-width: 62ch; }
-.about p { font-size: 17px; }
-
 /* ── 문서 본문 ────────────────────────────────────── */
 .summary {
   margin: 44px 0 0; padding: 24px 28px;
@@ -256,6 +278,7 @@ tbody tr:last-child td { border-bottom: 0; }
 }
 .contact .who { font-weight: 600; margin: 0 0 4px; color: var(--ink); }
 .contact .mail { font-size: 18px; margin: 0; }
+.contact .note { font-size: 14px; color: var(--ink-faint); margin: 12px 0 0; }
 
 /* ── 푸터 — 방침은 여기 (조사 근거) ───────────────── */
 footer {
