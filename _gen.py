@@ -18,7 +18,7 @@ MAIL = "lee.silver.chan@gmail.com"
 # ── 게임 표 — 여기만 고친다 ─────────────────────────────────────────────
 GAMES = [
     dict(
-        slug="catbat", icon="game_cat.png", shot_wide=True,
+        slug="catbat", accent="#e98783", icon="game_cat.png", shot_wide=True,
         store="https://play.google.com/store/apps/details?id=com.BigSmileMen.Cat",
         ko=dict(
             name="냥방망이",
@@ -44,7 +44,7 @@ GAMES = [
         ],
     ),
     dict(
-        slug="catbat2", icon="game_cat2.png", shot_wide=True,
+        slug="catbat2", accent="#f07a2b", icon="game_cat2.png", shot_wide=True,
         store="https://play.google.com/store/apps/details?id=com.silverchan.catbat2",
         ko=dict(
             name="냥방망이 2",
@@ -71,7 +71,7 @@ GAMES = [
         ],
     ),
     dict(
-        slug="wordria", icon="game_wordria.png", shot_wide=False,
+        slug="wordria", accent="#7c4dbe", icon="game_wordria.png", shot_wide=False,
         store="https://play.google.com/store/apps/details?id=com.sardinastudio.wordria",
         ko=dict(
             name="워드리아",
@@ -98,7 +98,7 @@ GAMES = [
         ],
     ),
     dict(
-        slug="boombrick", icon="game_boombrick.png", shot_wide=False,
+        slug="boombrick", accent="#3ac6e8", icon="game_boombrick.png", shot_wide=False,
         store="https://play.google.com/store/apps/details?id=com.BigSmileMen.BlockDestroy",
         ko=dict(
             name="붐브릭",
@@ -124,7 +124,7 @@ GAMES = [
         ],
     ),
     dict(
-        slug="spacesmasher", icon=None, shot_wide=False, store=None,
+        slug="spacesmasher", accent="#6d5cf0", icon=None, shot_wide=False, store=None,
         ko=dict(
             name="우주뿌셔",
             tagline="좌우로 두드려 행성을 부수는 캐주얼 아케이드.",
@@ -179,7 +179,7 @@ def topbar(lang, here, other_href):
     return f"""<header class="topbar">
   <div class="topbar-inner">
     <a class="brand" href="{s['home']}">
-      <img src="assets/logo.png" alt="">
+      <img src="assets/logo_white.png" alt="">
       Sardina Studio
     </a>
     <nav class="navlinks">
@@ -250,7 +250,7 @@ def index_page(lang):
         icon = (f'<img class="icon" src="assets/{g["icon"]}" alt="" width="128" height="128">'
                 if g["icon"] else '<div class="icon blank"></div>')
         badge = "" if g["store"] else f'<span class="badge">{s["soon"]}</span>'
-        cards.append(f"""      <a class="card" href="{page_name(g['slug'], lang)}">
+        cards.append(f"""      <a class="card" href="{page_name(g['slug'], lang)}" style="--c:{g['accent']}">
         {icon}
         <div>
           <h2>{t['name']}{badge}</h2>
@@ -260,7 +260,7 @@ def index_page(lang):
     body = f"""<main class="page">
 
   <div class="hero">
-    <img class="logo" src="assets/logo.png" alt="{s['studio']}">
+    <img class="logo" src="assets/logo_ink.png" alt="{s['studio']}">
     <h1>Sardina Studio</h1>
   </div>
 
@@ -314,7 +314,7 @@ def game_page(g, lang):
 
     body = f"""<main class="page">
 
-  <div class="hero game-hero">
+  <div class="hero game-hero" style="--c:{g['accent']}">
     {icon}
     <h1>{t['name']}</h1>
     <p class="lede">{t['tagline']}</p>

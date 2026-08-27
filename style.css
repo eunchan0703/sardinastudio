@@ -44,9 +44,10 @@ body {
 body::before {
   content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
   background:
-    radial-gradient(1100px 560px at 50% -18%, rgba(109, 92,240,.13), transparent 70%),
-    radial-gradient(760px 400px at 94% 2%,   rgba( 74,146,232,.09), transparent 72%),
-    radial-gradient(640px 420px at 2% 40%,   rgba(109, 92,240,.06), transparent 72%);
+    radial-gradient(820px 460px at 18% -8%,  rgba(109, 92,240,.22), transparent 66%),
+    radial-gradient(700px 420px at 82% -4%,  rgba(240,122, 43,.16), transparent 66%),
+    radial-gradient(620px 380px at 50% 12%,  rgba( 58,198,232,.14), transparent 70%),
+    radial-gradient(900px 520px at 92% 58%,  rgba(233,135,131,.10), transparent 72%);
 }
 .wrap { position: relative; z-index: 1; }
 
@@ -56,21 +57,21 @@ body::before {
 /* ── 머리띠 ───────────────────────────────────────── */
 .topbar {
   position: sticky; top: 0; z-index: 10;
-  background: rgba(20,22,31,.88);
+  background: rgba(15,17,26,.92);
   backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--band-line);
 }
 .topbar-inner {
-  max-width: var(--w-page); margin: 0 auto; padding: 13px var(--pad);
+  max-width: var(--w-page); margin: 0 auto; padding: 11px var(--pad);
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
 }
 .brand {
   display: flex; align-items: center; gap: 10px;
   text-decoration: none; border: 0; color: var(--band-ink);
-  font-size: 14.5px; font-weight: 600; letter-spacing: .01em;
+  font-size: 15px; font-weight: 650; letter-spacing: -0.01em;
 }
-.brand img { width: 26px; height: 26px; object-fit: contain; opacity: .92; }
-.navlinks { display: flex; align-items: center; gap: 4px; }
+.brand img { width: 30px; height: 30px; object-fit: contain; opacity: .95; }
+.navlinks { display: flex; align-items: center; gap: 2px; }
 .navlinks > a, .navmenu > a {
   font-size: 13.5px; font-weight: 500; text-decoration: none; border: 0;
   color: var(--band-soft); padding: 6px 13px; border-radius: 99px;
@@ -78,7 +79,18 @@ body::before {
 }
 .navlinks > a:hover, .navmenu > a:hover {
   background: rgba(255,255,255,.07); color: var(--band-ink); }
-.navlinks a.lang { color: var(--band-soft); font-weight: 600; letter-spacing: .04em; }
+.navlinks a.lang {
+  color: var(--band-soft); font-weight: 700; letter-spacing: .06em; font-size: 12px;
+  margin-left: 8px; padding: 5px 11px;
+  border: 1px solid rgba(255,255,255,.16); border-radius: 99px;
+}
+.navlinks a.lang:hover { border-color: rgba(255,255,255,.4); color: #fff; background: none; }
+/* 머리띠 밑 얇은 색 띠 — 회색 바가 그냥 회색으로 안 보이게 */
+.topbar::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px;
+  background: linear-gradient(90deg, #6d5cf0, #3ac6e8 34%, #f07a2b 68%, #e98783);
+  opacity: .9;
+}
 
 /* Games 드롭다운 — 슈퍼셀 방식: 머리띠 아래 띠로 게임이 펼쳐진다.
    JS 없이 :hover / :focus-within 으로만 (트래픽 0). */
@@ -115,9 +127,11 @@ body::before {
   text-align: center;
 }
 .hero .logo {
-  width: clamp(64px, 8vw, 84px); aspect-ratio: 1; object-fit: contain;
-  margin: 0 auto 18px; display: block; opacity: .95;
-  filter: drop-shadow(0 10px 30px rgba(109,92,240,.22));
+  width: clamp(96px, 11vw, 116px); aspect-ratio: 1; object-fit: contain;
+  margin: 0 auto 20px; display: block; padding: 18px;
+  border-radius: 26px; background: #fff;
+  border: 1px solid var(--line);
+  box-shadow: 0 14px 40px rgba(109,92,240,.20), 0 2px 6px rgba(20,22,28,.05);
 }
 .eyebrow {
   font-size: 12px; font-weight: 600; letter-spacing: .16em;
@@ -150,29 +164,45 @@ h1 {
 /* ── 절 제목 ──────────────────────────────────────── */
 .section { margin-top: var(--gap-sec); }
 .section-label {
-  font-size: 12px; font-weight: 600; letter-spacing: .16em;
-  text-transform: uppercase; color: var(--ink-faint); margin: 0 0 22px;
+  display: flex; align-items: center; gap: 9px;
+  font-size: 12px; font-weight: 700; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--ink-soft); margin: 0 0 20px;
+}
+.section-label::before {
+  content: ''; width: 22px; height: 3px; border-radius: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
 }
 
 /* ── 게임 목록 — 카드 하나가 게임 한 쪽으로 간다 ──── */
 .cards { display: grid; gap: 12px; }
 .card {
+  --c: var(--accent);
+  position: relative; overflow: hidden;
   display: flex; align-items: center; gap: 20px; text-decoration: none;
-  padding: 18px 22px 18px 20px; border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 20px 24px 20px 26px; border: 1px solid var(--line); border-radius: 18px;
   background: var(--bg-lift); color: inherit;
   box-shadow: 0 1px 2px rgba(20,22,28,.04);
-  transition: border-color .15s, box-shadow .15s, transform .15s;
+  transition: border-color .18s, box-shadow .18s, transform .18s;
+}
+/* 왼쪽 색 띠 — 게임마다 다른 색이라 목록이 한눈에 갈린다 */
+.card::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px;
+  background: var(--c); opacity: .85;
 }
 .card:hover {
-  border-color: rgba(109,92,240,.42);
-  box-shadow: 0 10px 28px rgba(109,92,240,.13);
-  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--c) 55%, transparent);
+  box-shadow: 0 14px 34px color-mix(in srgb, var(--c) 22%, transparent);
+  transform: translateY(-3px);
 }
 .card .icon {
-  width: 64px; height: 64px; border-radius: 15px; flex: 0 0 auto;
-  border: 1px solid var(--line); display: block;
+  width: 68px; height: 68px; border-radius: 17px; flex: 0 0 auto; display: block;
+  border: 1px solid var(--line);
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--c) 26%, transparent);
 }
-.card .icon.blank { background: var(--line-soft); }
+.card .icon.blank {
+  background: color-mix(in srgb, var(--c) 10%, #fff);
+  border-color: color-mix(in srgb, var(--c) 22%, var(--line));
+}
 .card h2 {
   font-size: 19px; font-weight: 650; letter-spacing: -0.01em;
   margin: 0 0 4px; color: var(--ink);
@@ -183,7 +213,7 @@ h1 {
   content: '›'; flex: 0 0 auto; font-size: 22px; line-height: 1;
   color: var(--ink-faint); opacity: .5; transition: transform .15s, opacity .15s;
 }
-.card:hover::after { transform: translateX(3px); opacity: 1; color: var(--accent); }
+.card:hover::after { transform: translateX(3px); opacity: 1; color: var(--c); }
 .badge {
   margin-left: 10px; padding: 3px 9px; border-radius: 99px; vertical-align: 2px;
   font-size: 11px; font-weight: 600; letter-spacing: .04em;
@@ -191,17 +221,33 @@ h1 {
 }
 
 /* ── 게임 한 쪽 ───────────────────────────────────── */
+.hero.game-hero { --c: var(--accent); }
 .game-hero .icon {
-  width: 92px; height: 92px; border-radius: 21px;
+  width: 104px; height: 104px; border-radius: 24px;
   border: 1px solid var(--line); display: block; margin: 0 auto 22px;
+  box-shadow: 0 16px 40px color-mix(in srgb, var(--c) 34%, transparent);
 }
+.game-hero h1 {
+  background: linear-gradient(180deg, var(--ink) 30%,
+              color-mix(in srgb, var(--c) 62%, var(--ink)));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.game-hero .btn {
+  background: linear-gradient(135deg, var(--c),
+              color-mix(in srgb, var(--c) 62%, var(--accent)));
+}
+.game-hero .btn:hover {
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--c) 40%, transparent); }
 .game-hero .facts {
   display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
   margin: 22px 0 28px; padding: 0; list-style: none;
 }
 .game-hero .facts li {
-  padding: 5px 12px; margin: 0; font-size: 12.5px; color: var(--ink-soft);
-  border: 1px solid var(--line); border-radius: 99px; background: var(--line-soft);
+  padding: 6px 14px; margin: 0; font-size: 12.5px; font-weight: 500;
+  color: color-mix(in srgb, var(--c) 58%, var(--ink));
+  border: 1px solid color-mix(in srgb, var(--c) 26%, transparent);
+  border-radius: 99px;
+  background: color-mix(in srgb, var(--c) 8%, #fff);
 }
 .game-hero .facts li::before { display: none; }
 .blurb.wide {
@@ -310,6 +356,12 @@ tbody tr:last-child td { border-bottom: 0; }
   font-size: 15px; color: var(--ink-soft);
 }
 .callout p { margin: 0; }
+
+/* 표 아래 «게임별로 다름» 단서 — 표에 붙어 보이도록 위 여백을 줄인다 */
+.tablenote {
+  margin: -8px 0 0; padding-left: 2px;
+  font-size: 13.5px; line-height: 1.7; color: var(--ink-faint);
+}
 
 .contact {
   margin: 24px 0 0; padding: 24px 28px;
