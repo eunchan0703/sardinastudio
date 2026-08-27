@@ -9,10 +9,10 @@
    · 타이포 «극단적 크기 대비» 가 디자인의 8할 — 중간 크기를 안 만든다 */
 
 :root {
-  --bg:        #f2f2f8;
+  --bg:        #e9eaf4;
   --bg-lift:   #ffffff;
-  --line:      #e2e2ee;
-  --line-soft: #ebebf4;
+  --line:      #dcdcea;
+  --line-soft: #f0f0f7;
   --ink:       #14161c;
   --ink-soft:  #4c5364;
   --ink-faint: #838a9b;
@@ -24,7 +24,7 @@
   --band-line: #262a37;
   --radius:    14px;
 
-  --w-page:    1120px;
+  --w-page:    1180px;
   --w-read:    780px;
   --pad:       32px;
   --gap-sec:   clamp(52px, 7vh, 82px);
@@ -44,9 +44,11 @@ body {
 body::before {
   content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
   background:
-    radial-gradient(900px 520px at 12% 26%, rgba(109, 92,240,.10), transparent 68%),
-    radial-gradient(820px 480px at 92% 44%, rgba(233,135,131,.10), transparent 70%),
-    radial-gradient(760px 460px at 50% 88%, rgba( 58,198,232,.09), transparent 72%);
+    radial-gradient(1400px 300px at 50% 0%,  rgba( 38, 42, 61,.20), transparent 78%),
+    radial-gradient(1000px 620px at 10% 22%, rgba(109, 92,240,.20), transparent 66%),
+    radial-gradient( 900px 560px at 94% 40%, rgba(233,135,131,.18), transparent 68%),
+    radial-gradient( 860px 540px at 46% 92%, rgba( 58,198,232,.16), transparent 70%);
+  background-attachment: fixed;
 }
 .wrap { position: relative; z-index: 1; }
 
@@ -131,6 +133,8 @@ body::before {
 .hero::before {
   content: ''; position: absolute; z-index: -1; top: 0; bottom: 0;
   left: 50%; width: 100vw; margin-left: -50vw;
+  border-bottom-left-radius: 28px; border-bottom-right-radius: 28px;
+  box-shadow: 0 26px 60px rgba(38,42,61,.28);
   background:
     radial-gradient(700px 360px at 20% -4%, rgba(126,110,255,.62), transparent 68%),
     radial-gradient(640px 340px at 80% 4%,  rgba( 72,205,236,.38), transparent 68%),
@@ -397,13 +401,13 @@ tbody tr:last-child td { border-bottom: 0; }
 footer {
   margin-top: var(--gap-sec);
   border-top: 1px solid var(--line);
-  background: linear-gradient(180deg, rgba(109,92,240,.05), rgba(233,135,131,.05));
+  background: linear-gradient(180deg, rgba(255,255,255,.75), rgba(255,255,255,.35));
 }
 /* 머리띠의 색 띠와 짝 — 위아래가 같은 색으로 닫힌다 */
 footer::before {
   content: ''; display: block; height: 2px; margin-top: -1px;
   background: linear-gradient(90deg, #6d5cf0, #3ac6e8 34%, #f07a2b 68%, #e98783);
-  opacity: .55;
+  opacity: .7;
 }
 .footer-inner {
   max-width: var(--w-page); margin: 0 auto; padding: 32px var(--pad) 68px;
