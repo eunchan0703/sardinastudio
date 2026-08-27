@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0a0b0f">
+<meta name="theme-color" content="#08090d">
 <title>사르디나 스튜디오</title>
-<meta name="description" content="사르디나 스튜디오 — 작은 게임을 만듭니다.">
+<meta name="description" content="사르디나 스튜디오 — 한 손으로 잡고 몇 분이면 한 판. 작은 게임을 만듭니다.">
 <link rel="icon" href="assets/logo.png">
 <link rel="stylesheet" href="style.css">
 </head>
@@ -19,61 +19,70 @@
       Sardina Studio
     </a>
     <nav class="navlinks">
-      <a href="./" aria-current="true">홈</a>
-      <a href="privacy.html">개인정보처리방침</a>
-      <a href="index-en.html">EN</a>
+      <a href="#games">게임</a>
+      <a href="#studio">스튜디오</a>
+      <a href="mailto:lee.silver.chan@gmail.com">문의</a>
+      <a class="lang" href="index-en.html">EN</a>
     </nav>
   </div>
 </header>
 
 <main class="page">
+
   <div class="hero">
     <img class="logo" src="assets/logo.png" alt="사르디나 스튜디오 로고">
     <p class="eyebrow">Sardina Studio</p>
-    <h1>작은 게임을 만듭니다</h1>
-    <p class="lede">한 손으로 잡고, 몇 분이면 한 판. 그런 게임을 만드는 1인 스튜디오입니다.</p>
+    <h1>작은 게임을<br>만듭니다</h1>
+    <p class="lede">한 손으로 잡고, 몇 분이면 한 판.<br>
+      그런 게임을 만드는 1인 스튜디오입니다.</p>
   </div>
 
-  <p class="section-label">게임</p>
-  <ul class="grid">
-    <li>
-      <a class="card" href="privacy.html">
-        <p class="name">우주뿌셔</p>
-        <p class="desc">Space Smasher · 캐주얼 아케이드 · 준비 중</p>
-        <p class="go">개인정보처리방침 →</p>
-      </a>
-    </li>
-    <li>
-      <span class="card soon">
-        <p class="name">다음 게임</p>
-        <p class="desc">준비 중</p>
-        <p class="go">&nbsp;</p>
-      </span>
-    </li>
-  </ul>
+  <div class="section" id="games">
+    <p class="section-label">게임</p>
 
-  <p class="section-label">문서</p>
-  <ul class="grid">
-    <li>
-      <a class="card" href="privacy.html">
-        <p class="name">개인정보처리방침</p>
-        <p class="desc">스튜디오의 모든 게임에 적용됩니다</p>
-        <p class="go">읽기 →</p>
-      </a>
-    </li>
-    <li>
-      <a class="card" href="mailto:lee.silver.chan@gmail.com">
-        <p class="name">문의</p>
-        <p class="desc">버그 신고 · 문의 · 제안</p>
-        <p class="go">lee.silver.chan@gmail.com →</p>
-      </a>
-    </li>
-  </ul>
+    <article class="game">
+      <div>
+        <h2 class="title">우주뿌셔</h2>
+        <p class="tagline">좌우로 두드려 행성을 부수는 캐주얼 아케이드.
+          떨어지는 낙석을 피하면서, 한 손으로.</p>
+        <ul class="facts">
+          <li>캐주얼 아케이드</li>
+          <li>1:1 대전</li>
+          <li>Android</li>
+          <li>출시 준비 중</li>
+        </ul>
+        <a class="btn disabled" href="#">곧 출시</a>
+      </div>
+      <div class="shot">
+        <p class="placeholder">스크린샷 준비 중</p>
+      </div>
+    </article>
+  </div>
+
+  <div class="section" id="studio">
+    <p class="section-label">스튜디오</p>
+    <div class="about">
+      <p>사르디나 스튜디오는 1인 게임 스튜디오입니다.
+        버스를 기다리는 3분, 자기 전 10분 — 그런 틈에 들어가는 게임을 만듭니다.</p>
+      <p>크고 복잡한 것보다 <strong>손에 붙는 것</strong>을 좋아합니다.
+        규칙은 한 줄로 설명되고, 잘하게 되는 데는 오래 걸리는 게임이요.</p>
+      <p>문의나 버그 제보는 언제든
+        <a href="mailto:lee.silver.chan@gmail.com">lee.silver.chan@gmail.com</a> 으로
+        보내 주세요.</p>
+    </div>
+  </div>
+
 </main>
 
 <footer>
-  <span>© 2026 Sardina Studio</span>
-  <a href="privacy.html">개인정보처리방침</a>
+  <div class="footer-inner">
+    <span>© 2026 Sardina Studio · Seoul, Korea</span>
+    <div class="footer-links">
+      <a href="privacy.html">개인정보처리방침</a>
+      <a href="mailto:lee.silver.chan@gmail.com">문의</a>
+      <a href="index-en.html">English</a>
+    </div>
+  </div>
 </footer>
 
 </div>

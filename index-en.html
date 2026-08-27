@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0a0b0f">
+<meta name="theme-color" content="#08090d">
 <title>Sardina Studio</title>
-<meta name="description" content="Sardina Studio — we make small games.">
+<meta name="description" content="Sardina Studio — one hand, a few minutes, one round. We make small games.">
 <link rel="icon" href="assets/logo.png">
 <link rel="stylesheet" href="style.css">
 </head>
@@ -19,62 +19,70 @@
       Sardina Studio
     </a>
     <nav class="navlinks">
-      <a href="index-en.html" aria-current="true">Home</a>
-      <a href="privacy-en.html">Privacy</a>
-      <a href="./">한국어</a>
+      <a href="#games">Games</a>
+      <a href="#studio">Studio</a>
+      <a href="mailto:lee.silver.chan@gmail.com">Contact</a>
+      <a class="lang" href="./">KO</a>
     </nav>
   </div>
 </header>
 
 <main class="page">
+
   <div class="hero">
     <img class="logo" src="assets/logo.png" alt="Sardina Studio logo">
     <p class="eyebrow">Sardina Studio</p>
-    <h1>We make small games</h1>
-    <p class="lede">One hand, a few minutes, one round. A one-person studio making
-      games that fit in the gaps of a day.</p>
+    <h1>We make<br>small games</h1>
+    <p class="lede">One hand, a few minutes, one round.<br>
+      A one-person studio.</p>
   </div>
 
-  <p class="section-label">Games</p>
-  <ul class="grid">
-    <li>
-      <a class="card" href="privacy-en.html">
-        <p class="name">Space Smasher</p>
-        <p class="desc">Casual arcade · Coming soon</p>
-        <p class="go">Privacy Policy →</p>
-      </a>
-    </li>
-    <li>
-      <span class="card soon">
-        <p class="name">Next game</p>
-        <p class="desc">In development</p>
-        <p class="go">&nbsp;</p>
-      </span>
-    </li>
-  </ul>
+  <div class="section" id="games">
+    <p class="section-label">Games</p>
 
-  <p class="section-label">Documents</p>
-  <ul class="grid">
-    <li>
-      <a class="card" href="privacy-en.html">
-        <p class="name">Privacy Policy</p>
-        <p class="desc">Applies to all games by the studio</p>
-        <p class="go">Read →</p>
-      </a>
-    </li>
-    <li>
-      <a class="card" href="mailto:lee.silver.chan@gmail.com">
-        <p class="name">Contact</p>
-        <p class="desc">Bug reports · questions · suggestions</p>
-        <p class="go">lee.silver.chan@gmail.com →</p>
-      </a>
-    </li>
-  </ul>
+    <article class="game">
+      <div>
+        <h2 class="title">Space Smasher</h2>
+        <p class="tagline">Tap left and right to smash planets, dodging the rocks
+          that fall — a casual arcade game built for one hand.</p>
+        <ul class="facts">
+          <li>Casual arcade</li>
+          <li>1v1 versus</li>
+          <li>Android</li>
+          <li>In development</li>
+        </ul>
+        <a class="btn disabled" href="#">Coming soon</a>
+      </div>
+      <div class="shot">
+        <p class="placeholder">Screenshots coming soon</p>
+      </div>
+    </article>
+  </div>
+
+  <div class="section" id="studio">
+    <p class="section-label">Studio</p>
+    <div class="about">
+      <p>Sardina Studio is a one-person game studio. We make games that fit into the
+        gaps of a day — three minutes waiting for a bus, ten minutes before sleep.</p>
+      <p>We prefer things that <strong>feel good in the hand</strong> over things that
+        are big and complicated. Games whose rules fit in one sentence, but take a
+        while to get good at.</p>
+      <p>For questions or bug reports, write to
+        <a href="mailto:lee.silver.chan@gmail.com">lee.silver.chan@gmail.com</a>.</p>
+    </div>
+  </div>
+
 </main>
 
 <footer>
-  <span>© 2026 Sardina Studio</span>
-  <a href="privacy-en.html">Privacy Policy</a>
+  <div class="footer-inner">
+    <span>© 2026 Sardina Studio · Seoul, Korea</span>
+    <div class="footer-links">
+      <a href="privacy-en.html">Privacy Policy</a>
+      <a href="mailto:lee.silver.chan@gmail.com">Contact</a>
+      <a href="./">한국어</a>
+    </div>
+  </div>
 </footer>
 
 </div>
