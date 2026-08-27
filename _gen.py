@@ -298,10 +298,21 @@ def game_page(g, lang):
 
     shots = ""
     if g["shots"]:
-        w, h = (480, 270) if g["shot_wide"] else (270, 480)
+        # 스크린샷은 스토어 CDN 에서 곧바로 받는다 (우리 트래픽 0).
+        #  · -rj = JPEG. 안 붙이면 PNG 를 주는데 같은 장이 620KB vs 114KB 다
+        #    (-rw 는 무손실 WebP 라 오히려 162KB. 이 CDN 에서는 JPEG 가 답이다)
+        #  · srcset 으로 화면 크기·배율에 맞는 장만 받는다. 일반 모니터(1x)는
+        #    270px 짜리 44KB 를 받으므로 한 쪽이 351KB → 132KB 가 된다
+        wide = g["shot_wide"]
+        w, h = (480, 270) if wide else (270, 480)
+        cand = (400, 540, 800, 1080) if wide else (270, 400, 540, 720)
+        sizes = ("(max-width: 860px) 92vw, 551px" if wide
+                 else "(max-width: 620px) 44vw, (max-width: 860px) 30vw, 362px")
         imgs = "\n".join(
-            # -rj = JPEG. 안 붙이면 CDN 이 PNG 를 준다 — 같은 장이 620KB vs 114KB
-            f'        <img src="{u}=w{w * 2}-rj" alt="" width="{w}" height="{h}" loading="lazy">'
+            '        <img src="{u}=w{d}-rj" srcset="{ss}" sizes="{sz}"'
+            ' alt="" width="{w}" height="{h}" loading="lazy" decoding="async">'.format(
+                u=u, d=cand[1], w=w, h=h, sz=sizes,
+                ss=", ".join(f"{u}=w{c}-rj {c}w" for c in cand))
             for u in g["shots"])
         shots = f"""
   <div class="section">
