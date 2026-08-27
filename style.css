@@ -132,15 +132,16 @@ body::before {
 /* 마크가 흰 선그림이라 밝은 바탕에서 안 보인다. 페이지를 어둡게 하는 대신
    «마크만» 어두운 동그라미에 담는다 — 강조도 되고 페이지는 밝게 남는다. */
 .hero .logo {
-  width: clamp(112px, 12vw, 136px); aspect-ratio: 1; object-fit: contain;
-  margin: 0 auto 24px; display: block; padding: 26px;
+  width: clamp(150px, 17vw, 196px); aspect-ratio: 1; object-fit: contain;
+  margin: 0 auto 26px; display: block; padding: 34px;
   border-radius: 50%;
   background:
     radial-gradient(120% 120% at 28% 12%, #3b3f5c, #22263a 58%, #1a1d2c);
   box-shadow:
     0 0 0 1px rgba(255,255,255,.10) inset,
-    0 0 0 8px rgba(109,92,240,.10),
-    0 18px 44px rgba(38,42,61,.30);
+    0 0 0 10px rgba(109,92,240,.09),
+    0 0 0 22px rgba(109,92,240,.05),
+    0 22px 54px rgba(38,42,61,.28);
 }
 .eyebrow {
   font-size: 12px; font-weight: 600; letter-spacing: .16em;
