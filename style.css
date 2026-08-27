@@ -1,6 +1,6 @@
-/* 사르디나 스튜디오 — 문서 페이지
-   ⚠ 외부 폰트·스크립트 없음. 시스템 폰트만 쓴다 (트래픽 최소, 사장님 지시).
-   어두운 바탕에 은은한 글로우 하나. 법적 문서라 가독성이 먼저다. */
+/* 사르디나 스튜디오
+   ⚠ 외부 폰트·스크립트 없음. 시스템 폰트만 (트래픽 최소, 사장님 지시).
+   법적 문서라 가독성이 먼저다 — 장식은 배경 그라디언트 하나뿐. */
 
 :root {
   --bg:        #0a0b0f;
@@ -13,7 +13,10 @@
   --accent:    #9b8cff;
   --accent-dim:#7b6cf0;
   --radius:    12px;
-  --w:         720px;
+
+  --w-page:    1040px;   /* 홈·머리띠 — 넓게 */
+  --w-read:    780px;    /* 본문 — 읽기 좋은 폭 */
+  --pad:       32px;
 }
 
 * { box-sizing: border-box; }
@@ -25,75 +28,77 @@ body {
   color: var(--ink);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
                'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
-  font-size: 16px;
-  line-height: 1.75;
+  font-size: 16.5px;
+  line-height: 1.78;
   -webkit-font-smoothing: antialiased;
   word-break: keep-all;
   overflow-wrap: anywhere;
 }
 
-/* 배경 글로우 — 이미지 없이 그라디언트 하나 */
 body::before {
   content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
   background:
-    radial-gradient(680px 380px at 50% -12%, rgba(155,140,255,.16), transparent 70%),
-    radial-gradient(520px 300px at 88% 8%, rgba(90,190,255,.07), transparent 70%);
+    radial-gradient(900px 460px at 50% -14%, rgba(155,140,255,.15), transparent 70%),
+    radial-gradient(620px 340px at 90% 6%, rgba(90,190,255,.06), transparent 70%);
 }
 .wrap { position: relative; z-index: 1; }
 
 /* ── 머리띠 ───────────────────────────────────────── */
 .topbar {
   position: sticky; top: 0; z-index: 10;
-  background: rgba(10,11,15,.72);
+  background: rgba(10,11,15,.74);
   backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--line);
 }
 .topbar-inner {
-  max-width: var(--w); margin: 0 auto; padding: 11px 24px;
+  max-width: var(--w-page); margin: 0 auto; padding: 12px var(--pad);
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
 }
 .brand {
-  display: flex; align-items: center; gap: 9px;
+  display: flex; align-items: center; gap: 10px;
   text-decoration: none; border: 0; color: var(--ink);
-  font-size: 14px; font-weight: 600; letter-spacing: .01em;
+  font-size: 14.5px; font-weight: 600; letter-spacing: .01em;
 }
-.brand img { width: 24px; height: 24px; object-fit: contain; opacity: .9; }
+.brand img { width: 26px; height: 26px; object-fit: contain; opacity: .92; }
 
-.langs { display: flex; gap: 4px; }
-.langs a {
-  font-size: 13px; font-weight: 500; text-decoration: none; border: 0;
-  color: var(--ink-faint); padding: 5px 12px; border-radius: 99px;
-  transition: background .15s, color .15s;
+.navlinks { display: flex; align-items: center; gap: 6px; }
+.navlinks a {
+  font-size: 13.5px; font-weight: 500; text-decoration: none; border: 0;
+  color: var(--ink-faint); padding: 6px 13px; border-radius: 99px;
+  transition: background .15s, color .15s; white-space: nowrap;
 }
-.langs a:hover { background: var(--line-soft); color: var(--ink-soft); }
-.langs a[aria-current="true"] {
+.navlinks a:hover { background: var(--line-soft); color: var(--ink-soft); }
+.navlinks a[aria-current="true"] {
   background: linear-gradient(135deg, var(--accent), #7fb7ff);
   color: #0a0b0f; font-weight: 600;
 }
 
-/* ── 본문 ─────────────────────────────────────────── */
-main { max-width: var(--w); margin: 0 auto; padding: 0 24px 96px; }
+/* ── 공통 폭 ──────────────────────────────────────── */
+.page { max-width: var(--w-page); margin: 0 auto; padding: 0 var(--pad) 100px; }
+.read { max-width: var(--w-read); margin: 0 auto; }
 
-.hero { padding: 72px 0 8px; text-align: center; }
+/* ── 히어로 ───────────────────────────────────────── */
+.hero { padding: 84px 0 0; text-align: center; }
 .hero .logo {
-  width: 84px; height: 84px; object-fit: contain; margin: 0 auto 20px;
-  display: block; opacity: .92;
-  filter: drop-shadow(0 0 26px rgba(155,140,255,.35));
+  width: 96px; height: 96px; object-fit: contain; margin: 0 auto 22px;
+  display: block; opacity: .93;
+  filter: drop-shadow(0 0 34px rgba(155,140,255,.34));
 }
 .eyebrow {
-  font-size: 12px; font-weight: 600; letter-spacing: .12em;
+  font-size: 12px; font-weight: 600; letter-spacing: .14em;
   text-transform: uppercase; color: var(--accent); margin: 0 0 12px;
 }
 h1 {
-  font-size: 36px; line-height: 1.25; letter-spacing: -0.03em;
-  margin: 0 0 14px; font-weight: 700;
-  background: linear-gradient(180deg, #fff 30%, #b9bfd4);
+  font-size: 42px; line-height: 1.2; letter-spacing: -0.035em;
+  margin: 0 0 16px; font-weight: 700;
+  background: linear-gradient(180deg, #fff 28%, #b9bfd4);
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-.lede { font-size: 16.5px; color: var(--ink-soft); margin: 0 auto; max-width: 30em; }
+.hero.doc h1 { font-size: 36px; }
+.lede { font-size: 17px; color: var(--ink-soft); margin: 0 auto; max-width: 34em; }
 
 .meta {
-  display: flex; flex-wrap: wrap; gap: 6px 18px; justify-content: center;
+  display: flex; flex-wrap: wrap; gap: 6px 20px; justify-content: center;
   margin: 26px 0 0; padding: 0; list-style: none;
   font-size: 12.5px; color: var(--ink-faint);
 }
@@ -101,9 +106,39 @@ h1 {
 .meta li::before { display: none; }
 .meta b { color: var(--ink-soft); font-weight: 600; }
 
-/* 요약 */
+/* ── 홈: 게임 칸 ──────────────────────────────────── */
+.section-label {
+  font-size: 12px; font-weight: 600; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--ink-faint);
+  margin: 76px 0 18px; text-align: center;
+}
+.grid {
+  display: grid; gap: 16px; margin: 0; padding: 0; list-style: none;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+.grid li { padding: 0; margin: 0; }
+.grid li::before { display: none; }
+.card {
+  display: block; height: 100%; padding: 26px 28px; text-decoration: none; border: 0;
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--bg-lift);
+  transition: border-color .18s, transform .18s, box-shadow .18s;
+}
+.card:hover {
+  border-color: rgba(155,140,255,.42); transform: translateY(-2px);
+  box-shadow: 0 12px 38px rgba(0,0,0,.5);
+}
+.card .name {
+  font-size: 19px; font-weight: 700; color: var(--ink);
+  letter-spacing: -0.02em; margin: 0 0 4px;
+}
+.card .desc { font-size: 14.5px; color: var(--ink-faint); margin: 0 0 14px; }
+.card .go { font-size: 13.5px; color: var(--accent); font-weight: 600; }
+.card.soon { opacity: .5; pointer-events: none; }
+
+/* ── 문서 본문 ────────────────────────────────────── */
 .summary {
-  margin: 44px 0 0; padding: 22px 24px;
+  margin: 48px 0 0; padding: 24px 28px;
   background: linear-gradient(180deg, rgba(155,140,255,.09), rgba(155,140,255,.03));
   border: 1px solid rgba(155,140,255,.22); border-radius: var(--radius);
 }
@@ -111,12 +146,11 @@ h1 {
   font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
   margin: 0 0 10px; color: var(--accent); border: 0; padding: 0; display: block;
 }
-.summary p { margin: 0; font-size: 15.5px; color: #d2d7e6; }
+.summary p { margin: 0; font-size: 16px; color: #d2d7e6; }
 .summary p + p { margin-top: 10px; }
 
-/* 목차 */
 nav.toc {
-  margin: 36px 0 0; padding: 20px 24px;
+  margin: 36px 0 0; padding: 22px 28px;
   border: 1px solid var(--line); border-radius: var(--radius);
   background: var(--bg-lift);
 }
@@ -126,114 +160,103 @@ nav.toc h2 {
 }
 nav.toc ol {
   margin: 0; padding: 0; list-style: none;
-  columns: 2; column-gap: 30px; font-size: 14.5px;
+  columns: 2; column-gap: 32px; font-size: 14.5px;
 }
 nav.toc li { margin: 0 0 7px; break-inside: avoid; padding: 0; }
 nav.toc li::before { display: none; }
 nav.toc a { color: var(--ink-soft); text-decoration: none; border: 0; }
 nav.toc a:hover { color: var(--accent); }
 
-/* 절 */
-section { margin-top: 54px; scroll-margin-top: 72px; }
+section { margin-top: 56px; scroll-margin-top: 76px; }
 h2 {
-  font-size: 20px; font-weight: 700; letter-spacing: -0.02em;
-  margin: 0 0 4px; padding-bottom: 12px; border-bottom: 1px solid var(--line);
-  display: flex; align-items: baseline; gap: 12px; color: var(--ink);
+  font-size: 21px; font-weight: 700; letter-spacing: -0.02em;
+  margin: 0 0 4px; padding-bottom: 13px; border-bottom: 1px solid var(--line);
+  display: flex; align-items: baseline; gap: 13px; color: var(--ink);
 }
 h2 .num {
   font-size: 12.5px; font-weight: 600; color: var(--accent);
   font-variant-numeric: tabular-nums; flex: none; letter-spacing: .04em;
 }
-h3 { font-size: 15px; font-weight: 600; color: var(--ink); margin: 28px 0 4px; }
-p { margin: 14px 0; color: var(--ink-soft); }
+h3 { font-size: 15.5px; font-weight: 600; color: var(--ink); margin: 30px 0 4px; }
+p { margin: 15px 0; color: var(--ink-soft); }
 strong { font-weight: 600; color: var(--ink); }
 
 a { color: var(--accent); text-decoration: none;
     border-bottom: 1px solid rgba(155,140,255,.3); }
 a:hover { border-bottom-color: currentColor; }
 
-ul { margin: 14px 0; padding-left: 0; list-style: none; }
-ul li { position: relative; padding-left: 17px; margin: 9px 0; color: var(--ink-soft); }
+ul { margin: 15px 0; padding-left: 0; list-style: none; }
+ul li { position: relative; padding-left: 18px; margin: 9px 0; color: var(--ink-soft); }
 ul li::before {
-  content: ''; position: absolute; left: 2px; top: 12px;
+  content: ''; position: absolute; left: 2px; top: 13px;
   width: 4px; height: 4px; border-radius: 50%; background: var(--accent-dim);
 }
 
-/* 표 */
-.table { margin: 18px 0; border: 1px solid var(--line);
+.table { margin: 20px 0; border: 1px solid var(--line);
          border-radius: var(--radius); overflow: hidden; }
-table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
 thead th {
   background: var(--bg-lift); font-size: 11.5px; font-weight: 600;
   letter-spacing: .08em; color: var(--ink-faint); text-transform: uppercase;
-  text-align: left; padding: 11px 16px; border-bottom: 1px solid var(--line);
+  text-align: left; padding: 12px 18px; border-bottom: 1px solid var(--line);
 }
 tbody td {
-  padding: 14px 16px; vertical-align: top;
+  padding: 15px 18px; vertical-align: top;
   border-bottom: 1px solid var(--line-soft); color: var(--ink-soft);
 }
-tbody td:first-child { color: var(--ink); font-weight: 500; width: 30%; }
+tbody td:first-child { color: var(--ink); font-weight: 500; width: 28%; }
 tbody tr:last-child td { border-bottom: 0; }
 
 .callout {
-  margin: 20px 0; padding: 15px 20px;
+  margin: 22px 0; padding: 16px 22px;
   border-left: 2px solid var(--accent); background: var(--bg-lift);
   border-radius: 0 var(--radius) var(--radius) 0;
-  font-size: 14.5px; color: var(--ink-soft);
+  font-size: 15px; color: var(--ink-soft);
 }
 .callout p { margin: 0; }
 .callout p + p { margin-top: 10px; }
 
 .contact {
-  margin: 22px 0 0; padding: 22px 24px;
+  margin: 24px 0 0; padding: 24px 28px;
   border: 1px solid var(--line); border-radius: var(--radius);
   background: var(--bg-lift);
 }
 .contact .who { font-weight: 600; margin: 0 0 4px; color: var(--ink); }
-.contact .mail { font-size: 17px; margin: 0; }
+.contact .mail { font-size: 18px; margin: 0; }
 
 footer {
-  max-width: var(--w); margin: 0 auto; padding: 26px 24px 60px;
+  max-width: var(--w-page); margin: 0 auto; padding: 28px var(--pad) 64px;
   border-top: 1px solid var(--line);
   font-size: 13px; color: var(--ink-faint);
-  display: flex; flex-wrap: wrap; gap: 6px 18px; justify-content: space-between;
+  display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: space-between;
 }
 footer a { color: var(--ink-soft); border-bottom-color: var(--line); }
 
-/* ── 목차(index) ──────────────────────────────────── */
-.games { margin: 44px 0 0; padding: 0; list-style: none; }
-.games li { padding: 0; margin: 0 0 12px; }
-.games li::before { display: none; }
-.game-card {
-  display: block; padding: 22px 24px; text-decoration: none;
-  border: 1px solid var(--line); border-radius: var(--radius);
-  background: var(--bg-lift);
-  transition: border-color .18s, transform .18s, box-shadow .18s;
+/* ── 반응형 — 폭에 따라 자연히 줄어든다 ───────────── */
+@media (max-width: 900px) {
+  :root { --pad: 24px; }
+  h1 { font-size: 36px; }
+  .hero.doc h1 { font-size: 31px; }
 }
-.game-card:hover {
-  border-color: rgba(155,140,255,.4); transform: translateY(-2px);
-  box-shadow: 0 10px 34px rgba(0,0,0,.5);
-}
-.game-card .name {
-  font-size: 18px; font-weight: 700; color: var(--ink);
-  letter-spacing: -0.02em; margin: 0 0 3px;
-}
-.game-card .desc { font-size: 14px; color: var(--ink-faint); margin: 0 0 12px; }
-.game-card .links { font-size: 13.5px; color: var(--accent); font-weight: 500; }
 
-/* ── 모바일 ───────────────────────────────────────── */
 @media (max-width: 620px) {
-  body { font-size: 15.5px; }
-  main { padding: 0 18px 72px; }
-  .topbar-inner { padding: 10px 18px; }
-  .hero { padding: 48px 0 4px; }
-  .hero .logo { width: 68px; height: 68px; }
-  h1 { font-size: 28px; }
-  .lede { font-size: 15.5px; }
-  h2 { font-size: 18.5px; }
+  :root { --pad: 18px; }
+  body { font-size: 16px; }
+  .topbar-inner { padding: 10px var(--pad); }
+  .brand { font-size: 13.5px; }
+  .navlinks a { padding: 6px 10px; font-size: 13px; }
+  .hero { padding: 52px 0 0; }
+  .hero .logo { width: 74px; height: 74px; }
+  h1 { font-size: 30px; }
+  .hero.doc h1 { font-size: 27px; }
+  .lede { font-size: 16px; }
+  h2 { font-size: 19px; }
+  .section-label { margin: 56px 0 14px; }
   nav.toc ol { columns: 1; }
-  footer { padding: 22px 18px 48px; }
+  .summary, nav.toc, .contact { padding: 20px 20px; }
+  footer { padding: 24px var(--pad) 52px; }
 
+  /* 표 → 카드 */
   .table { border: 0; border-radius: 0; }
   table, tbody, tr, td { display: block; width: 100%; }
   thead { display: none; }
@@ -241,8 +264,8 @@ footer a { color: var(--ink-soft); border-bottom-color: var(--line); }
     border: 1px solid var(--line); border-radius: var(--radius);
     padding: 6px 2px; margin: 0 0 10px; background: var(--bg-lift);
   }
-  tbody td { border: 0; padding: 8px 16px; }
-  tbody td:first-child { width: auto; font-size: 15.5px; }
+  tbody td { border: 0; padding: 9px 18px; }
+  tbody td:first-child { width: auto; font-size: 16px; }
   tbody td[data-label]::before {
     content: attr(data-label);
     display: block; font-size: 11px; font-weight: 600;
