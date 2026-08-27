@@ -260,11 +260,12 @@ def index_page(lang):
         t = g[lang]
         icon = (f'<img class="icon" src="assets/{g["icon"]}" alt="" width="128" height="128">'
                 if g["icon"] else '<div class="icon blank"></div>')
+        # 안드로이드 표시는 카드 오른쪽 위 모서리에 띄운다
         plat = ('<span class="plat" title="Android">'
                 '<svg width="13" height="13"><use href="#android"/></svg>Android</span>')
-        badge = plat if g["store"] else (
-            plat + f'<span class="badge">{s["soon"]}</span>')
+        badge = "" if g["store"] else f'<span class="badge">{s["soon"]}</span>'
         cards.append(f"""      <a class="card" href="{page_name(g['slug'], lang)}" style="--c:{g['accent']}">
+        {plat}
         {icon}
         <div>
           <h2>{t['name']}{badge}</h2>
