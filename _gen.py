@@ -134,7 +134,7 @@ GAMES = [
         ],
     ),
     dict(
-        slug="spacesmasher", accent="#6d5cf0", icon=None, shot_wide=False, store=None,
+        slug="spacesmasher", accent="#6d5cf0", icon="game_spacesmasher.png", shot_wide=False, store=None,
         ko=dict(
             name="우주뿌셔",
             tagline="좌우로 두드려 행성을 부수는 캐주얼 아케이드.",
