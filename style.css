@@ -27,7 +27,7 @@
   --w-page:    1180px;
   --w-read:    780px;
   --pad:       32px;
-  --gap-sec:   clamp(52px, 7vh, 82px);
+  --gap-sec:   clamp(34px, 4.5vh, 52px);
 }
 
 * { box-sizing: border-box; }
@@ -126,14 +126,14 @@ body::before {
    깔개를 깐다 — 머리띠와 이어져 한 덩어리가 된다. */
 .hero {
   position: relative;
-  padding: clamp(52px, 8vh, 88px) 0 clamp(44px, 6vh, 70px);
+  padding: clamp(34px, 5vh, 56px) 0 clamp(20px, 3vh, 32px);
   text-align: center;
 }
 /* 마크가 흰 선그림이라 밝은 바탕에서 안 보인다. 페이지를 어둡게 하는 대신
    «마크만» 어두운 동그라미에 담는다 — 강조도 되고 페이지는 밝게 남는다. */
 .hero .logo {
   width: clamp(150px, 17vw, 196px); aspect-ratio: 1; object-fit: contain;
-  margin: 0 auto 26px; display: block; padding: 34px;
+  margin: 0 auto 20px; display: block; padding: 34px;
   border-radius: 50%;
   background:
     radial-gradient(120% 120% at 28% 12%, #3b3f5c, #22263a 58%, #1a1d2c);
