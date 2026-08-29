@@ -134,21 +134,20 @@ GAMES = [
         ],
     ),
     dict(
-        slug="spacesmasher", accent="#6d5cf0", icon="game_spacesmasher.png", shot_wide=False, store=None,
+        slug="spacesmasher", accent="#6d5cf0", icon="game_spacesmasher.png", shot_wide=False,
+        store="https://play.google.com/store/apps/details?id=com.sardinastudio.spacesmasher",
         ko=dict(
             name="우주뿌셔",
             tagline="좌우로 두드려 행성을 부수는 캐주얼 아케이드.",
             blurb="좌우를 번갈아 두드려 쏟아지는 낙석을 피하고 행성을 부숩니다. "
-                  "1:1 대전으로 다른 사람과 같은 판을 동시에 달릴 수도 있습니다. "
-                  "곧 출시합니다.",
+                  "1:1 대전으로 다른 사람과 같은 판을 동시에 달릴 수도 있습니다.",
             facts=["캐주얼 아케이드", "1:1 대전", "Android"],
         ),
         en=dict(
             name="Space Smasher",
             tagline="Tap left and right to smash planets.",
             blurb="Alternate taps to dodge the falling rocks and break the planets. "
-                  "A 1v1 mode lets you run the very same board against someone else. "
-                  "Coming soon.",
+                  "A 1v1 mode lets you run the very same board against someone else.",
             facts=["Casual arcade", "1v1 versus", "Android"],
         ),
         shots=[],
