@@ -158,6 +158,7 @@ STR = dict(
     ko=dict(
         home="./", home_label="홈", games="게임", contact="문의",
         privacy="개인정보처리방침", privacy_href="privacy.html",
+        delete="계정 삭제", delete_href="delete-account.html",
         other_lang="EN", other_lang_href_suffix="-en.html", index="index.html",
         get="Google Play 에서 받기", soon="곧 출시",
         contact_note="버그·문의·개인정보 삭제 요청은 이 주소로 메일 주세요.",
@@ -167,6 +168,7 @@ STR = dict(
     en=dict(
         home="index-en.html", home_label="Home", games="Games", contact="Contact",
         privacy="Privacy Policy", privacy_href="privacy-en.html",
+        delete="Delete account", delete_href="delete-account-en.html",
         other_lang="KO", other_lang_href_suffix=".html", index="index-en.html",
         get="Get it on Google Play", soon="Coming soon",
         contact_note="Bug reports, questions and data deletion requests — write to this address.",
@@ -211,11 +213,14 @@ def footer(lang):
     s = STR[lang]
     other = "index-en.html" if lang == "ko" else "./"
     other_label = "English" if lang == "ko" else "한국어"
+    # 계정 삭제는 바닥글에 둔다 — 구글이 «눈에 띄고 찾기 쉬울 것» 을 요구한다
+    # (`delete_page` 머리말). 모든 장에 깔리는 자리가 여기뿐이다.
     return f"""<footer>
   <div class="footer-inner">
     <span>© 2026 Sardina Studio · Seoul, Korea</span>
     <div class="footer-links">
       <a href="{s['privacy_href']}">{s['privacy']}</a>
+      <a href="{s['delete_href']}">{s['delete']}</a>
       <a href="{s['index']}#contact">{s['contact']}</a>
       <a href="{other}">{other_label}</a>
     </div>
@@ -360,6 +365,142 @@ def game_page(g, lang):
     return shell(lang, t["name"] + s["title_suffix"], t["tagline"], body, other)
 
 
+def delete_page(lang):
+    """
+    계정 삭제 안내. **구글 플레이가 요구하는 웹 리소스다.**
+
+    계정을 만들 수 있는 앱은 «앱 안 경로» 와 «웹 링크» 를 **둘 다** 내야 하고,
+    웹 쪽은 «눈에 띄고 찾기 쉬워야» 한다. 개인정보처리방침 안에 한 줄로 묻어
+    두면 그 조건을 못 채운다 — 그래서 장을 따로 뺐다.
+    (support.google.com/googleplay/android-developer/answer/13327111)
+
+    자동 삭제 시스템은 안 만든다. 구글이 «메일로 요청받는 것» 을 명시적으로
+    허용한다 — *"a customer service email or a form they can submit a request
+    through"*.
+    """
+    if lang == "ko":
+        title = "계정 삭제"
+        body = f"""<main class="page">
+ <div class="read">
+
+  <div class="hero doc">
+    <p class="eyebrow">Sardina Studio</p>
+    <h1>계정 삭제</h1>
+    <p class="lede">Sardina Studio 게임의 계정과 저장된 데이터를
+      <strong>삭제해 드립니다.</strong> 아래 주소로 메일 주시면 됩니다.</p>
+  </div>
+
+  <section id="how">
+    <h2><span class="num">01</span> 요청하는 법</h2>
+
+    <div class="callout">
+      <p><strong><a href="mailto:{MAIL}?subject=계정%20삭제%20요청">{MAIL}</a></strong>
+      으로 메일을 보내 주세요. 아래 둘을 적어 주시면 빠릅니다.</p>
+    </div>
+
+    <ul>
+      <li><b>게임 이름</b> — 예: 우주뿌셔</li>
+      <li><b>로그인에 쓰신 구글 계정 주소</b> — 그 계정으로 저장된 것을 찾습니다.</li>
+    </ul>
+
+    <p>본인 확인을 위해 <b>요청하신 메일 주소가 로그인에 쓰신 구글 계정과
+    같아야 합니다.</b> 다르면 확인을 위해 한 번 더 여쭐 수 있습니다.</p>
+  </section>
+
+  <section id="what">
+    <h2><span class="num">02</span> 무엇이 지워지나</h2>
+
+    <table>
+      <thead><tr><th>지워지는 것</th><th>남는 것</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>계정 식별자, 서버에 백업된 게임 기록(점수·재화·진행), 닉네임,
+              순위표 기록, 우편함</td>
+          <td>결제 영수증 — <b>법으로 5년간 보관해야 합니다</b>
+              (전자상거래법). 게임 진행과는 이어지지 않습니다</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><b>기기에 저장된 것은 앱을 지우면 함께 사라집니다.</b>
+    서버 쪽만 이 요청으로 지워집니다.</p>
+  </section>
+
+  <section id="when">
+    <h2><span class="num">03</span> 얼마나 걸리나</h2>
+    <p><b>영업일 기준 3일 안에</b> 처리하고 결과를 회신드립니다.
+    한 번 지운 것은 <b>되돌릴 수 없습니다.</b></p>
+  </section>
+
+  <p class="back"><a href="{STR[lang]['privacy_href']}">← 개인정보처리방침</a></p>
+
+ </div>
+</main>"""
+        desc = "Sardina Studio 게임의 계정 및 데이터 삭제를 요청하는 방법."
+    else:
+        title = "Delete your account"
+        body = f"""<main class="page">
+ <div class="read">
+
+  <div class="hero doc">
+    <p class="eyebrow">Sardina Studio</p>
+    <h1>Delete your account</h1>
+    <p class="lede">We will <strong>delete your account and saved data</strong>
+      for any Sardina Studio game. Just send us an email.</p>
+  </div>
+
+  <section id="how">
+    <h2><span class="num">01</span> How to request</h2>
+
+    <div class="callout">
+      <p>Email <strong><a href="mailto:{MAIL}?subject=Account%20deletion%20request">{MAIL}</a></strong>.
+      Including the two items below helps us act faster.</p>
+    </div>
+
+    <ul>
+      <li><b>Game name</b> — for example, Space Smasher</li>
+      <li><b>The Google account you signed in with</b> — we use it to find your saved data.</li>
+    </ul>
+
+    <p>To verify it is really you, <b>please write from the same Google account
+    you signed in with.</b> If it differs we may ask one follow-up question.</p>
+  </section>
+
+  <section id="what">
+    <h2><span class="num">02</span> What gets deleted</h2>
+
+    <table>
+      <thead><tr><th>Deleted</th><th>Kept</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Account identifier, game data backed up on our servers
+              (scores, currency, progress), nickname, leaderboard entries, mailbox</td>
+          <td>Purchase receipts — <b>Korean law requires us to keep these for
+              5 years</b>. They are not linked back to your game progress</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><b>Anything stored on your device is removed when you uninstall the app.</b>
+    This request covers the server side.</p>
+  </section>
+
+  <section id="when">
+    <h2><span class="num">03</span> How long it takes</h2>
+    <p>We process requests <b>within 3 business days</b> and reply when done.
+    Deletion <b>cannot be undone.</b></p>
+  </section>
+
+  <p class="back"><a href="{STR[lang]['privacy_href']}">← Privacy Policy</a></p>
+
+ </div>
+</main>"""
+        desc = "How to request deletion of your Sardina Studio game account and data."
+
+    other = "delete-account-en.html" if lang == "ko" else "delete-account.html"
+    return shell(lang, title + STR[lang]["title_suffix"], desc, body, other)
+
+
 def write(name, text):
     with io.open(os.path.join(OUT, name), "w", encoding="utf-8", newline="\n") as f:
         f.write(text)
@@ -372,6 +513,9 @@ write("index-en.html", index_page("en"))
 for g in GAMES:
     write(page_name(g["slug"], "ko"), game_page(g, "ko"))
     write(page_name(g["slug"], "en"), game_page(g, "en"))
+
+write("delete-account.html", delete_page("ko"))
+write("delete-account-en.html", delete_page("en"))
 
 # 개인정보처리방침 두 장은 손으로 쓴 본문이라 머리말·바닥글만 갈아 끼운다
 for lang, name in (("ko", "privacy.html"), ("en", "privacy-en.html")):
