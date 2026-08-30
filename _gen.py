@@ -427,8 +427,8 @@ def delete_page(lang):
   </section>
 
   <section id="when">
-    <h2><span class="num">03</span> 얼마나 걸리나</h2>
-    <p><b>영업일 기준 3일 안에</b> 처리하고 결과를 회신드립니다.
+    <h2><span class="num">03</span> 처리</h2>
+    <p>요청을 확인한 뒤 처리하고 결과를 회신드립니다.
     한 번 지운 것은 <b>되돌릴 수 없습니다.</b></p>
   </section>
 
@@ -486,8 +486,8 @@ def delete_page(lang):
   </section>
 
   <section id="when">
-    <h2><span class="num">03</span> How long it takes</h2>
-    <p>We process requests <b>within 3 business days</b> and reply when done.
+    <h2><span class="num">03</span> After you send it</h2>
+    <p>We process the request once we have confirmed it, and reply when it is done.
     Deletion <b>cannot be undone.</b></p>
   </section>
 
