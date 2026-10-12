@@ -14,8 +14,9 @@
 # 페이지 트래픽도 늘지 않는다. 주소는 스토어 페이지의 «스크린샷 이미지» img
 # 에서 뽑았다(shots 값).
 #
-# 2026-10 3차 시안 — «다른 게임 회사랑 너무 다르다» 를 받고 국내 게임사 홈의 틀을 따른다:
-# 어두운 바탕 · 화면을 꽉 채운 게임 슬라이드 · 큰 그림 카드 · 어두운 바닥글. 그림이 주인공이다.
+# 2026-10 4차 시안 — 국내 게임사 홈의 틀(게임 슬라이드 첫 화면 · 그림 카드 · 스튜디오 · 바닥글)을
+# 밝은 바탕으로. 그림은 «우리 게임의 실제 그림» 만 쓴다 — Play 스토어 스크린샷 · 앱 아이콘 · 로고.
+# 사장님 지시(2026-10-13): «거짓 이미지 생성해서는 하지 마. 그냥 우리 게임 그대로 넣으면 됨».
 # 근거와 참고 사이트는 REDESIGN_NOTES.md.
 
 import datetime, hashlib, html, io, json, os, re
@@ -52,8 +53,8 @@ FONT_CSS = ("https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/"
             "pretendardvariable-dynamic-subset.css")
 FONT_SRI = "sha384-uR1wgObmx89ZQ4VVXHdzjbDJZ1PvBK01K+E3GebmaBKdZ87qRJvBWPoPbzWeEd5T"
 
-# 첫 화면 그림의 sizes — art() 와 미리 받기(preload) 가 같은 값을 써야 같은 파일을 고른다
-HERO_SIZES = "(orientation: portrait) 178vh, 100vw"
+# 첫 화면 가로 스크린샷의 sizes — showcase() 와 미리 받기(preload) 가 같은 값을 써야 같은 파일을 고른다
+HERO_WIDE_SIZES = "(max-width: 959px) 92vw, 640px"
 
 # 첫 화면 슬라이드가 저절로 넘어가는 간격(밀리초). JS 가 data- 로 받는다.
 SLIDE_MS = 6000
@@ -89,11 +90,12 @@ STUDIO = dict(
 
 # ── 게임 표 — 여기만 고친다 ─────────────────────────────────────────────
 # 한 줄 = 첫 화면 슬라이드 · 홈 카드 · 게임 쪽 · 다른 게임 줄 · 고객지원 선택칸 · 사이트맵.
-# hero — 키아트 파일 이름(assets/ 안, 16:9). 같은 이름에 «-960» 을 붙인 작은 판도 둔다.
-#   비어 있으면(None) 아래 규칙으로 그림을 저절로 꾸린다(art() 참고) — 이름으로 가르지 않는다:
-#     가로 스크린샷(shot_wide) → 그 스크린샷을 꽉 채운다
-#     세로 스크린샷           → 게임 색 바탕 + 폰 화면처럼 세운 스크린샷 2~3장
-#     스크린샷 없음           → 게임 색 바탕 + 아이콘 크게
+# hero — 첫 화면에 맨 앞으로 내세울 «실제 스크린샷 주소». shots 안의 주소만 된다(_gen.py 가 확인한다).
+#   비어 있으면(None) shots 의 순서 그대로. 그림은 표의 칸으로만 가른다(이름으로 안 가른다 — showcase()):
+#     가로 스크린샷(shot_wide) → 한 장을 원래 비율 그대로 크게
+#     세로 스크린샷           → 2~3장을 원래 비율 그대로 나란히(폰 화면 모양 둥근 모서리만)
+#     스크린샷 없음           → 앱 아이콘(게임 색 옅은 판 위)
+#   새로 그린 그림·합성 장면은 넣지 않는다.
 # shot_wide — 스크린샷이 가로면 True, 세로면 False. CDN 에서 받아 잰 실제 크기(2026-10-13):
 #   냥방망이 2540×1440 · 냥방망이 2 1259×713 · 워드리아 576×1024 · 붐브릭 1080×1920.
 #   CDN 은 =w 로 원본보다 크게 달라고 해도 원본 크기에서 멈춘다(늘려 주지 않는다).
@@ -101,7 +103,7 @@ STUDIO = dict(
 GAMES = [
     dict(
         slug="catbat", accent="#e98783", icon="game_cat.png", shot_wide=True,
-        hero="hero_catbat.jpg",
+        hero=None,
         store="https://play.google.com/store/apps/details?id=com.BigSmileMen.Cat",
         platforms=("Android",),
         ko=dict(
@@ -129,7 +131,7 @@ GAMES = [
     ),
     dict(
         slug="catbat2", accent="#f07a2b", icon="game_cat2.png", shot_wide=True,
-        hero="hero_catbat2.jpg",
+        hero=None,
         store="https://play.google.com/store/apps/details?id=com.silverchan.catbat2",
         platforms=("Android",),
         ko=dict(
@@ -158,7 +160,7 @@ GAMES = [
     ),
     dict(
         slug="wordria", accent="#7c4dbe", icon="game_wordria.png", shot_wide=False,
-        hero="hero_wordria.jpg",
+        hero=None,
         store="https://play.google.com/store/apps/details?id=com.sardinastudio.wordria",
         platforms=("Android",),
         ko=dict(
@@ -187,7 +189,7 @@ GAMES = [
     ),
     dict(
         slug="boombrick", accent="#3ac6e8", icon="game_boombrick.png", shot_wide=False,
-        hero="hero_boombrick.jpg",
+        hero=None,
         store="https://play.google.com/store/apps/details?id=com.BigSmileMen.BlockDestroy",
         platforms=("Android",),
         ko=dict(
@@ -215,7 +217,7 @@ GAMES = [
     ),
     dict(
         slug="spacesmasher", accent="#6d5cf0", icon="game_spacesmasher.png", shot_wide=False,
-        hero="hero_spacesmasher.jpg",
+        hero=None,
         store="https://play.google.com/store/apps/details?id=com.sardinastudio.spacesmasher",
         platforms=("Android",),
         ko=dict(
@@ -390,52 +392,56 @@ SPRITE = """<svg width="0" height="0" style="position:absolute" aria-hidden="tru
 </svg>"""
 
 
-# ── 게임 그림 — 첫 화면 슬라이드·카드·게임 쪽 첫 화면이 같은 규칙을 쓴다 ─────
+# ── 게임 그림 — 우리 게임의 실제 그림만 ───────────────────────────────────
+# 첫 화면 슬라이드 · 게임 쪽 첫 화면 · GAMES 카드가 같은 규칙을 쓴다. 자르지도(cover) 늘리지도 않는다:
+# width/height 를 실제 비율(가로 540×306 · 세로 540×960 — CDN 원본을 잰 값과 같은 비율)로 주고
+# 높이는 auto 로 둔다.
 BLANK = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
 
 
-def _small(name):
-    # hero_x.jpg → hero_x-960.jpg (모바일용 작은 판)
-    stem, ext = os.path.splitext(name)
-    return f"{stem}-960{ext}"
+def featured(g):
+    """첫 화면에 놓을 실제 스크린샷 순서 — hero 칸이 있으면 그 주소를 맨 앞으로."""
+    shots = list(g["shots"])
+    if g.get("hero"):
+        shots.remove(g["hero"])
+        shots.insert(0, g["hero"])
+    return shots
 
 
-def art(g, lang, where, lazy=True, defer=False):
-    """where — "hero"(화면 꽉 참) | "card"(16:9 카드).
-    lazy  — 화면 밖 그림은 지연 로드한다.
-    defer — 첫 화면의 2번째부터 슬라이드: src 를 data- 에 두고 JS 가 나중에 채운다
+def showcase(g, lang, where, defer=False):
+    """where — "hero"(첫 화면 오른쪽) | "card"(GAMES 카드의 옅은 판 안).
+    defer — 첫 화면 2번째부터 슬라이드: src 를 data- 에 두고 JS 가 나중에 채운다
             (안 그러면 안 보이는 슬라이드 그림까지 첫 화면에서 한꺼번에 받는다)."""
     t = g[lang]
-    # 첫 화면 — 세로 화면(폰)에서는 16:9 그림을 높이에 맞춰 채우므로 화면 높이의 1.78배 폭이 필요하다.
-    # «100vw» 로 두면 폰이 960 판을 골라 1.5배로 늘려 흐려진다.
-    sizes = (HERO_SIZES if where == "hero"
-             else "(max-width: 639px) 100vw, (max-width: 959px) 50vw, 45vw")
-    load = ' loading="lazy"' if lazy and not defer else ""
     pre = "data-" if defer else ""
-
-    def img(src, srcset, cls, w, h, alt=""):
-        ss = f' {pre}srcset="{srcset}" sizes="{sizes if cls == "art-img" else "(max-width: 639px) 40vw, 300px"}"' if srcset else ""
-        # 미룬 그림도 src 는 있어야 한다(HTML 규칙) — 1×1 투명 GIF 를 두고 JS 가 바꾼다
-        blank = f' src="{BLANK}"' if defer else ""
-        return (f'<img class="{cls}"{blank} {pre}src="{src}"{ss} alt="{esc(alt)}" width="{w}" height="{h}"'
-                f'{load} decoding="async">')
-
-    if g.get("hero"):
-        h = g["hero"]
-        inner = img(f"assets/{h}", f"assets/{_small(h)} 960w, assets/{h} 1672w", "art-img", 1672, 941)
-        return f'<div class="art art-key">{inner}</div>'
-    shots = g["shots"]
+    # 미룬 그림도 src 는 있어야 한다(HTML 규칙) — 1×1 투명 GIF 를 두고 JS 가 바꾼다
+    blank = f' src="{BLANK}"' if defer else ""
+    load = "" if (defer or where == "hero") else ' loading="lazy"'
+    shots = featured(g)
+    n = len(shots)
     if shots and g["shot_wide"]:
         u = shots[0]
-        ss = ", ".join(f"{u}=w{c}-rj {c}w" for c in (960, 1280, 1920, 2560))
-        return f'<div class="art art-wide">{img(f"{u}=w1280-rj", ss, "art-img", 1920, 1089)}</div>'
+        ss = ", ".join(f"{u}=w{c}-rj {c}w" for c in (540, 800, 1080, 1440, 1920))
+        sizes = (HERO_WIDE_SIZES if where == "hero"
+                 else "(max-width: 639px) 84vw, (max-width: 959px) 42vw, 34vw")
+        alt = STR[lang]["shot_alt"].format(name=t["name"], i=1, n=n)
+        return (f'<div class="show show-wide"><img class="shot"{blank} {pre}src="{u}=w1080-rj" '
+                f'{pre}srcset="{ss}" sizes="{sizes}" alt="{esc(alt)}" width="540" height="306"'
+                f'{load} decoding="async"></div>')
     if shots:
-        # 세로 스크린샷 — 폰 화면처럼 둥글게 세워 겹친다(가운데가 앞)
-        phones = "".join(
-            img(f"{u}=w540-rj", f"{u}=w400-rj 400w, {u}=w540-rj 540w, {u}=w720-rj 720w",
-                "phone", 540, 960) for u in shots[:3])
-        return f'<div class="art art-phones"><div class="phones n{min(len(shots), 3)}">{phones}</div></div>'
-    return (f'<div class="art art-icon">{img(f"assets/{g["icon"]}", "", "big-icon", 160, 160)}</div>')
+        k = min(n, 3)
+        sizes = ("(max-width: 639px) 27vw, (max-width: 959px) 22vw, 210px" if where == "hero"
+                 else "(max-width: 639px) 24vw, 130px")
+        imgs = "".join(
+            f'<img class="shot"{blank} {pre}src="{u}=w540-rj" '
+            f'{pre}srcset="{u}=w270-rj 270w, {u}=w400-rj 400w, {u}=w540-rj 540w, {u}=w720-rj 720w" '
+            f'sizes="{sizes}" alt="{esc(STR[lang]["shot_alt"].format(name=t["name"], i=i + 1, n=n))}" '
+            f'width="540" height="960"{load} decoding="async">'
+            for i, u in enumerate(shots[:k]))
+        return f'<div class="show show-tall n{k}">{imgs}</div>'
+    # 스크린샷이 없는 게임 — 앱 아이콘만(새 그림을 만들어 채우지 않는다)
+    return (f'<div class="show show-icon"><img class="big-icon" src="assets/{g["icon"]}" alt="" '
+            f'width="160" height="160"{load}></div>')
 
 
 # ── 껍데기 ───────────────────────────────────────────────────────────────
@@ -497,14 +503,14 @@ def lang_switch(lang, self_href, alt_href):
 
 def header(lang, here, self_href, alt_href):
     # 메뉴는 셋(게임 · 스튜디오 · 고객지원). 좁은 화면에서도 한 줄에 들어가므로 햄버거가 없다.
-    # 첫 화면 그림 위에서는 투명했다가, 내려가면 어두운 단색 띠가 된다(site.js · style.css).
+    # 첫 화면 위에서는 투명했다가, 내려가면 흰 단색 띠가 된다(site.js · style.css).
     s = STR[lang]
     g_cur = ' class="is-here"' if here in [g["slug"] for g in GAMES] else ""
     sup_cur = ' aria-current="page"' if here == "support" else ""
     return f"""<header class="site-header" data-header>
   <div class="bar">
     <a class="brand" href="{home_href(lang)}">
-      <img src="assets/logo_white.png" alt="" width="44" height="36">
+      <img src="assets/logo_ink.png" alt="" width="44" height="36">
       <span class="brand-name">Sardina Studio</span>
     </a>
     <nav class="nav" aria-label="{s['nav_label']}">
@@ -531,7 +537,7 @@ def footer(lang, self_href, alt_href):
     return f"""<footer class="site-footer">
   <div class="ft">
     <div class="ft-top">
-      <a class="brand" href="{home_href(lang)}"><img src="assets/logo_white.png" alt="" width="44" height="36" loading="lazy"><span>Sardina Studio</span></a>
+      <a class="brand" href="{home_href(lang)}"><img src="assets/logo_ink.png" alt="" width="44" height="36" loading="lazy"><span>Sardina Studio</span></a>
       {lang_switch(lang, self_href, alt_href)}
     </div>
     <nav class="ft-links" aria-label="{s['foot_nav']}">
@@ -575,15 +581,15 @@ def shell(lang, *, title, desc, path, alt, body, here=None, body_class="", noind
 
 
 def preload_for(g):
-    # 첫 화면의 첫 그림을 미리 받는다. 키아트·가로 스크린샷만 — 나머지는 작은 그림이라 필요 없다
-    if g.get("hero"):
-        h = g["hero"]
-        return (f'<link rel="preload" as="image" href="assets/{h}" '
-                f'imagesrcset="assets/{_small(h)} 960w, assets/{h} 1672w" imagesizes="{HERO_SIZES}">')
-    if g["shots"] and g["shot_wide"]:
-        u = g["shots"][0]
-        ss = ", ".join(f"{u}=w{c}-rj {c}w" for c in (960, 1280, 1920, 2560))
-        return f'<link rel="preload" as="image" href="{u}=w1280-rj" imagesrcset="{ss}" imagesizes="{HERO_SIZES}">'
+    # 첫 화면의 첫 그림을 미리 받는다 — 가로 스크린샷 한 장만(세로는 작은 그림 여럿이라 필요 없다)
+    shots = featured(g)
+    if shots and g["shot_wide"]:
+        u = shots[0]
+        ss = ", ".join(f"{u}=w{c}-rj {c}w" for c in (540, 800, 1080, 1440, 1920))
+        # 넓은 화면만 — 폰에서는 미리 받기 판단과 실제 그림 고르기가 어긋나 같은 그림을 두 번 받았다
+        # (크롬 경고 «preloaded but not used» 로 확인)
+        return (f'<link rel="preload" as="image" href="{u}=w1080-rj" imagesrcset="{ss}" '
+                f'imagesizes="{HERO_WIDE_SIZES}" media="(min-width: 960px)">')
     return None
 
 
@@ -597,7 +603,7 @@ def store_link(g, lang, cls, label=None):
 
 
 # ── 홈 ───────────────────────────────────────────────────────────────────
-# 위에서 아래로: 게임 슬라이드(화면 꽉) → 슬로건 띠 → GAMES 그림 카드 → 스튜디오 띠.
+# 위에서 아래로: 게임 슬라이드(왼쪽 글 · 오른쪽 실제 스크린샷) → 슬로건 띠 → GAMES 카드 → 스튜디오 띠.
 def card_rows(n):
     """카드 수 → 데스크톱 줄마다 몇 장인가. 빈 칸이 안 남게 2장 줄과 3장 줄을 섞는다.
     5 → [2, 3] · 4 → [2, 2] · 6 → [3, 3] · 7 → [2, 2, 3] — 큰 줄(2장)을 앞에 둔다."""
@@ -617,15 +623,17 @@ def index_page(lang):
         cur = " is-current" if i == 0 else ""
         hidden = "" if i == 0 else ' aria-hidden="true"'
         slides.append(f"""    <article class="slide{cur}" style="--c:{g['accent']}" aria-roledescription="slide" aria-label="{s['slide_n'].format(i=i + 1, n=n)}"{hidden}>
-      {art(g, lang, "hero", lazy=False, defer=(i > 0))}
-      <div class="slide-body">
-        <img class="slide-icon" src="assets/{g['icon']}" alt="" width="160" height="160">
-        <h2 class="slide-name">{esc(t['name'])}</h2>
-        <p class="slide-line">{esc(t['tagline'])}</p>
-        <div class="cta">
-          {store_link(g, lang, "btn btn-light")}
-          <a class="btn btn-outline" href="{page_name(g['slug'], lang)}">{s['detail']}<span class="sr-only"> — {esc(t['name'])}</span></a>
+      <div class="slide-inner">
+        <div class="slide-body">
+          <img class="slide-icon" src="assets/{g['icon']}" alt="" width="160" height="160">
+          <h2 class="slide-name">{esc(t['name'])}</h2>
+          <p class="slide-line">{esc(t['tagline'])}</p>
+          <div class="cta">
+            {store_link(g, lang, "btn btn-primary")}
+            <a class="btn btn-ghost" href="{page_name(g['slug'], lang)}">{s['detail']}<span class="sr-only"> — {esc(t['name'])}</span></a>
+          </div>
         </div>
+        <div class="slide-art">{showcase(g, lang, "hero", defer=(i > 0))}</div>
       </div>
     </article>""")
         thumbs.append(
@@ -640,7 +648,7 @@ def index_page(lang):
         t = g[lang]
         wide_t = " wide-t" if n % 2 == 1 and i == 0 else ""   # 태블릿 2열에서 홀수면 첫 장을 두 칸으로
         cards.append(f"""      <article class="g-card span-{spans[i]}{wide_t}" style="--c:{g['accent']}">
-        <div class="g-card-art">{art(g, lang, "card")}</div>
+        <div class="g-card-art">{showcase(g, lang, "card")}</div>
         <div class="g-card-body">
           <img class="g-card-icon" src="assets/{g['icon']}" alt="" width="160" height="160" loading="lazy">
           <div class="g-card-text">
@@ -694,7 +702,7 @@ def index_page(lang):
     </div>
     <div>
       <p class="studio-p">{esc(st['about'])}</p>
-      <p><a class="btn btn-light" href="{page_name('support', lang)}#contact">{s['contact_btn']}</a></p>
+      <p><a class="btn btn-primary" href="{page_name('support', lang)}#contact">{s['contact_btn']}</a></p>
     </div>
   </div>
 </section>
@@ -709,7 +717,7 @@ def index_page(lang):
 
 
 # ── 게임 한 쪽 ───────────────────────────────────────────────────────────
-# 첫 화면 키아트(같은 그림 규칙) → 소개 → 스크린샷 → 정보 → 도움 링크 → 다른 게임.
+# 첫 화면(왼쪽 글 · 오른쪽 실제 스크린샷 — 슬라이드와 같은 규칙) → 소개 → 스크린샷 → 정보 → 도움 → 다른 게임.
 def shot_img(g, u, i, n, lang):
     # 스크린샷은 스토어 CDN 에서 곧바로 받는다 (우리 트래픽 0).
     #  · -rj = JPEG. 안 붙이면 PNG 를 주는데 같은 장이 620KB vs 114KB 다
@@ -766,15 +774,17 @@ def game_page(g, lang):
     body = f"""<main id="main">
 
 <section class="key" style="--c:{g['accent']}">
-  {art(g, lang, "hero", lazy=False)}
-  <div class="slide-body">
-    <img class="slide-icon" src="assets/{g['icon']}" alt="" width="160" height="160">
-    <h1 class="slide-name">{esc(t['name'])}</h1>
-    <p class="slide-line">{esc(t['tagline'])}</p>
-    <div class="cta">
-      {store_link(g, lang, "btn btn-light", s['store_long'])}
-      <a class="btn btn-outline" href="#help">{s['support']}</a>
+  <div class="slide-inner">
+    <div class="slide-body">
+      <img class="slide-icon" src="assets/{g['icon']}" alt="" width="160" height="160">
+      <h1 class="slide-name">{esc(t['name'])}</h1>
+      <p class="slide-line">{esc(t['tagline'])}</p>
+      <div class="cta">
+        {store_link(g, lang, "btn btn-primary", s['store_long'])}
+        <a class="btn btn-ghost" href="#help">{s['support']}</a>
+      </div>
     </div>
+    <div class="slide-art">{showcase(g, lang, "hero")}</div>
   </div>
 </section>
 
@@ -966,7 +976,7 @@ def support_page(lang):
     <aside class="contact-box" id="contact" aria-labelledby="contact-h">
       <h2 class="sub-title" id="contact-h">{s['c_h']}</h2>
       <p class="cc-addr"><a href="mailto:{MAIL}">{MAIL}</a></p>
-      <p class="cc-copy-row"><button type="button" class="btn btn-outline btn-sm" data-copy="{MAIL}">{icon('copy', 16)}{s['c_copy']}</button>
+      <p class="cc-copy-row"><button type="button" class="btn btn-ghost btn-sm" data-copy="{MAIL}">{icon('copy', 16)}{s['c_copy']}</button>
         <span class="copy-status" role="status" aria-live="polite"></span></p>
       <div class="composer" data-composer>
         <p>{s['c_p']}</p>
@@ -982,9 +992,9 @@ def support_page(lang):
           </select>
         </label>
         <p class="composer-subject">{s['c_subject']}: <output data-subject></output></p>
-        <a class="btn btn-light btn-block" data-mailto href="{generic}">{s['c_btn']}</a>
+        <a class="btn btn-primary btn-block" data-mailto href="{generic}">{s['c_btn']}</a>
       </div>
-      <p class="cc-nojs"><a class="btn btn-light btn-block" href="{generic}">{s['c_btn']}</a></p>
+      <p class="cc-nojs"><a class="btn btn-primary btn-block" href="{generic}">{s['c_btn']}</a></p>
       <p class="cc-note">{s['c_note']}</p>
       <script type="application/json" id="composer-data">{cfg}</script>
     </aside>
@@ -1168,8 +1178,8 @@ def not_found_page():
     <h1>{k['nf_title']}</h1>
     <p>{k['nf_p']}</p>
     <p lang="en" class="nf-en">{e['nf_title']}. {e['nf_p']}</p>
-    <p class="nf-links"><a class="btn btn-light" href="./">{k['home']}</a>
-      <a class="btn btn-outline" href="index-en.html" lang="en">Home (English)</a></p>
+    <p class="nf-links"><a class="btn btn-primary" href="./">{k['home']}</a>
+      <a class="btn btn-ghost" href="index-en.html" lang="en">Home (English)</a></p>
   </div>
 </main>"""
     page = shell("ko", title=k["nf_title"] + " · Sardina Studio", desc=k["nf_p"],
@@ -1201,12 +1211,10 @@ def write(name, text):
 
 
 if __name__ == "__main__":
-    # 표에 적은 키아트 파일이 실제로 있는지 먼저 본다 — 없으면 그림 없는 슬라이드가 조용히 나간다
+    # hero 칸은 그 게임의 실제 스크린샷(shots) 중 하나만 된다 — 바깥 그림·만든 그림이 끼어들지 못하게
     for g in GAMES:
-        if g.get("hero"):
-            for f in (g["hero"], _small(g["hero"])):
-                if not os.path.exists(os.path.join(OUT, "assets", f)):
-                    raise SystemExit(f"키아트 파일이 없다: assets/{f} ({g['slug']} 의 hero 칸)")
+        if g.get("hero") and g["hero"] not in g["shots"]:
+            raise SystemExit(f"{g['slug']} 의 hero 칸이 그 게임의 shots 에 없는 주소다: {g['hero']}")
     print("찍는다:")
     pairs = [("index.html", "index-en.html")]
     write("index.html", index_page("ko"))

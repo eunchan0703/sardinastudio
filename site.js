@@ -7,7 +7,7 @@
   'use strict';
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // ① 머리띠 — 첫 화면 그림 위에서는 투명, 조금이라도 내려가면 어두운 단색 띠
+  // ① 머리띠 — 첫 화면 위에서는 투명, 조금이라도 내려가면 흰 단색 띠
   var header = document.querySelector('[data-header]');
   if (header && document.body.classList.contains('has-hero')) {
     var onScroll = function () { header.classList.toggle('is-solid', window.scrollY > 24); };
