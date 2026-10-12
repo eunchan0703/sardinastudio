@@ -4,25 +4,27 @@
 # 장마다 흩어지면 게임을 하나 늘릴 때마다 그만큼 고쳐야 하고, 반드시 어긋난다.
 # 그래서 «게임 표» 한 곳만 고치고 이 파일을 돌린다.
 #
-#   python3 _gen.py
+#   python3 _gen.py && python3 _check.py
 #
 # 찍는 것 (전부 한/영 짝, 이름은 옛 주소 그대로 — 플레이 콘솔이 이 주소들을 물고 있다):
-#   index · <게임>.html · support(새로) · delete-account · privacy(본문은 손글, 껍데기만)
+#   index · <게임>.html · support · delete-account · privacy(본문은 손글, 껍데기만)
 #   + 404.html · sitemap.xml
 #
 # 스크린샷은 우리가 담지 않고 Play 스토어 CDN 을 그대로 가리킨다 — 저장소도
 # 페이지 트래픽도 늘지 않는다. 주소는 스토어 페이지의 «스크린샷 이미지» img
 # 에서 뽑았다(shots 값).
 #
-# 2026-10 다시 짬 — 무엇을 왜 바꿨는지, 참고한 사이트는 REDESIGN_NOTES.md.
+# 2026-10 2차 시안 — «너무 어수선하다» 를 받고 덜어냈다. 한 장에 큰 문장 하나·그림 하나·
+# 단추 하나, 색은 잉크와 강조색 하나. 꼬리표·숫자 상자·장식 그림은 넣지 않는다.
+# 근거와 참고 사이트는 REDESIGN_NOTES.md.
 
-import datetime, hashlib, html, io, json, math, os, re
+import datetime, hashlib, html, io, json, os, re
 from urllib.parse import quote
 
 OUT = os.path.dirname(os.path.abspath(__file__))
 
 # 절대 주소 — og:image · hreflang · canonical · sitemap 은 상대 주소를 못 쓴다.
-# 도메인을 붙이면 이 한 줄(과 404 의 BASE)만 바꾼다.
+# 도메인을 붙이면 이 두 줄만 바꾼다.
 SITE = "https://eunchan0703.github.io/sardinastudio/"
 BASE = "/sardinastudio/"
 MAIL = "sardina.chans@gmail.com"
@@ -43,54 +45,49 @@ JS_V = _hash("site.js")
 # 웹폰트 — Pretendard(OFL) 를 jsDelivr 에서 받는다. 버전을 못박고(1.3.9, 2023-11 배포)
 # SRI 로 내용까지 묶는다. «dynamic-subset» 이라 화면에 쓰인 글자 묶음만 받는다.
 # ⚠ 2026-08 에는 «외부 폰트 없음(트래픽 최소)» 이 사장님 지시였다(커밋 3571de3).
-#   이번 개편에서 다시 여쭙는 중 — False 로 두면 시스템 폰트(애플 산돌고딕·맑은 고딕)로
-#   돌아가고, 다른 곳은 하나도 안 바뀐다.
+#   다시 여쭙는 중 — False 로 두면 시스템 폰트(애플 산돌고딕·맑은 고딕)로 돌아가고,
+#   다른 곳은 하나도 안 바뀐다. 첫 방문에 약 350~380KB 를 더 받는다(2026-10-13 실측).
 WEBFONT = True
 FONT_CSS = ("https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/"
             "pretendardvariable-dynamic-subset.css")
 FONT_SRI = "sha384-uR1wgObmx89ZQ4VVXHdzjbDJZ1PvBK01K+E3GebmaBKdZ87qRJvBWPoPbzWeEd5T"
 
 # ── 스튜디오 표 — 회사 정보는 여기만 ───────────────────────────────────────
-# 비어 있으면 화면에 아예 안 나온다. «준비 중» 같은 빈 자리를 공개 화면에
-# 띄우지 않으려는 것 — 채우면 그 자리가 생긴다.
+# 비어 있으면 화면에 아예 안 나온다. «준비 중» 같은 빈 자리를 공개 화면에 띄우지 않는다.
+# 위치(도시·주소)는 사장님 지시로 사이트 어디에도 안 적는다(2026-10-13).
 STUDIO = dict(
     # TODO(사장님): 히어로 문구·소개 문구는 초안이다. 사실이 아닌 것은 안 적었다
-    #   (서울 · 출시 게임 수 · 장르만 썼다 — 앞의 둘은 옛 바닥글과 게임 표가 근거).
+    #   (장르는 게임 표가 근거).
     ko=dict(
-        city="서울",
-        hero_title="손끝으로 즐기는<br><em>작은 즐거움</em>",
-        about=("Sardina Studio 는 서울에서 모바일 게임을 만드는 스튜디오입니다. "
-               "고양이를 위한 게임부터 워드 퍼즐, 레트로 감성의 아케이드까지 — "
-               "지금 Google Play 에서 게임 {n}개를 만날 수 있습니다."),
-        tag="서울에서 모바일 게임을 만듭니다.",
+        hero="손끝으로 즐기는<br><span>작은 즐거움</span>",
+        lede="Sardina Studio 가 만든 모바일 게임을 만나 보세요.",
+        about=("Sardina Studio 는 모바일 게임을 만드는 스튜디오입니다. 고양이를 위한 게임부터 "
+               "워드 퍼즐, 레트로 감성의 아케이드까지 — 짧게 켜도 즐거운 게임을 만듭니다."),
     ),
     en=dict(
-        city="Seoul, Korea",
-        hero_title="Little joys,<br><em>right at your fingertips</em>",
-        about=("Sardina Studio makes mobile games in Seoul — from games made for cats "
-               "to word puzzles and retro arcade. {n} of them are on Google Play today."),
-        tag="Mobile games, made in Seoul.",
+        hero="Little joys,<br><span>right at your fingertips</span>",
+        lede="Mobile games made by Sardina Studio.",
+        about=("Sardina Studio is a mobile game studio. From games made for cats to word "
+               "puzzles and retro arcade — games that are fun even in a short break."),
     ),
     # TODO(사장님): SNS 가 생기면 (이름, 주소) 로 넣는다. 예: ("YouTube", "https://…")
     sns=[],
-    # TODO(사장님): 사업자 정보. 국내 게임사 바닥글에 흔히 붙는 칸이다.
-    #   (한국어 이름, 영어 이름, 값) — 값이 None 인 줄은 안 나온다.
+    # TODO(사장님): 사업자 정보. (한국어 이름, 영어 이름, 값) — 값이 None 인 줄은 안 나온다.
+    #   «주소» 칸은 위치를 안 적기로 해서 뺐다. 법적으로 적어야 하면 그때 줄을 더한다.
     biz=[
         ("상호", "Company", None),
         ("대표자", "CEO", None),
         ("사업자등록번호", "Business registration no.", None),
         ("통신판매업 신고번호", "Mail-order business no.", None),
-        ("주소", "Address", None),
     ],
 )
 
 # ── 게임 표 — 여기만 고친다 ─────────────────────────────────────────────
-# 첫 줄이 홈에서 큰 카드가 된다. 순서는 사장님이 정한 차례 그대로다.
+# 한 줄 = 홈 타일 · 게임 쪽 · 다른 게임 줄 · 고객지원 선택칸 · 사이트맵.
 # shot_wide — 스크린샷이 가로(540×306)면 True, 세로(540×960)면 False.
 #   두 비율은 CDN 에서 실제로 받아 잰 값이다(2026-10-13). width/height 를 맞춰 둬야
 #   그림이 늦게 와도 자리가 안 흔들린다.
-# facts — 장르·특징 꼬리표. 플랫폼은 platforms 로 따로 뺐다(카드마다 «Android» 가
-#   되풀이돼 꼬리표가 묻혔다).
+# facts — 게임 쪽 «정보» 목록의 «특징» 줄에만 글자로 쓴다(꼬리표로 그리지 않는다).
 GAMES = [
     dict(
         slug="catbat", accent="#e98783", icon="game_cat.png", shot_wide=True,
@@ -232,27 +229,17 @@ GAMES = [
 STR = dict(
     ko=dict(
         lang="ko", skip="본문 바로가기", nav_label="주 메뉴", lang_label="언어 선택",
-        menu_open="메뉴 열기", menu_close="메뉴 닫기",
-        home="홈", games="게임", support="고객지원", about="회사소개",
+        home="홈", games="게임", support="고객지원", about="스튜디오 소개",
         privacy="개인정보처리방침", delete="계정 삭제", faq="자주 묻는 질문",
-        mail_us="메일 문의", foot_nav="바닥글 메뉴", foot_studio="스튜디오",
-        store_long="Google Play에서 다운로드", store_short="Google Play", more="자세히",
-        hero_eyebrow="Sardina Studio · Mobile Games",
-        hero_lede="{first}부터 {last}까지 — Sardina Studio 가 만든 모바일 게임을 만나 보세요.",
-        hero_cta="게임 둘러보기",
-        games_sub="Google Play 에서 만날 수 있는 게임 {n}개",
-        f_games="출시한 게임", f_platform="플랫폼", f_city="위치", f_mail="문의",
-        help_h="도움이 필요하세요?",
-        help_p="자주 묻는 질문 · 버그 신고 · 결제와 환불 · 계정 삭제 안내를 한곳에 모았습니다.",
-        help_cta="고객지원 바로가기", delete_cta="계정 삭제 안내",
-        crumbs="현재 위치", shots="스크린샷", prev="이전 스크린샷", next="다음 스크린샷",
+        foot_nav="바닥글 메뉴", contact="문의",
+        cta="게임 보기", store="Google Play에서 다운로드",
+        shots="스크린샷", prev="이전 스크린샷", next="다음 스크린샷",
         shot_alt="{name} 스크린샷 {i}/{n}", about_game="게임 소개", info="정보",
         i_dev="개발", i_platform="플랫폼", i_features="특징", i_download="다운로드",
         i_privacy="개인정보",
-        g_help="도움이 필요하세요?", g_bug="버그 신고 메일 쓰기", g_other="다른 문의 메일 쓰기",
-        g_faq="자주 묻는 질문 보기", g_delete="계정·데이터 삭제", g_mail="메일",
-        more_games="다른 게임", all_games="게임 전체 보기",
-        s_title="고객지원", s_eyebrow="Support", s_h1="무엇을 도와드릴까요?",
+        help="도움이 필요하세요?", h_bug="버그 신고", h_other="문의 메일",
+        more_games="다른 게임",
+        s_title="고객지원", s_h1="무엇을 도와드릴까요?",
         s_lede="먼저 자주 묻는 질문을 확인해 주세요. 해결되지 않으면 메일로 알려 주세요.",
         c_h="메일 문의",
         c_p="게임과 문의 종류를 고르면 제목과 적을 내용이 채워진 메일이 열립니다.",
@@ -277,28 +264,17 @@ STR = dict(
     ),
     en=dict(
         lang="en", skip="Skip to content", nav_label="Main menu", lang_label="Language",
-        menu_open="Open menu", menu_close="Close menu",
-        home="Home", games="Games", support="Support", about="About",
+        home="Home", games="Games", support="Support", about="About us",
         privacy="Privacy Policy", delete="Delete account", faq="FAQ",
-        mail_us="Email us", foot_nav="Footer menu", foot_studio="Studio",
-        store_long="Get it on Google Play", store_short="Google Play", more="Details",
-        hero_eyebrow="Sardina Studio · Mobile Games",
-        hero_lede="From {first} to {last} — mobile games made by Sardina Studio in Seoul.",
-        hero_cta="Browse games",
-        games_sub="{n} games on Google Play",
-        f_games="Games released", f_platform="Platform", f_city="Based in", f_mail="Contact",
-        help_h="Need a hand?",
-        help_p="FAQ, bug reports, payments and refunds, and account deletion — all in one place.",
-        help_cta="Go to Support", delete_cta="Delete your account",
-        crumbs="Breadcrumb", shots="Screenshots", prev="Previous screenshot",
-        next="Next screenshot", shot_alt="{name} screenshot {i} of {n}",
-        about_game="About the game", info="Info",
+        foot_nav="Footer menu", contact="Contact",
+        cta="See our games", store="Get it on Google Play",
+        shots="Screenshots", prev="Previous screenshot", next="Next screenshot",
+        shot_alt="{name} screenshot {i} of {n}", about_game="About the game", info="Info",
         i_dev="Developer", i_platform="Platform", i_features="Features",
         i_download="Download", i_privacy="Privacy",
-        g_help="Need a hand?", g_bug="Report a bug by email", g_other="Ask something else",
-        g_faq="Read the FAQ", g_delete="Delete account & data", g_mail="Email",
-        more_games="More games", all_games="See all games",
-        s_title="Support", s_eyebrow="Support", s_h1="How can we help?",
+        help="Need a hand?", h_bug="Report a bug", h_other="Email us",
+        more_games="More games",
+        s_title="Support", s_h1="How can we help?",
         s_lede="Please check the FAQ first. If it does not answer your question, email us.",
         c_h="Email us",
         c_p="Pick the game and the topic, and your mail app opens with the subject and "
@@ -378,29 +354,12 @@ def icon(name, size=20, cls="i"):
             f'focusable="false"><use href="#i-{name}"/></svg>')
 
 
-def released():
-    return [g for g in GAMES if g["store"]]
-
-
-# 아이콘 묶음 — 한 번 심고 장마다 가져다 쓴다(파일도 요청도 안 는다).
-# 남의 아이콘 세트를 베끼지 않고 단순한 선으로 그렸다. 안드로이드 로봇(CC-BY,
-# 출처 표기 필요)은 뺐다 — 표기 없이 쓰던 것을 이어 갈 이유가 없다.
+# 아이콘은 꼭 필요한 넷만 — 화살표 둘(스크린샷 앞뒤), 바깥 링크, 복사. 장식 그림은 안 쓴다.
 SPRITE = """<svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
-    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-    <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-    <symbol id="i-left" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-    <symbol id="i-right" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-    <symbol id="i-get" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
-    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
-    <symbol id="i-mail" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M4 7l8 6 8-6"/></g></symbol>
-    <symbol id="i-bug" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="8" height="12" rx="4"/><path d="M9.5 8a2.5 2.5 0 0 1 5 0M12 12v8M4 13h4M16 13h4M5 19l3-2M19 19l-3-2M5 7l3 2M19 7l-3 2"/></g></symbol>
-    <symbol id="i-card" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 10h18M7 15h4"/></g></symbol>
-    <symbol id="i-restore" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3L4 9.5"/><path d="M4 4.5v5h5"/><path d="M12 8.5V12l2.5 1.5"/></g></symbol>
-    <symbol id="i-trash" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9.5 7V4.5h5V7M6.5 7l1 12.5h9l1-12.5M10 11v5.5M14 11v5.5"/></g></symbol>
-    <symbol id="i-help" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.5a2.5 2.5 0 1 1 3.4 2.3c-.6.3-1 .9-1 1.6v.4M12 17h.01"/></g></symbol>
     <symbol id="i-copy" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8.5" y="8.5" width="11.5" height="11.5" rx="2"/><path d="M15.5 8.5V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v9.5a1 1 0 0 0 1 1h3.5"/></g></symbol>
   </defs>
 </svg>"""
@@ -411,12 +370,12 @@ def head(lang, title, desc, path, alt_path, noindex=False):
     """path / alt_path — 이 장과 짝 장의 파일 이름. hreflang 로 서로를 가리킨다."""
     ko_path, en_path = (path, alt_path) if lang == "ko" else (alt_path, path)
     lines = ['<meta charset="utf-8">',
-             '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">']
-    lines += [f"<title>{esc(title)}</title>",
-              f'<meta name="description" content="{esc(desc)}">']
+             '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">',
+             f"<title>{esc(title)}</title>",
+             f'<meta name="description" content="{esc(desc)}">']
     if noindex:
         lines.append('<meta name="robots" content="noindex">')
-    lines += ['<meta name="theme-color" content="#0b1020">',
+    lines += ['<meta name="theme-color" content="#ffffff">',
               '<meta name="color-scheme" content="light">']
     if not noindex:
         lines.append(f'<link rel="canonical" href="{abs_url(path)}">')
@@ -450,106 +409,61 @@ def head(lang, title, desc, path, alt_path, noindex=False):
     return "<head>\n" + "\n".join(lines) + "\n</head>"
 
 
-def lang_switch(lang, self_href, alt_href, cls="lang"):
+def lang_switch(lang, self_href, alt_href):
     # 지금 장의 짝으로 바로 간다 — 홈으로 튕기면 방침을 읽던 사람이 길을 잃는다
-    # (조사한 사이트 대부분이 홈으로 튕겼다. REDESIGN_NOTES.md).
+    # (참고한 국내 사이트 한 곳이 홈으로 튕겼다. REDESIGN_NOTES.md).
     ko_href, en_href = (self_href, alt_href) if lang == "ko" else (alt_href, self_href)
     cur_ko = ' aria-current="true"' if lang == "ko" else ""
     cur_en = ' aria-current="true"' if lang == "en" else ""
-    return (f'<div class="{cls}" role="group" aria-label="{STR[lang]["lang_label"]}">'
+    return (f'<div class="lang" role="group" aria-label="{STR[lang]["lang_label"]}">'
             f'<a href="{ko_href}" hreflang="ko" lang="ko"{cur_ko}>KO</a>'
             f'<a href="{en_href}" hreflang="en" lang="en"{cur_en}>EN</a></div>')
 
 
 def header(lang, here, self_href, alt_href):
+    # 메뉴는 둘뿐이다(게임 · 고객지원). 폭이 좁아도 한 줄에 들어가므로 햄버거 단추가 없다
+    # — 단추 하나를 눌러야 메뉴가 보이는 것보다 늘 보이는 쪽이 덜 헷갈린다.
     s = STR[lang]
-    rows = []
-    for g in GAMES:
-        cur = ' aria-current="page"' if here == g["slug"] else ""
-        rows.append(
-            f'              <li><a href="{page_name(g["slug"], lang)}"{cur}>'
-            f'<img src="assets/{g["icon"]}" alt="" width="40" height="40" loading="lazy">'
-            f'<span><b>{esc(g[lang]["name"])}</b>'
-            f'<small>{esc(" · ".join(g[lang]["facts"][:2]))}</small></span></a></li>')
-    support_cur = ' aria-current="page"' if here == "support" else ""
-    games_cls = ' class="is-here"' if here in [g["slug"] for g in GAMES] else ""
-    return f"""<header class="site-header" data-header>
+    g_cur = ' class="is-here"' if here in [g["slug"] for g in GAMES] else ""
+    sup_cur = ' aria-current="page"' if here == "support" else ""
+    return f"""<header class="site-header">
   <div class="bar">
     <a class="brand" href="{home_href(lang)}">
-      <img src="assets/logo_white.png" alt="" width="40" height="33">
-      <span>Sardina Studio</span>
+      <img src="assets/logo_ink.png" alt="" width="44" height="36">
+      <span class="brand-name">Sardina Studio</span>
     </a>
-    <nav class="nav" id="site-nav" aria-label="{s['nav_label']}">
-      <ul class="nav-list">
-        <li class="nav-games">
-          <a href="{index_href(lang)}#games"{games_cls}>{s['games']}{icon('down', 16, 'i chev')}</a>
-          <div class="nav-panel">
-            <ul class="nav-game-list">
-{chr(10).join(rows)}
-            </ul>
-          </div>
-        </li>
-        <li><a href="{page_name('support', lang)}"{support_cur}>{s['support']}</a></li>
-        <li><a href="{index_href(lang)}#about">{s['about']}</a></li>
-      </ul>
+    <nav class="nav" aria-label="{s['nav_label']}">
+      <a href="{index_href(lang)}#games"{g_cur}>{s['games']}</a>
+      <a href="{page_name('support', lang)}"{sup_cur}>{s['support']}</a>
     </nav>
     {lang_switch(lang, self_href, alt_href)}
-    <button class="menu-btn" type="button" aria-controls="site-nav" aria-expanded="false"
-            aria-label="{s['menu_open']}" data-open-label="{s['menu_open']}" data-close-label="{s['menu_close']}">
-      {icon('menu', 22, 'i i-open')}{icon('close', 22, 'i i-close')}
-    </button>
   </div>
 </header>"""
 
 
 def footer(lang, self_href, alt_href):
     s = STR[lang]
-    st = STUDIO[lang]
-    games = "".join(
-        f'<li><a href="{page_name(g["slug"], lang)}">{esc(g[lang]["name"])}</a></li>'
-        for g in GAMES)
-    sns = ""
-    if STUDIO["sns"]:
-        sns = '<ul class="ft-sns">' + "".join(
-            f'<li><a href="{esc(u)}" rel="noopener">{esc(n)}</a></li>'
-            for n, u in STUDIO["sns"]) + "</ul>"
+    sns = "".join(f'<a href="{esc(u)}" rel="noopener">{esc(n)}</a>' for n, u in STUDIO["sns"])
     biz = [(ko if lang == "ko" else en, v) for ko, en, v in STUDIO["biz"] if v]
     biz_html = ""
     if biz:
-        biz_html = ('<p class="ft-biz">' + " · ".join(
+        biz_html = ('\n    <p class="ft-biz">' + " · ".join(
             f"{esc(k)} {esc(v)}" for k, v in biz) + "</p>")
-    sup = page_name("support", lang)
     # 계정 삭제는 바닥글에 둔다 — 구글이 «눈에 띄고 찾기 쉬울 것» 을 요구한다
     # (`delete_page` 머리말). 모든 장에 깔리는 자리가 여기다.
     # 개인정보처리방침은 굵게 — 국내 사이트 관행이고, 찾는 사람이 바로 본다.
     return f"""<footer class="site-footer">
-  <div class="ft-inner">
-    <div class="ft-brand">
-      <a class="brand" href="{home_href(lang)}"><img src="assets/logo_white.png" alt="" width="40" height="33" loading="lazy"><span>Sardina Studio</span></a>
-      <p>{esc(st['tag'])}</p>
-      <p><a class="ft-mail" href="mailto:{MAIL}">{icon('mail', 18)}{MAIL}</a></p>
-      {sns}
+  <div class="ft">
+    <div class="ft-row">
+      <nav class="ft-links" aria-label="{s['foot_nav']}">
+        <a href="{page_name('support', lang)}">{s['support']}</a>
+        <a class="ft-strong" href="{page_name('privacy', lang)}">{s['privacy']}</a>
+        <a href="{page_name('delete-account', lang)}">{s['delete']}</a>
+        <a href="mailto:{MAIL}">{MAIL}</a>{sns}
+      </nav>
+      {lang_switch(lang, self_href, alt_href)}
     </div>
-    <nav class="ft-cols" aria-label="{s['foot_nav']}">
-      <div><h2>{s['games']}</h2><ul>{games}</ul></div>
-      <div><h2>{s['support']}</h2><ul>
-        <li><a href="{sup}">{s['support']}</a></li>
-        <li><a href="{sup}#faq">{s['faq']}</a></li>
-        <li><a href="{page_name('delete-account', lang)}">{s['delete']}</a></li>
-        <li><a href="{sup}#contact">{s['mail_us']}</a></li>
-      </ul></div>
-      <div><h2>{s['foot_studio']}</h2><ul>
-        <li><a href="{index_href(lang)}#about">{s['about']}</a></li>
-        <li><a class="ft-strong" href="{page_name('privacy', lang)}">{s['privacy']}</a></li>
-      </ul></div>
-    </nav>
-  </div>
-  <div class="ft-bottom">
-    <div>
-      <p>© {YEAR} Sardina Studio · {esc(STUDIO['en']['city'])}</p>
-      {biz_html}
-    </div>
-    {lang_switch(lang, self_href, alt_href, 'lang lang-foot')}
+    <p class="ft-copy">© {YEAR} Sardina Studio</p>{biz_html}
   </div>
 </footer>"""
 
@@ -562,7 +476,6 @@ def shell(lang, *, title, desc, path, alt, body, here=None, body_class="", noind
     else:
         self_href = home_href(lang) if path.startswith("index") else path
         alt_href = home_href(other(lang)) if alt.startswith("index") else alt
-    skip = f'<a class="skip" href="#main">{s["skip"]}</a>\n'
     if 'id="main"' not in body:
         # 손글 본문(<main class="page">)은 건드리지 않으므로 건너뛰기 표적을 앞에 둔다
         body = '<div id="main" tabindex="-1"></div>\n' + body
@@ -570,7 +483,8 @@ def shell(lang, *, title, desc, path, alt, body, here=None, body_class="", noind
 <html lang="{s['lang']}" class="no-js">
 {head(lang, title, desc, path, alt, noindex=noindex)}
 <body class="{body_class}">
-{skip}{SPRITE}
+<a class="skip" href="#main">{s['skip']}</a>
+{SPRITE}
 
 {header(lang, here, self_href, alt_href)}
 
@@ -582,143 +496,62 @@ def shell(lang, *, title, desc, path, alt, body, here=None, body_class="", noind
 """
 
 
-# ── 조각 ─────────────────────────────────────────────────────────────────
-def store_btn(g, lang, big=False):
-    s = STR[lang]
-    if not g["store"]:
-        return ""
-    label = s["store_long"] if big else s["store_short"]
-    size = " btn-lg" if big else " btn-sm"
-    # 구글 공식 배지 그림을 흉내 내지 않는다(배지는 고쳐 쓰지 말라는 지침) — 글자 단추.
-    return (f'<a class="btn btn-store{size}" href="{g["store"]}" rel="noopener">'
-            f'{icon("get", 18)}<span>{label}</span>'
-            f'<span class="sr-only"> — {esc(g[lang]["name"])}</span></a>')
-
-
-def tags(items):
-    return '<ul class="tags">' + "".join(f"<li>{esc(t)}</li>" for t in items) + "</ul>"
-
-
-def game_card(g, lang, featured):
-    s = STR[lang]
-    t = g[lang]
-    blurb = f'<p class="gc-blurb">{esc(t["blurb"])}</p>' if featured else ""
-    cls = "game-card is-featured" if featured else "game-card"
-    return f"""      <article class="{cls}" style="--c:{g['accent']};--icon:url(assets/{g['icon']})">
-        <div class="gc-cover"><img class="gc-icon" src="assets/{g['icon']}" alt="" width="160" height="160"></div>
-        <div class="gc-body">
-          {tags(t['facts'])}
-          <h3><a class="gc-link" href="{page_name(g['slug'], lang)}">{esc(t['name'])}</a></h3>
-          <p class="gc-tagline">{esc(t['tagline'])}</p>
-          {blurb}
-          <div class="gc-actions">
-            {store_btn(g, lang)}
-            <span class="gc-more" aria-hidden="true">{s['more']}{icon('arrow', 16)}</span>
-          </div>
-        </div>
-      </article>"""
-
-
-def orbit(lang):
-    # 게임 아이콘을 로고 둘레에 고르게 둔다 — 게임 수가 바뀌면 각도가 저절로 다시 나뉜다.
-    n = len(GAMES)
-    items = []
-    for i, g in enumerate(GAMES):
-        a = math.radians(-90 + i * 360 / n)
-        x, y = 50 + 39 * math.cos(a), 50 + 39 * math.sin(a)
-        r = (-8, 6, -4, 7, -6, 5)[i % 6]
-        items.append(
-            f'      <li style="--x:{x:.1f}%;--y:{y:.1f}%;--r:{r}deg;--d:{-i * 1.3:.1f}s">'
-            f'<a href="{page_name(g["slug"], lang)}"><img src="assets/{g["icon"]}" '
-            f'alt="{esc(g[lang]["name"])}" width="160" height="160"></a></li>')
-    return f"""<div class="orbit">
-    <div class="orbit-core"><img src="assets/logo_white.png" alt="" width="176" height="144"></div>
-    <ul>
-{chr(10).join(items)}
-    </ul>
-  </div>"""
-
-
 # ── 홈 ───────────────────────────────────────────────────────────────────
+# 큰 문장 하나 · 단추 하나 · 그림 한 줄(아이콘) → 같은 모양의 게임 타일 → 짧은 소개.
 def index_page(lang):
     s = STR[lang]
     st = STUDIO[lang]
-    n = len(released())
-    plats = sorted({p for g in GAMES for p in g["platforms"]})
-    cards = "\n".join(game_card(g, lang, i == 0) for i, g in enumerate(GAMES))
-    lede = s["hero_lede"].format(first=GAMES[0][lang]["name"], last=GAMES[-1][lang]["name"])
-    sup = page_name("support", lang)
+    # 히어로의 아이콘 줄은 그림이다(아래 타일이 같은 링크를 갖는다) — 읽기 프로그램에는 숨긴다
+    icons = "\n".join(
+        f'      <li><img src="assets/{g["icon"]}" alt="" width="160" height="160"></li>'
+        for g in GAMES)
+    tiles = "\n".join(
+        f"""      <li><a class="tile" href="{page_name(g['slug'], lang)}">
+        <img class="tile-icon" src="assets/{g['icon']}" alt="" width="160" height="160" loading="lazy">
+        <span class="tile-text"><span class="tile-name">{esc(g[lang]['name'])}</span>
+        <span class="tile-line">{esc(g[lang]['tagline'])}</span></span></a></li>"""
+        for g in GAMES)
     body = f"""<main id="main">
 
-<section class="home-hero">
-  <div class="container hh-grid">
-    <div class="hh-text">
-      <p class="eyebrow">{s['hero_eyebrow']}</p>
-      <h1>{st['hero_title']}</h1>
-      <p class="hh-lede">{esc(lede)}</p>
-      <div class="cta-row">
-        <a class="btn btn-light btn-lg" href="#games">{s['hero_cta']}{icon('arrow', 18)}</a>
-        <a class="btn btn-ghost-light btn-lg" href="{sup}">{s['support']}</a>
-      </div>
-    </div>
-  {orbit(lang)}
+<section class="hero">
+  <div class="container hero-inner">
+    <h1>{st['hero']}</h1>
+    <p class="lede">{esc(st['lede'])}</p>
+    <a class="btn btn-primary btn-lg" href="#games">{s['cta']}</a>
+    <ul class="icon-row" aria-hidden="true">
+{icons}
+    </ul>
   </div>
 </section>
 
 <section class="section" id="games" aria-labelledby="games-h">
   <div class="container">
-    <div class="sec-head">
-      <div><p class="eyebrow">Games</p><h2 id="games-h">{s['games']}</h2></div>
-      <p class="sec-sub">{s['games_sub'].format(n=n)}</p>
-    </div>
-    <div class="game-grid">
-{cards}
-    </div>
+    <h2 class="sec-title" id="games-h">{s['games']}</h2>
+    <ul class="tiles">
+{tiles}
+    </ul>
   </div>
 </section>
 
 <section class="section about" id="about" aria-labelledby="about-h">
-  <div class="container about-grid">
-    <div class="about-mark"><img src="assets/logo_white.png" alt="" width="176" height="144" loading="lazy"></div>
-    <div>
-      <p class="eyebrow">About</p>
-      <h2 id="about-h">{s['about']}</h2>
-      <p class="about-p">{esc(st['about'].format(n=n))}</p>
-      <dl class="facts-grid">
-        <div><dt>{s['f_games']}</dt><dd>{n}</dd></div>
-        <div><dt>{s['f_platform']}</dt><dd>{esc(' · '.join(plats))}</dd></div>
-        <div><dt>{s['f_city']}</dt><dd>{esc(st['city'])}</dd></div>
-        <div class="wide" id="contact"><dt>{s['f_mail']}</dt><dd><a href="mailto:{MAIL}">{MAIL}</a></dd></div>
-      </dl>
-    </div>
-  </div>
-</section>
-
-<section class="section section-tight" aria-labelledby="help-h">
-  <div class="container">
-    <div class="help-band">
-      <div>
-        <h2 id="help-h">{s['help_h']}</h2>
-        <p>{s['help_p']}</p>
-      </div>
-      <div class="cta-row">
-        <a class="btn btn-light" href="{sup}">{s['help_cta']}{icon('arrow', 18)}</a>
-        <a class="btn btn-ghost-light" href="{page_name('delete-account', lang)}">{s['delete_cta']}</a>
-      </div>
-    </div>
+  <div class="container narrow">
+    <h2 class="sec-title" id="about-h">{s['about']}</h2>
+    <p class="about-p">{esc(st['about'])}</p>
+    <p class="about-mail" id="contact">{s['contact']} <a href="mailto:{MAIL}">{MAIL}</a></p>
   </div>
 </section>
 
 </main>"""
     names = " · ".join(g[lang]["name"] for g in GAMES)
-    desc = (f"Sardina Studio — {names}. 서울의 모바일 게임 스튜디오." if lang == "ko"
-            else f"Sardina Studio — {names}. A mobile game studio in Seoul.")
+    desc = (f"Sardina Studio — {names}. 모바일 게임 스튜디오." if lang == "ko"
+            else f"Sardina Studio — {names}. A mobile game studio.")
     return shell(lang, title="Sardina Studio", desc=desc,
                  path=index_href(lang), alt=index_href(other(lang)), body=body,
                  here="home", body_class="p-home")
 
 
 # ── 게임 한 쪽 ───────────────────────────────────────────────────────────
+# 히어로(아이콘 · 이름 · 한 줄 · 단추 하나) → 스크린샷 띠 → 소개 → 정보 → 도움 링크 → 다른 게임.
 def srcset(u, cand):
     return ", ".join(f"{u}=w{c}-rj {c}w" for c in cand)
 
@@ -728,13 +561,13 @@ def shot_img(g, u, i, n, lang, eager=False):
     #  · -rj = JPEG. 안 붙이면 PNG 를 주는데 같은 장이 620KB vs 114KB 다
     #    (-rw 는 무손실 WebP 라 오히려 162KB. 이 CDN 에서는 JPEG 가 답이다)
     #  · srcset 으로 화면 크기·배율에 맞는 장만 받는다
-    #  · sizes 는 style.css 의 .carousel-track img 높이와 짝이다 — 한쪽만 바꾸면 흐려지거나 커진다
+    #  · sizes 는 style.css 의 .shot-track img 크기와 짝이다 — 한쪽만 바꾸면 흐려지거나 커진다
     wide = g["shot_wide"]
     w, h = (540, 306) if wide else (540, 960)
     cand = (400, 540, 800, 1080) if wide else (270, 400, 540, 720)
-    sizes = "(max-width: 640px) 82vw, 530px" if wide else "(max-width: 640px) 214px, 248px"
+    sizes = "(max-width: 640px) 84vw, 560px" if wide else "(max-width: 640px) 203px, 248px"
     alt = STR[lang]["shot_alt"].format(name=g[lang]["name"], i=i, n=n)
-    # 첫 장은 좁은 화면에서 첫 화면 안에 든다 — 지연 로드하지 않는다
+    # 첫 장은 첫 화면 안에 든다 — 지연 로드하지 않는다
     load = "" if eager else 'loading="lazy" '
     return (f'<img src="{u}=w{cand[1]}-rj" srcset="{srcset(u, cand)}" sizes="{sizes}" '
             f'alt="{esc(alt)}" width="{w}" height="{h}" {load}decoding="async">')
@@ -746,119 +579,79 @@ def game_page(g, lang):
     shots = g["shots"]
     n = len(shots)
 
-    if shots:
-        # 넓은 화면의 큰 그림. 좁은 화면에서는 CSS 가 숨기므로 lazy 로 둬야 안 받는다
-        # (숨긴 그림도 eager 면 받는다). 넓은 화면에서는 첫 화면 안이라 곧바로 온다.
-        u = shots[0]
-        wide = g["shot_wide"]
-        cand = (540, 800, 1080) if wide else (400, 540, 720)
-        sizes = "(max-width: 640px) 90vw, 560px" if wide else "(max-width: 640px) 70vw, 300px"
-        alt = esc(s["shot_alt"].format(name=t["name"], i=1, n=n))
-        kind = "landscape" if wide else "portrait"
-        art = (f'<div class="device {kind}"><img src="{u}=w{cand[1]}-rj" '
-               f'srcset="{srcset(u, cand)}" sizes="{sizes}" alt="{alt}" '
-               f'width="540" height="{306 if wide else 960}" loading="lazy" decoding="async"></div>')
-    else:
-        # 스크린샷이 없으면 아이콘을 크게 — 빈 칸을 남기지 않는다
-        art = f'<div class="stage"><img src="assets/{g["icon"]}" alt="" width="160" height="160"></div>'
+    store = ""
+    if g["store"]:
+        # 구글 공식 배지 그림을 흉내 내지 않는다(배지는 고쳐 쓰지 말라는 지침) — 글자 단추.
+        store = (f'<a class="btn btn-primary" href="{g["store"]}" rel="noopener">{s["store"]}'
+                 f'<span class="sr-only"> — {esc(t["name"])}</span></a>')
 
-    carousel = ""
+    strip = ""
     if shots:
-        imgs = "\n".join(f"        <li>{shot_img(g, u, i + 1, n, lang, eager=(i == 0))}</li>"
+        imgs = "\n".join(f"      <li>{shot_img(g, u, i + 1, n, lang, eager=(i == 0))}</li>"
                          for i, u in enumerate(shots))
-        track_cls = "carousel-track landscape" if g["shot_wide"] else "carousel-track"
-        carousel = f"""
-<section class="section section-tight" aria-labelledby="shots-h">
-  <div class="container sec-head">
-    <h2 id="shots-h">{s['shots']}</h2>
-    <div class="carousel-nav">
-      <button type="button" class="round" data-dir="-1" aria-label="{s['prev']}" aria-controls="shots-track">{icon('left', 20)}</button>
-      <button type="button" class="round" data-dir="1" aria-label="{s['next']}" aria-controls="shots-track">{icon('right', 20)}</button>
+        track = "shot-track wide" if g["shot_wide"] else "shot-track"
+        strip = f"""
+<section class="shots" aria-labelledby="shots-h">
+  <div class="container shots-head">
+    <h2 class="sub-title" id="shots-h">{s['shots']}</h2>
+    <div class="shot-nav">
+      <button type="button" class="nav-btn" data-dir="-1" aria-label="{s['prev']}" aria-controls="shots-track">{icon('left', 18)}</button>
+      <button type="button" class="nav-btn" data-dir="1" aria-label="{s['next']}" aria-controls="shots-track">{icon('right', 18)}</button>
     </div>
   </div>
-  <ul class="{track_cls}" id="shots-track" tabindex="0" aria-label="{s['shots']}">
+  <ul class="{track}" id="shots-track" tabindex="0" aria-label="{s['shots']}">
 {imgs}
   </ul>
 </section>
 """
 
     plats = " · ".join(g["platforms"])
-    store_row = ""
+    rows = [(s["i_dev"], "Sardina Studio"), (s["i_platform"], esc(plats)),
+            (s["i_features"], esc(" · ".join(t["facts"])))]
     if g["store"]:
-        store_row = (f'<div><dt>{s["i_download"]}</dt><dd><a href="{g["store"]}" rel="noopener">'
-                     f'Google Play{icon("ext", 14)}</a></dd></div>')
+        rows.append((s["i_download"],
+                     f'<a href="{g["store"]}" rel="noopener">Google Play{icon("ext", 14)}</a>'))
+    rows.append((s["i_privacy"], f'<a href="{page_name("privacy", lang)}">{s["privacy"]}</a>'))
+    info = "\n".join(f"      <div><dt>{k}</dt><dd>{v}</dd></div>" for k, v in rows)
     others = "\n".join(
-        f"""      <li><a class="mini-card" href="{page_name(o['slug'], lang)}" style="--c:{o['accent']}">
-        <img src="assets/{o['icon']}" alt="" width="160" height="160" loading="lazy">
-        <span><b>{esc(o[lang]['name'])}</b><small>{esc(o[lang]['tagline'])}</small></span></a></li>"""
+        f"""      <li><a href="{page_name(o['slug'], lang)}"><img src="assets/{o['icon']}" alt="" width="160" height="160" loading="lazy"><span>{esc(o[lang]['name'])}</span></a></li>"""
         for o in GAMES if o is not g)
 
     body = f"""<main id="main">
 
-<section class="game-hero" style="--c:{g['accent']}">
-  <div class="container gh-grid">
-    <div class="gh-text">
-      <nav class="crumbs" aria-label="{s['crumbs']}"><ol>
-        <li><a href="{home_href(lang)}">{s['home']}</a></li>
-        <li><a href="{index_href(lang)}#games">{s['games']}</a></li>
-        <li aria-current="page">{esc(t['name'])}</li>
-      </ol></nav>
-      <div class="gh-title">
-        <img class="gh-icon" src="assets/{g['icon']}" alt="" width="160" height="160">
-        <div>
-          <h1>{esc(t['name'])}</h1>
-          <p class="gh-dev">Sardina Studio · {plats}</p>
-        </div>
-      </div>
-      <p class="gh-tagline">{esc(t['tagline'])}</p>
-      {tags(t['facts'])}
-      <div class="cta-row">
-        {store_btn(g, lang, big=True)}
-        <a class="btn btn-ghost btn-lg" href="#help">{icon('help', 18)}{s['support']}</a>
-      </div>
+<section class="g-hero">
+  <div class="container g-head">
+    <img class="g-icon" src="assets/{g['icon']}" alt="" width="160" height="160">
+    <div class="g-text">
+      <h1>{esc(t['name'])}</h1>
+      <p class="g-line">{esc(t['tagline'])}</p>
+      {store}
     </div>
-    <div class="gh-art">{art}</div>
   </div>
 </section>
-{carousel}
-<section class="section section-tight">
-  <div class="container gd-grid">
-    <article class="gd-about">
-      <h2>{s['about_game']}</h2>
-      <p>{esc(t['blurb'])}</p>
-    </article>
-    <aside class="gd-side" style="--c:{g['accent']}">
-      <div class="info-card">
-        <h2>{s['info']}</h2>
-        <dl class="info-list">
-          <div><dt>{s['i_dev']}</dt><dd>Sardina Studio</dd></div>
-          <div><dt>{s['i_platform']}</dt><dd>{plats}</dd></div>
-          <div><dt>{s['i_features']}</dt><dd>{esc(' · '.join(t['facts']))}</dd></div>
-          {store_row}
-          <div><dt>{s['i_privacy']}</dt><dd><a href="{page_name('privacy', lang)}">{s['privacy']}</a></dd></div>
-        </dl>
-      </div>
-      <div class="info-card" id="help">
-        <h2>{s['g_help']}</h2>
-        <ul class="help-links">
-          <li><a href="{topic_mail(lang, 'bug', t['name'])}"><span class="i-wrap">{icon('bug')}</span>{s['g_bug']}</a></li>
-          <li><a href="{topic_mail(lang, 'other', t['name'])}"><span class="i-wrap">{icon('mail')}</span>{s['g_other']}</a></li>
-          <li><a href="{page_name('support', lang)}#faq"><span class="i-wrap">{icon('help')}</span>{s['g_faq']}</a></li>
-          <li><a href="{page_name('delete-account', lang)}"><span class="i-wrap">{icon('trash')}</span>{s['g_delete']}</a></li>
-        </ul>
-        <p class="help-mail">{s['g_mail']} <a href="mailto:{MAIL}">{MAIL}</a></p>
-      </div>
-    </aside>
+{strip}
+<section class="section-sm">
+  <div class="container narrow">
+    <h2 class="sub-title">{s['about_game']}</h2>
+    <p class="g-blurb">{esc(t['blurb'])}</p>
+
+    <h2 class="sub-title">{s['info']}</h2>
+    <dl class="info">
+{info}
+    </dl>
+
+    <p class="help-row" id="help"><span>{s['help']}</span>
+      <a href="{topic_mail(lang, 'bug', t['name'])}">{s['h_bug']}</a>
+      <a href="{topic_mail(lang, 'other', t['name'])}">{s['h_other']}</a>
+      <a href="{page_name('support', lang)}#faq">{s['faq']}</a>
+      <a href="{page_name('delete-account', lang)}">{s['delete']}</a></p>
   </div>
 </section>
 
-<section class="section section-tight" aria-labelledby="more-h">
-  <div class="container">
-    <div class="sec-head">
-      <h2 id="more-h">{s['more_games']}</h2>
-      <a class="link-arrow" href="{index_href(lang)}#games">{s['all_games']}{icon('arrow', 16)}</a>
-    </div>
-    <ul class="more-grid">
+<section class="section-sm more" aria-labelledby="more-h">
+  <div class="container narrow">
+    <h2 class="sub-title" id="more-h">{s['more_games']}</h2>
+    <ul class="mini-row">
 {others}
     </ul>
   </div>
@@ -872,7 +665,7 @@ def game_page(g, lang):
 
 # ── 고객지원 ─────────────────────────────────────────────────────────────
 def faq(lang):
-    """자주 묻는 질문 — (묶음 id, 아이콘, 제목, 한 줄 설명, [(질문 id, 질문, 답 HTML)]).
+    """자주 묻는 질문 — (묶음 id, 제목, [(질문 id, 질문, 답 HTML)]).
 
     답은 이미 공개한 문서(개인정보처리방침·계정 삭제)와 구글 공식 안내에서만 가져왔다.
     우리가 지킬지 모르는 약속(답장 기한·환불 보장·복구 보장)은 안 적는다
@@ -881,21 +674,21 @@ def faq(lang):
     bug_mail, pay_mail, rest_mail = (topic_mail(lang, k) for k in ("bug", "payment", "restore"))
     if lang == "ko":
         return [
-            ("bug", "bug", "버그·오류", "멈춤 · 오류 · 이상한 동작", [
+            ("bug", "버그·오류", [
                 ("bug-report", "게임이 멈추거나 이상하게 동작해요.",
                  f"""<p>아래 내용을 함께 보내 주시면 원인을 찾는 데 큰 도움이 됩니다.</p>
 <ul><li>게임 이름</li><li>기기 모델명과 Android 버전</li><li>앱 버전</li>
 <li>언제, 무엇을 하다가 생겼는지</li><li>스크린샷이나 화면 녹화(있으면)</li></ul>
-<p><a class="btn btn-primary btn-sm" href="{bug_mail}">{icon('mail', 16)}버그 신고 메일 쓰기</a></p>"""),
+<p><a href="{bug_mail}">버그 신고 메일 쓰기</a></p>"""),
                 ("app-version", "앱 버전은 어디서 보나요?",
                  "<p>Android <b>설정 › 애플리케이션</b>에서 게임을 고르면 화면 아래쪽에 버전이 "
                  "나옵니다. 기기마다 메뉴 이름은 조금 다를 수 있습니다.</p>"),
             ]),
-            ("payment", "card", "결제·환불", "결제 누락 · 환불", [
+            ("payment", "결제·환불", [
                 ("missing-item", "결제했는데 아이템이 들어오지 않았어요.",
                  f"""<p>Google Play 영수증 메일에 있는 <b>주문 번호</b>와 게임 이름, 구매한 날짜와
 시각을 적어 메일로 보내 주세요.</p>
-<p><a class="btn btn-primary btn-sm" href="{pay_mail}">{icon('mail', 16)}결제 문의 메일 쓰기</a></p>"""),
+<p><a href="{pay_mail}">결제 문의 메일 쓰기</a></p>"""),
                 ("refund", "환불받고 싶어요.",
                  f"""<p>결제는 Google Play 가 처리하며, 스튜디오는 카드 정보를 받지 않습니다.
 환불은 Google Play 고객센터의 <a href="{REFUND_URL['ko']}" rel="noopener">«Google Play에서 환불 요청하기»</a>
@@ -903,19 +696,18 @@ def faq(lang):
 <p>Google 은 구매한 지 48시간이 지난 항목은 개발자에게 문의하라고 안내합니다. 이때는
 주문 번호를 적어 메일로 보내 주세요.</p>"""),
             ]),
-            ("restore", "restore", "데이터 복구", "기기 변경 · 앱 재설치", [
+            ("restore", "데이터 복구", [
                 ("lost-progress", "기기를 바꾸거나 앱을 지웠더니 기록이 사라졌어요.",
                  f"""<p>서버 백업은 <b>구글 계정을 연결한 경우에만</b> 이루어집니다. 연결하지 않았다면
 기록은 기기에만 저장되어, 앱을 지우면 함께 사라집니다
 (<a href="{priv}#s3">개인정보처리방침 3항</a>).</p>
 <p>구글 계정을 연결해 두셨는데 기록이 보이지 않으면 게임 이름과 상황을 적어 메일로 알려 주세요.</p>
-<p><a class="btn btn-primary btn-sm" href="{rest_mail}">{icon('mail', 16)}복구 문의 메일 쓰기</a></p>"""),
+<p><a href="{rest_mail}">복구 문의 메일 쓰기</a></p>"""),
             ]),
-            ("account", "trash", "계정 삭제·개인정보", "계정과 데이터 지우기 · 광고", [
+            ("account", "계정 삭제·개인정보", [
                 ("delete", "계정과 데이터를 지우고 싶어요.",
                  f"""<p>요청하는 법과 지워지는 것·남는 것을 <a href="{dele}">계정 삭제</a> 안내에
-정리해 두었습니다.</p>
-<p><a class="btn btn-primary btn-sm" href="{dele}">계정 삭제 안내 보기{icon('arrow', 16)}</a></p>"""),
+정리해 두었습니다.</p>"""),
                 ("ads", "맞춤 광고를 받고 싶지 않아요.",
                  f"""<p>Android <b>설정 › 개인정보 보호 › 광고</b>에서 광고 ID 를 삭제하거나 재설정할 수
 있습니다. 자세한 내용은 <a href="{priv}#s7">개인정보처리방침 7항</a>을 보세요.</p>"""),
@@ -926,21 +718,21 @@ def faq(lang):
             ]),
         ]
     return [
-        ("bug", "bug", "Bugs & errors", "Freezes · errors · odd behaviour", [
+        ("bug", "Bugs & errors", [
             ("bug-report", "The game freezes or behaves oddly.",
              f"""<p>Sending these along helps us find the cause much faster:</p>
 <ul><li>Game name</li><li>Device model and Android version</li><li>App version</li>
 <li>When it happened and what you were doing</li><li>A screenshot or screen recording, if you have one</li></ul>
-<p><a class="btn btn-primary btn-sm" href="{bug_mail}">{icon('mail', 16)}Email a bug report</a></p>"""),
+<p><a href="{bug_mail}">Email a bug report</a></p>"""),
             ("app-version", "Where do I find the app version?",
              "<p>In Android <b>Settings › Apps</b>, pick the game — the version is shown near the "
              "bottom. Menu names can differ slightly between devices.</p>"),
         ]),
-        ("payment", "card", "Payments & refunds", "Missing items · refunds", [
+        ("payment", "Payments & refunds", [
             ("missing-item", "I paid but did not receive my item.",
              f"""<p>Email us the <b>order number</b> from your Google Play receipt, the game name, and the
 date and time of purchase.</p>
-<p><a class="btn btn-primary btn-sm" href="{pay_mail}">{icon('mail', 16)}Email about a payment</a></p>"""),
+<p><a href="{pay_mail}">Email about a payment</a></p>"""),
             ("refund", "I would like a refund.",
              f"""<p>Payments are processed by Google Play; the studio never receives card details.
 You can request a refund by following Google Play Help's
@@ -948,20 +740,19 @@ You can request a refund by following Google Play Help's
 <p>Google asks you to contact the developer for items bought more than 48 hours ago. In that
 case, email us with your order number.</p>"""),
         ]),
-        ("restore", "restore", "Data recovery", "New phone · reinstalled", [
+        ("restore", "Data recovery", [
             ("lost-progress", "I changed phones or reinstalled, and my progress is gone.",
              f"""<p>Cloud backup only happens <b>if you linked a Google account</b>. Without it, progress
 is kept on the device only and is removed when the app is uninstalled
 (<a href="{priv}#s3">Privacy Policy, section 3</a>).</p>
 <p>If you did link a Google account and still cannot see your progress, email us with the game
 name and what happened.</p>
-<p><a class="btn btn-primary btn-sm" href="{rest_mail}">{icon('mail', 16)}Email about recovery</a></p>"""),
+<p><a href="{rest_mail}">Email about recovery</a></p>"""),
         ]),
-        ("account", "trash", "Account & privacy", "Delete your data · ads", [
+        ("account", "Account & privacy", [
             ("delete", "I want to delete my account and data.",
              f"""<p>How to ask, and what is deleted or kept, is set out on the
-<a href="{dele}">Delete your account</a> page.</p>
-<p><a class="btn btn-primary btn-sm" href="{dele}">Open account deletion{icon('arrow', 16)}</a></p>"""),
+<a href="{dele}">Delete your account</a> page.</p>"""),
             ("ads", "I do not want personalised ads.",
              f"""<p>On Android, go to <b>Settings › Privacy › Ads</b> to delete or reset your advertising
 ID. See <a href="{priv}#s7">Privacy Policy, section 7</a> for details.</p>"""),
@@ -976,26 +767,23 @@ listing.</p>"""),
 def support_page(lang):
     s = STR[lang]
     groups = faq(lang)
-    topic_cards = "\n".join(
-        f'      <li><a class="topic" href="#{gid}"><span class="i-wrap">{icon(ic, 22)}</span>'
-        f'<b>{esc(title)}</b><small>{esc(sub)}</small></a></li>'
-        for gid, ic, title, sub, _ in groups)
+    jump = "\n".join(f'      <a href="#{gid}">{esc(title)}</a>' for gid, title, _ in groups)
     faq_html = []
-    for gid, ic, title, _, items in groups:
+    for gid, title, items in groups:
         qs = "\n".join(
             f"""      <details class="faq" id="{qid}">
         <summary>{esc(q)}</summary>
         <div class="faq-body">{a}</div>
       </details>""" for qid, q, a in items)
         faq_html.append(f"""    <div class="faq-group" id="{gid}">
-      <h3><span class="i-wrap">{icon(ic, 18)}</span>{esc(title)}</h3>
+      <h3>{esc(title)}</h3>
 {qs}
     </div>""")
     game_opts = "\n".join(
-        f'            <option value="{esc(g[lang]["name"])}">{esc(g[lang]["name"])}</option>'
+        f'          <option value="{esc(g[lang]["name"])}">{esc(g[lang]["name"])}</option>'
         for g in GAMES)
     topic_opts = "\n".join(
-        f'            <option value="{k}">{esc(v[0])}</option>' for k, v in s["topics"].items())
+        f'          <option value="{k}">{esc(v[0])}</option>' for k, v in s["topics"].items())
     # 메일 틀은 파이썬 표 하나에서 나온다 — JS 에 따로 적으면 두 벌이 되어 어긋난다
     cfg = json.dumps(dict(
         mail=MAIL,
@@ -1006,32 +794,28 @@ def support_page(lang):
 
     body = f"""<main id="main">
 
-<section class="page-hero">
+<section class="page-head">
   <div class="container">
-    <nav class="crumbs" aria-label="{s['crumbs']}"><ol>
-      <li><a href="{home_href(lang)}">{s['home']}</a></li>
-      <li aria-current="page">{s['support']}</li>
-    </ol></nav>
-    <p class="eyebrow">{s['s_eyebrow']}</p>
     <h1>{s['s_h1']}</h1>
     <p class="lede">{s['s_lede']}</p>
-    <ul class="topic-grid">
-{topic_cards}
-    </ul>
+    <nav class="jump" aria-label="{s['faq']}">
+{jump}
+      <a href="#contact">{s['c_h']}</a>
+    </nav>
   </div>
 </section>
 
-<section class="section section-tight">
+<section class="section-sm">
   <div class="container support-grid">
     <div class="faq-col" id="faq">
-      <h2>{s['faq']}</h2>
+      <h2 class="sub-title">{s['faq']}</h2>
 {chr(10).join(faq_html)}
     </div>
 
-    <aside class="contact-card" id="contact" aria-labelledby="contact-h">
-      <h2 id="contact-h">{icon('mail', 22)}{s['c_h']}</h2>
+    <aside class="contact-box" id="contact" aria-labelledby="contact-h">
+      <h2 class="sub-title" id="contact-h">{s['c_h']}</h2>
       <p class="cc-addr"><a href="mailto:{MAIL}">{MAIL}</a></p>
-      <p class="cc-copy-row"><button type="button" class="btn btn-ghost btn-sm" data-copy="{MAIL}">{icon('copy', 16)}{s['c_copy']}</button>
+      <p class="cc-copy-row"><button type="button" class="btn btn-quiet btn-sm" data-copy="{MAIL}">{icon('copy', 16)}{s['c_copy']}</button>
         <span class="copy-status" role="status" aria-live="polite"></span></p>
       <div class="composer" data-composer>
         <p>{s['c_p']}</p>
@@ -1047,9 +831,9 @@ def support_page(lang):
           </select>
         </label>
         <p class="composer-subject">{s['c_subject']}: <output data-subject></output></p>
-        <a class="btn btn-primary btn-block" data-mailto href="{generic}">{icon('mail', 18)}{s['c_btn']}</a>
+        <a class="btn btn-primary btn-block" data-mailto href="{generic}">{s['c_btn']}</a>
       </div>
-      <p class="cc-nojs"><a class="btn btn-primary btn-block" href="{generic}">{icon('mail', 18)}{s['c_btn']}</a></p>
+      <p class="cc-nojs"><a class="btn btn-primary btn-block" href="{generic}">{s['c_btn']}</a></p>
       <p class="cc-note">{s['c_note']}</p>
       <script type="application/json" id="composer-data">{cfg}</script>
     </aside>
@@ -1228,16 +1012,13 @@ def not_found_page():
     # <use href="#i-…"> 까지 다른 문서를 가리키게 되어 아이콘이 통째로 사라진다.
     k, e = STR["ko"], STR["en"]
     body = f"""<main id="main" class="nf">
-  <div class="container nf-inner">
+  <div class="container narrow">
     <p class="nf-code">404</p>
     <h1>{k['nf_title']}</h1>
     <p>{k['nf_p']}</p>
-    <p lang="en" class="nf-en"><b>{e['nf_title']}.</b> {e['nf_p']}</p>
-    <div class="cta-row">
-      <a class="btn btn-primary btn-lg" href="./">{k['home']}</a>
-      <a class="btn btn-ghost btn-lg" href="index-en.html" lang="en">Home (English)</a>
-      <a class="btn btn-ghost btn-lg" href="support.html">{k['support']}</a>
-    </div>
+    <p lang="en" class="nf-en">{e['nf_title']}. {e['nf_p']}</p>
+    <p class="nf-links"><a class="btn btn-primary" href="./">{k['home']}</a>
+      <a class="btn btn-quiet" href="index-en.html" lang="en">Home (English)</a></p>
   </div>
 </main>"""
     page = shell("ko", title=k["nf_title"] + " · Sardina Studio", desc=k["nf_p"],

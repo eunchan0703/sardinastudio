@@ -1,35 +1,12 @@
-/* Sardina Studio — 작은 덧붙임 넷. 전부 «없어도 되는 것» 이다:
-   JS 가 꺼져도 메뉴는 줄로 펼쳐지고(style.css .no-js), 스크린샷은 손가락으로 밀리고,
-   메일 단추는 기본 틀로 열리고, 목차 링크는 그대로 간다.
-   ① 모바일 메뉴 ② 스크린샷 앞뒤 단추 ③ 고객지원 메일 쓰기 ④ 방침 목차에 지금 읽는 절 표시 */
+/* Sardina Studio — 작은 덧붙임 셋. 전부 «없어도 되는 것» 이다:
+   JS 가 꺼져도 스크린샷은 손가락으로 밀리고, 메일 단추는 기본 틀로 열리고,
+   목차 링크는 그대로 간다.
+   ① 스크린샷 앞뒤 단추 ② 고객지원 메일 쓰기(+주소 복사, 질문 바로 펼치기) ③ 방침 목차에 지금 읽는 절 표시 */
 (function () {
   'use strict';
 
-  // ① 모바일 메뉴 — 열면 머리띠에 data-open 을 단다(모양은 CSS 가 맡는다)
-  var header = document.querySelector('[data-header]');
-  var btn = header && header.querySelector('.menu-btn');
-  if (btn) {
-    var setOpen = function (open) {
-      if (open) header.setAttribute('data-open', ''); else header.removeAttribute('data-open');
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      btn.setAttribute('aria-label', btn.getAttribute(open ? 'data-close-label' : 'data-open-label'));
-    };
-    btn.addEventListener('click', function () { setOpen(!header.hasAttribute('data-open')); });
-    // 같은 장 안의 앵커(#games 등)를 눌러도 메뉴가 덮고 있으면 안 보인다 — 닫는다
-    header.querySelectorAll('.nav a').forEach(function (a) {
-      a.addEventListener('click', function () { setOpen(false); });
-    });
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && header.hasAttribute('data-open')) { setOpen(false); btn.focus(); }
-    });
-    // 넓은 화면으로 돌리면 모바일 메뉴 상태를 버린다 — 안 그러면 스크롤이 잠긴 채 남는다
-    var wide = window.matchMedia('(min-width: 960px)');
-    var onWide = function () { if (wide.matches) setOpen(false); };
-    if (wide.addEventListener) wide.addEventListener('change', onWide); else wide.addListener(onWide);
-  }
-
-  // ② 스크린샷 앞뒤 단추 — 끝에 닿으면 그쪽 단추를 끈다. 넘칠 것이 없으면 둘 다 숨긴다
-  document.querySelectorAll('.carousel-nav').forEach(function (nav) {
+  // ① 스크린샷 앞뒤 단추 — 끝에 닿으면 그쪽 단추를 끈다. 넘칠 것이 없으면 둘 다 숨긴다
+  document.querySelectorAll('.shot-nav').forEach(function (nav) {
     var track = document.getElementById(nav.querySelector('[aria-controls]').getAttribute('aria-controls'));
     if (!track) return;
     var prev = nav.querySelector('[data-dir="-1"]'), next = nav.querySelector('[data-dir="1"]');
@@ -44,7 +21,7 @@
       var b = e.target.closest('[data-dir]');
       if (!b) return;
       var item = track.querySelector('li');
-      var step = item ? item.getBoundingClientRect().width + 14 : track.clientWidth * 0.8;
+      var step = item ? item.getBoundingClientRect().width + 16 : track.clientWidth * 0.8;
       track.scrollBy({ left: Number(b.getAttribute('data-dir')) * step, behavior: reduce ? 'auto' : 'smooth' });
     });
     track.addEventListener('scroll', update, { passive: true });
@@ -54,12 +31,12 @@
     update();
   });
 
-  // ③ 고객지원 — 게임·문의 종류를 고르면 메일 제목과 본문 틀을 채운다.
+  // ② 고객지원 — 게임·문의 종류를 고르면 메일 제목과 본문 틀을 채운다.
   //    틀은 _gen.py 의 표 하나에서 JSON 으로 온다(두 벌로 적지 않는다).
   var cfgEl = document.getElementById('composer-data');
   var composer = document.querySelector('[data-composer]');
+  var cfg = {};
   if (cfgEl && composer) {
-    var cfg = {};
     try { cfg = JSON.parse(cfgEl.textContent); } catch (err) {
       // 틀을 못 읽으면 기본 메일 단추(서버가 찍어 둔 href)가 그대로 남는다
       console.warn('메일 틀을 못 읽음 — 기본 단추를 쓴다', err);
@@ -96,7 +73,7 @@
     var say = function (msg) { if (status) status.textContent = msg; };
     b.addEventListener('click', function () {
       var text = b.getAttribute('data-copy');
-      var ok = (cfg && cfg.copied) || 'Copied', fail = (cfg && cfg.copy_fail) || 'Copy failed';
+      var ok = cfg.copied || 'Copied', fail = cfg.copy_fail || 'Copy failed';
       if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(text).then(function () { say(ok); }, function () { say(fail); });
       } else {
@@ -115,7 +92,7 @@
   window.addEventListener('hashchange', openFromHash);
   openFromHash();
 
-  // ④ 방침 목차 — 지금 읽는 절의 목차 줄에 aria-current 를 단다(넓은 화면에서 왼쪽에 붙어 있다)
+  // ③ 방침 목차 — 지금 읽는 절의 목차 줄에 aria-current 를 단다(넓은 화면에서 왼쪽에 붙어 있다)
   var toc = document.querySelector('nav.toc');
   if (toc && 'IntersectionObserver' in window) {
     var links = {};
