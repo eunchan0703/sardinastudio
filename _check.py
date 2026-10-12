@@ -37,12 +37,14 @@ class Page(HTMLParser):
             self._in_lang += 1
         if tag == "link" and a.get("rel") == "preconnect":
             return  # 연결 예열일 뿐 여는 주소가 아니다
-        for k in ("href", "src"):
+        # data-src · data-srcset — 첫 화면 2번째부터 슬라이드 그림(JS 가 나중에 채운다)도 본다
+        for k in ("href", "src", "data-src"):
             if k in a and a[k] is not None:
                 self.links.append((tag, k, a[k], a))
-        if "srcset" in a:
-            for part in a["srcset"].split(","):
-                self.links.append((tag, "srcset", part.strip().split(" ")[0], a))
+        for k in ("srcset", "data-srcset", "imagesrcset"):
+            if a.get(k):
+                for part in a[k].split(","):
+                    self.links.append((tag, k, part.strip().split(" ")[0], a))
         if tag == "a" and self._in_lang and "hreflang" in a:
             self.lang_links.append((a["hreflang"], a["href"]))
 

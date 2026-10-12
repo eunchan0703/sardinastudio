@@ -14,8 +14,8 @@
 # 페이지 트래픽도 늘지 않는다. 주소는 스토어 페이지의 «스크린샷 이미지» img
 # 에서 뽑았다(shots 값).
 #
-# 2026-10 2차 시안 — «너무 어수선하다» 를 받고 덜어냈다. 한 장에 큰 문장 하나·그림 하나·
-# 단추 하나, 색은 잉크와 강조색 하나. 꼬리표·숫자 상자·장식 그림은 넣지 않는다.
+# 2026-10 3차 시안 — «다른 게임 회사랑 너무 다르다» 를 받고 국내 게임사 홈의 틀을 따른다:
+# 어두운 바탕 · 화면을 꽉 채운 게임 슬라이드 · 큰 그림 카드 · 어두운 바닥글. 그림이 주인공이다.
 # 근거와 참고 사이트는 REDESIGN_NOTES.md.
 
 import datetime, hashlib, html, io, json, os, re
@@ -52,21 +52,26 @@ FONT_CSS = ("https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/"
             "pretendardvariable-dynamic-subset.css")
 FONT_SRI = "sha384-uR1wgObmx89ZQ4VVXHdzjbDJZ1PvBK01K+E3GebmaBKdZ87qRJvBWPoPbzWeEd5T"
 
+# 첫 화면 그림의 sizes — art() 와 미리 받기(preload) 가 같은 값을 써야 같은 파일을 고른다
+HERO_SIZES = "(orientation: portrait) 178vh, 100vw"
+
+# 첫 화면 슬라이드가 저절로 넘어가는 간격(밀리초). JS 가 data- 로 받는다.
+SLIDE_MS = 6000
+
 # ── 스튜디오 표 — 회사 정보는 여기만 ───────────────────────────────────────
 # 비어 있으면 화면에 아예 안 나온다. «준비 중» 같은 빈 자리를 공개 화면에 띄우지 않는다.
 # 위치(도시·주소)는 사장님 지시로 사이트 어디에도 안 적는다(2026-10-13).
 STUDIO = dict(
-    # TODO(사장님): 히어로 문구·소개 문구는 초안이다. 사실이 아닌 것은 안 적었다
-    #   (장르는 게임 표가 근거).
+    # TODO(사장님): 슬로건·소개 문구는 1·2차 시안의 초안을 그대로 옮긴 것이다(새로 짓지 않았다).
+    # 슬로건은 영어 대문자 한 줄 + 그 언어의 한 줄(데브시스터즈식 띠).
+    slogan="Little joys, right at your fingertips",
     ko=dict(
-        hero="손끝으로 즐기는<br><span>작은 즐거움</span>",
-        lede="Sardina Studio 가 만든 모바일 게임을 만나 보세요.",
+        slogan_sub="손끝으로 즐기는 작은 즐거움",
         about=("Sardina Studio 는 모바일 게임을 만드는 스튜디오입니다. 고양이를 위한 게임부터 "
                "워드 퍼즐, 레트로 감성의 아케이드까지 — 짧게 켜도 즐거운 게임을 만듭니다."),
     ),
     en=dict(
-        hero="Little joys,<br><span>right at your fingertips</span>",
-        lede="Mobile games made by Sardina Studio.",
+        slogan_sub="Mobile games made by Sardina Studio.",
         about=("Sardina Studio is a mobile game studio. From games made for cats to word "
                "puzzles and retro arcade — games that are fun even in a short break."),
     ),
@@ -83,14 +88,20 @@ STUDIO = dict(
 )
 
 # ── 게임 표 — 여기만 고친다 ─────────────────────────────────────────────
-# 한 줄 = 홈 타일 · 게임 쪽 · 다른 게임 줄 · 고객지원 선택칸 · 사이트맵.
-# shot_wide — 스크린샷이 가로(540×306)면 True, 세로(540×960)면 False.
-#   두 비율은 CDN 에서 실제로 받아 잰 값이다(2026-10-13). width/height 를 맞춰 둬야
-#   그림이 늦게 와도 자리가 안 흔들린다.
-# facts — 게임 쪽 «정보» 목록의 «특징» 줄에만 글자로 쓴다(꼬리표로 그리지 않는다).
+# 한 줄 = 첫 화면 슬라이드 · 홈 카드 · 게임 쪽 · 다른 게임 줄 · 고객지원 선택칸 · 사이트맵.
+# hero — 키아트 파일 이름(assets/ 안, 16:9). 같은 이름에 «-960» 을 붙인 작은 판도 둔다.
+#   비어 있으면(None) 아래 규칙으로 그림을 저절로 꾸린다(art() 참고) — 이름으로 가르지 않는다:
+#     가로 스크린샷(shot_wide) → 그 스크린샷을 꽉 채운다
+#     세로 스크린샷           → 게임 색 바탕 + 폰 화면처럼 세운 스크린샷 2~3장
+#     스크린샷 없음           → 게임 색 바탕 + 아이콘 크게
+# shot_wide — 스크린샷이 가로면 True, 세로면 False. CDN 에서 받아 잰 실제 크기(2026-10-13):
+#   냥방망이 2540×1440 · 냥방망이 2 1259×713 · 워드리아 576×1024 · 붐브릭 1080×1920.
+#   CDN 은 =w 로 원본보다 크게 달라고 해도 원본 크기에서 멈춘다(늘려 주지 않는다).
+# facts — 첫 칸이 카드의 장르 줄이 된다. 게임 쪽 «정보» 목록의 «특징» 줄에도 글자로 쓴다.
 GAMES = [
     dict(
         slug="catbat", accent="#e98783", icon="game_cat.png", shot_wide=True,
+        hero="hero_catbat.jpg",
         store="https://play.google.com/store/apps/details?id=com.BigSmileMen.Cat",
         platforms=("Android",),
         ko=dict(
@@ -118,6 +129,7 @@ GAMES = [
     ),
     dict(
         slug="catbat2", accent="#f07a2b", icon="game_cat2.png", shot_wide=True,
+        hero="hero_catbat2.jpg",
         store="https://play.google.com/store/apps/details?id=com.silverchan.catbat2",
         platforms=("Android",),
         ko=dict(
@@ -146,6 +158,7 @@ GAMES = [
     ),
     dict(
         slug="wordria", accent="#7c4dbe", icon="game_wordria.png", shot_wide=False,
+        hero="hero_wordria.jpg",
         store="https://play.google.com/store/apps/details?id=com.sardinastudio.wordria",
         platforms=("Android",),
         ko=dict(
@@ -174,6 +187,7 @@ GAMES = [
     ),
     dict(
         slug="boombrick", accent="#3ac6e8", icon="game_boombrick.png", shot_wide=False,
+        hero="hero_boombrick.jpg",
         store="https://play.google.com/store/apps/details?id=com.BigSmileMen.BlockDestroy",
         platforms=("Android",),
         ko=dict(
@@ -201,6 +215,7 @@ GAMES = [
     ),
     dict(
         slug="spacesmasher", accent="#6d5cf0", icon="game_spacesmasher.png", shot_wide=False,
+        hero="hero_spacesmasher.jpg",
         store="https://play.google.com/store/apps/details?id=com.sardinastudio.spacesmasher",
         platforms=("Android",),
         ko=dict(
@@ -229,10 +244,14 @@ GAMES = [
 STR = dict(
     ko=dict(
         lang="ko", skip="본문 바로가기", nav_label="주 메뉴", lang_label="언어 선택",
-        home="홈", games="게임", support="고객지원", about="스튜디오 소개",
+        home="홈", games="게임", studio="스튜디오", support="고객지원",
         privacy="개인정보처리방침", delete="계정 삭제", faq="자주 묻는 질문",
-        foot_nav="바닥글 메뉴", contact="문의",
-        cta="게임 보기", store="Google Play에서 다운로드",
+        foot_nav="바닥글 메뉴",
+        store="Google Play", store_long="Google Play에서 다운로드", detail="자세히 보기",
+        slides="추천 게임", slide_n="{i} / {n}", pick="게임 고르기",
+        pause="자동 넘김 멈추기", play="자동 넘김 다시 켜기",
+        games_sub="Google Play 에서 만날 수 있는 게임",
+        about_h="ABOUT US", contact_btn="문의하기",
         shots="스크린샷", prev="이전 스크린샷", next="다음 스크린샷",
         shot_alt="{name} 스크린샷 {i}/{n}", about_game="게임 소개", info="정보",
         i_dev="개발", i_platform="플랫폼", i_features="특징", i_download="다운로드",
@@ -264,10 +283,14 @@ STR = dict(
     ),
     en=dict(
         lang="en", skip="Skip to content", nav_label="Main menu", lang_label="Language",
-        home="Home", games="Games", support="Support", about="About us",
+        home="Home", games="Games", studio="Studio", support="Support",
         privacy="Privacy Policy", delete="Delete account", faq="FAQ",
-        foot_nav="Footer menu", contact="Contact",
-        cta="See our games", store="Get it on Google Play",
+        foot_nav="Footer menu",
+        store="Google Play", store_long="Get it on Google Play", detail="Learn more",
+        slides="Featured games", slide_n="{i} of {n}", pick="Choose a game",
+        pause="Pause auto-advance", play="Resume auto-advance",
+        games_sub="Our games on Google Play",
+        about_h="ABOUT US", contact_btn="Contact us",
         shots="Screenshots", prev="Previous screenshot", next="Next screenshot",
         shot_alt="{name} screenshot {i} of {n}", about_game="About the game", info="Info",
         i_dev="Developer", i_platform="Platform", i_features="Features",
@@ -354,19 +377,69 @@ def icon(name, size=20, cls="i"):
             f'focusable="false"><use href="#i-{name}"/></svg>')
 
 
-# 아이콘은 꼭 필요한 넷만 — 화살표 둘(스크린샷 앞뒤), 바깥 링크, 복사. 장식 그림은 안 쓴다.
+# 아이콘은 꼭 필요한 것만 — 화살표 둘, 바깥 링크, 복사, 멈춤/재생.
 SPRITE = """<svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
     <symbol id="i-left" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-right" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-copy" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8.5" y="8.5" width="11.5" height="11.5" rx="2"/><path d="M15.5 8.5V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v9.5a1 1 0 0 0 1 1h3.5"/></g></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></symbol>
   </defs>
 </svg>"""
 
 
+# ── 게임 그림 — 첫 화면 슬라이드·카드·게임 쪽 첫 화면이 같은 규칙을 쓴다 ─────
+BLANK = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+
+
+def _small(name):
+    # hero_x.jpg → hero_x-960.jpg (모바일용 작은 판)
+    stem, ext = os.path.splitext(name)
+    return f"{stem}-960{ext}"
+
+
+def art(g, lang, where, lazy=True, defer=False):
+    """where — "hero"(화면 꽉 참) | "card"(16:9 카드).
+    lazy  — 화면 밖 그림은 지연 로드한다.
+    defer — 첫 화면의 2번째부터 슬라이드: src 를 data- 에 두고 JS 가 나중에 채운다
+            (안 그러면 안 보이는 슬라이드 그림까지 첫 화면에서 한꺼번에 받는다)."""
+    t = g[lang]
+    # 첫 화면 — 세로 화면(폰)에서는 16:9 그림을 높이에 맞춰 채우므로 화면 높이의 1.78배 폭이 필요하다.
+    # «100vw» 로 두면 폰이 960 판을 골라 1.5배로 늘려 흐려진다.
+    sizes = (HERO_SIZES if where == "hero"
+             else "(max-width: 639px) 100vw, (max-width: 959px) 50vw, 45vw")
+    load = ' loading="lazy"' if lazy and not defer else ""
+    pre = "data-" if defer else ""
+
+    def img(src, srcset, cls, w, h, alt=""):
+        ss = f' {pre}srcset="{srcset}" sizes="{sizes if cls == "art-img" else "(max-width: 639px) 40vw, 300px"}"' if srcset else ""
+        # 미룬 그림도 src 는 있어야 한다(HTML 규칙) — 1×1 투명 GIF 를 두고 JS 가 바꾼다
+        blank = f' src="{BLANK}"' if defer else ""
+        return (f'<img class="{cls}"{blank} {pre}src="{src}"{ss} alt="{esc(alt)}" width="{w}" height="{h}"'
+                f'{load} decoding="async">')
+
+    if g.get("hero"):
+        h = g["hero"]
+        inner = img(f"assets/{h}", f"assets/{_small(h)} 960w, assets/{h} 1672w", "art-img", 1672, 941)
+        return f'<div class="art art-key">{inner}</div>'
+    shots = g["shots"]
+    if shots and g["shot_wide"]:
+        u = shots[0]
+        ss = ", ".join(f"{u}=w{c}-rj {c}w" for c in (960, 1280, 1920, 2560))
+        return f'<div class="art art-wide">{img(f"{u}=w1280-rj", ss, "art-img", 1920, 1089)}</div>'
+    if shots:
+        # 세로 스크린샷 — 폰 화면처럼 둥글게 세워 겹친다(가운데가 앞)
+        phones = "".join(
+            img(f"{u}=w540-rj", f"{u}=w400-rj 400w, {u}=w540-rj 540w, {u}=w720-rj 720w",
+                "phone", 540, 960) for u in shots[:3])
+        return f'<div class="art art-phones"><div class="phones n{min(len(shots), 3)}">{phones}</div></div>'
+    return (f'<div class="art art-icon">{img(f"assets/{g["icon"]}", "", "big-icon", 160, 160)}</div>')
+
+
 # ── 껍데기 ───────────────────────────────────────────────────────────────
-def head(lang, title, desc, path, alt_path, noindex=False):
+def head(lang, title, desc, path, alt_path, noindex=False, preload=None):
     """path / alt_path — 이 장과 짝 장의 파일 이름. hreflang 로 서로를 가리킨다."""
     ko_path, en_path = (path, alt_path) if lang == "ko" else (alt_path, path)
     lines = ['<meta charset="utf-8">',
@@ -375,8 +448,8 @@ def head(lang, title, desc, path, alt_path, noindex=False):
              f'<meta name="description" content="{esc(desc)}">']
     if noindex:
         lines.append('<meta name="robots" content="noindex">')
-    lines += ['<meta name="theme-color" content="#ffffff">',
-              '<meta name="color-scheme" content="light">']
+    lines += ['<meta name="theme-color" content="#0d0d14">',
+              '<meta name="color-scheme" content="dark">']
     if not noindex:
         lines.append(f'<link rel="canonical" href="{abs_url(path)}">')
     if alt_path:
@@ -402,6 +475,9 @@ def head(lang, title, desc, path, alt_path, noindex=False):
     if WEBFONT:
         lines += ['<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>',
                   f'<link rel="stylesheet" href="{FONT_CSS}" integrity="{FONT_SRI}" crossorigin>']
+    if preload:
+        # 첫 화면 그림 — 가장 먼저 보이는 큰 그림이라 다른 것보다 먼저 받게 한다
+        lines.append(preload)
     # «js» 표시를 그리기 전에 단다 — 안 그러면 JS 없을 때용 화면이 한 번 번쩍인다.
     lines += [f'<link rel="stylesheet" href="style.css?v={CSS_V}">',
               "<script>document.documentElement.className='js'</script>",
@@ -410,8 +486,7 @@ def head(lang, title, desc, path, alt_path, noindex=False):
 
 
 def lang_switch(lang, self_href, alt_href):
-    # 지금 장의 짝으로 바로 간다 — 홈으로 튕기면 방침을 읽던 사람이 길을 잃는다
-    # (참고한 국내 사이트 한 곳이 홈으로 튕겼다. REDESIGN_NOTES.md).
+    # 지금 장의 짝으로 바로 간다 — 홈으로 튕기면 방침을 읽던 사람이 길을 잃는다.
     ko_href, en_href = (self_href, alt_href) if lang == "ko" else (alt_href, self_href)
     cur_ko = ' aria-current="true"' if lang == "ko" else ""
     cur_en = ' aria-current="true"' if lang == "en" else ""
@@ -421,19 +496,20 @@ def lang_switch(lang, self_href, alt_href):
 
 
 def header(lang, here, self_href, alt_href):
-    # 메뉴는 둘뿐이다(게임 · 고객지원). 폭이 좁아도 한 줄에 들어가므로 햄버거 단추가 없다
-    # — 단추 하나를 눌러야 메뉴가 보이는 것보다 늘 보이는 쪽이 덜 헷갈린다.
+    # 메뉴는 셋(게임 · 스튜디오 · 고객지원). 좁은 화면에서도 한 줄에 들어가므로 햄버거가 없다.
+    # 첫 화면 그림 위에서는 투명했다가, 내려가면 어두운 단색 띠가 된다(site.js · style.css).
     s = STR[lang]
     g_cur = ' class="is-here"' if here in [g["slug"] for g in GAMES] else ""
     sup_cur = ' aria-current="page"' if here == "support" else ""
-    return f"""<header class="site-header">
+    return f"""<header class="site-header" data-header>
   <div class="bar">
     <a class="brand" href="{home_href(lang)}">
-      <img src="assets/logo_ink.png" alt="" width="44" height="36">
+      <img src="assets/logo_white.png" alt="" width="44" height="36">
       <span class="brand-name">Sardina Studio</span>
     </a>
     <nav class="nav" aria-label="{s['nav_label']}">
       <a href="{index_href(lang)}#games"{g_cur}>{s['games']}</a>
+      <a href="{index_href(lang)}#studio">{s['studio']}</a>
       <a href="{page_name('support', lang)}"{sup_cur}>{s['support']}</a>
     </nav>
     {lang_switch(lang, self_href, alt_href)}
@@ -454,21 +530,23 @@ def footer(lang, self_href, alt_href):
     # 개인정보처리방침은 굵게 — 국내 사이트 관행이고, 찾는 사람이 바로 본다.
     return f"""<footer class="site-footer">
   <div class="ft">
-    <div class="ft-row">
-      <nav class="ft-links" aria-label="{s['foot_nav']}">
-        <a href="{page_name('support', lang)}">{s['support']}</a>
-        <a class="ft-strong" href="{page_name('privacy', lang)}">{s['privacy']}</a>
-        <a href="{page_name('delete-account', lang)}">{s['delete']}</a>
-        <a href="mailto:{MAIL}">{MAIL}</a>{sns}
-      </nav>
+    <div class="ft-top">
+      <a class="brand" href="{home_href(lang)}"><img src="assets/logo_white.png" alt="" width="44" height="36" loading="lazy"><span>Sardina Studio</span></a>
       {lang_switch(lang, self_href, alt_href)}
     </div>
-    <p class="ft-copy">© {YEAR} Sardina Studio</p>{biz_html}
+    <nav class="ft-links" aria-label="{s['foot_nav']}">
+      <a href="{page_name('support', lang)}">{s['support']}</a>
+      <a class="ft-strong" href="{page_name('privacy', lang)}">{s['privacy']}</a>
+      <a href="{page_name('delete-account', lang)}">{s['delete']}</a>{sns}
+    </nav>
+    <p class="ft-mail"><a href="mailto:{MAIL}">{MAIL}</a></p>{biz_html}
+    <p class="ft-copy">© {YEAR} Sardina Studio. All rights reserved.</p>
   </div>
 </footer>"""
 
 
-def shell(lang, *, title, desc, path, alt, body, here=None, body_class="", noindex=False):
+def shell(lang, *, title, desc, path, alt, body, here=None, body_class="", noindex=False,
+          preload=None):
     s = STR[lang]
     if alt is None:
         # 짝이 없는 장(404)은 언어 단추가 각 언어의 홈으로 간다
@@ -481,7 +559,7 @@ def shell(lang, *, title, desc, path, alt, body, here=None, body_class="", noind
         body = '<div id="main" tabindex="-1"></div>\n' + body
     return f"""<!DOCTYPE html>
 <html lang="{s['lang']}" class="no-js">
-{head(lang, title, desc, path, alt, noindex=noindex)}
+{head(lang, title, desc, path, alt, noindex=noindex, preload=preload)}
 <body class="{body_class}">
 <a class="skip" href="#main">{s['skip']}</a>
 {SPRITE}
@@ -496,48 +574,128 @@ def shell(lang, *, title, desc, path, alt, body, here=None, body_class="", noind
 """
 
 
+def preload_for(g):
+    # 첫 화면의 첫 그림을 미리 받는다. 키아트·가로 스크린샷만 — 나머지는 작은 그림이라 필요 없다
+    if g.get("hero"):
+        h = g["hero"]
+        return (f'<link rel="preload" as="image" href="assets/{h}" '
+                f'imagesrcset="assets/{_small(h)} 960w, assets/{h} 1672w" imagesizes="{HERO_SIZES}">')
+    if g["shots"] and g["shot_wide"]:
+        u = g["shots"][0]
+        ss = ", ".join(f"{u}=w{c}-rj {c}w" for c in (960, 1280, 1920, 2560))
+        return f'<link rel="preload" as="image" href="{u}=w1280-rj" imagesrcset="{ss}" imagesizes="{HERO_SIZES}">'
+    return None
+
+
+def store_link(g, lang, cls, label=None):
+    if not g["store"]:
+        return ""
+    s = STR[lang]
+    # 구글 공식 배지 그림을 흉내 내지 않는다(배지는 고쳐 쓰지 말라는 지침) — 글자 단추.
+    return (f'<a class="{cls}" href="{g["store"]}" rel="noopener">{label or s["store"]}'
+            f'<span class="sr-only"> — {esc(g[lang]["name"])}</span></a>')
+
+
 # ── 홈 ───────────────────────────────────────────────────────────────────
-# 큰 문장 하나 · 단추 하나 · 그림 한 줄(아이콘) → 같은 모양의 게임 타일 → 짧은 소개.
+# 위에서 아래로: 게임 슬라이드(화면 꽉) → 슬로건 띠 → GAMES 그림 카드 → 스튜디오 띠.
+def card_rows(n):
+    """카드 수 → 데스크톱 줄마다 몇 장인가. 빈 칸이 안 남게 2장 줄과 3장 줄을 섞는다.
+    5 → [2, 3] · 4 → [2, 2] · 6 → [3, 3] · 7 → [2, 2, 3] — 큰 줄(2장)을 앞에 둔다."""
+    if n <= 3:
+        return [n]
+    twos = {0: 0, 1: 2, 2: 1}[n % 3]
+    return [2] * twos + [3] * ((n - 2 * twos) // 3)
+
+
 def index_page(lang):
     s = STR[lang]
     st = STUDIO[lang]
-    # 히어로의 아이콘 줄은 그림이다(아래 타일이 같은 링크를 갖는다) — 읽기 프로그램에는 숨긴다
-    icons = "\n".join(
-        f'      <li><img src="assets/{g["icon"]}" alt="" width="160" height="160"></li>'
-        for g in GAMES)
-    tiles = "\n".join(
-        f"""      <li><a class="tile" href="{page_name(g['slug'], lang)}">
-        <img class="tile-icon" src="assets/{g['icon']}" alt="" width="160" height="160" loading="lazy">
-        <span class="tile-text"><span class="tile-name">{esc(g[lang]['name'])}</span>
-        <span class="tile-line">{esc(g[lang]['tagline'])}</span></span></a></li>"""
-        for g in GAMES)
+    n = len(GAMES)
+    slides, thumbs = [], []
+    for i, g in enumerate(GAMES):
+        t = g[lang]
+        cur = " is-current" if i == 0 else ""
+        hidden = "" if i == 0 else ' aria-hidden="true"'
+        slides.append(f"""    <article class="slide{cur}" style="--c:{g['accent']}" aria-roledescription="slide" aria-label="{s['slide_n'].format(i=i + 1, n=n)}"{hidden}>
+      {art(g, lang, "hero", lazy=False, defer=(i > 0))}
+      <div class="slide-body">
+        <img class="slide-icon" src="assets/{g['icon']}" alt="" width="160" height="160">
+        <h2 class="slide-name">{esc(t['name'])}</h2>
+        <p class="slide-line">{esc(t['tagline'])}</p>
+        <div class="cta">
+          {store_link(g, lang, "btn btn-light")}
+          <a class="btn btn-outline" href="{page_name(g['slug'], lang)}">{s['detail']}<span class="sr-only"> — {esc(t['name'])}</span></a>
+        </div>
+      </div>
+    </article>""")
+        thumbs.append(
+            f'      <button type="button" class="thumb" data-go="{i}" aria-label="{esc(t["name"])}"'
+            f'{" aria-current=" + chr(34) + "true" + chr(34) if i == 0 else ""}>'
+            f'<img src="assets/{g["icon"]}" alt="" width="160" height="160"><span class="bar"><i></i></span></button>')
+
+    rows = card_rows(n)
+    spans = [6 // r for r in rows for _ in range(r)]
+    cards = []
+    for i, g in enumerate(GAMES):
+        t = g[lang]
+        wide_t = " wide-t" if n % 2 == 1 and i == 0 else ""   # 태블릿 2열에서 홀수면 첫 장을 두 칸으로
+        cards.append(f"""      <article class="g-card span-{spans[i]}{wide_t}" style="--c:{g['accent']}">
+        <div class="g-card-art">{art(g, lang, "card")}</div>
+        <div class="g-card-body">
+          <img class="g-card-icon" src="assets/{g['icon']}" alt="" width="160" height="160" loading="lazy">
+          <div class="g-card-text">
+            <h3><a class="g-card-link" href="{page_name(g['slug'], lang)}">{esc(t['name'])}</a></h3>
+            <p>{esc(t['facts'][0])}</p>
+          </div>
+          {store_link(g, lang, "g-card-store")}
+        </div>
+      </article>""")
+
     body = f"""<main id="main">
 
-<section class="hero">
-  <div class="container hero-inner">
-    <h1>{st['hero']}</h1>
-    <p class="lede">{esc(st['lede'])}</p>
-    <a class="btn btn-primary btn-lg" href="#games">{s['cta']}</a>
-    <ul class="icon-row" aria-hidden="true">
-{icons}
-    </ul>
+<section class="slider" aria-roledescription="carousel" aria-label="{s['slides']}" data-slider data-interval="{SLIDE_MS}">
+  <h1 class="sr-only">Sardina Studio</h1>
+  <div class="slides">
+{chr(10).join(slides)}
+  </div>
+  <div class="slider-bar">
+    <div class="thumbs" role="group" aria-label="{s['pick']}">
+{chr(10).join(thumbs)}
+    </div>
+    <button type="button" class="slider-toggle" data-toggle aria-label="{s['pause']}" data-pause="{s['pause']}" data-play="{s['play']}">{icon('pause', 18, 'i i-pause')}{icon('play', 18, 'i i-play')}</button>
+  </div>
+</section>
+
+<section class="slogan" aria-label="Slogan">
+  <div class="container">
+    <p class="slogan-en" lang="en">{esc(STUDIO['slogan'])}</p>
+    <p class="slogan-sub">{esc(st['slogan_sub'])}</p>
   </div>
 </section>
 
 <section class="section" id="games" aria-labelledby="games-h">
   <div class="container">
-    <h2 class="sec-title" id="games-h">{s['games']}</h2>
-    <ul class="tiles">
-{tiles}
-    </ul>
+    <div class="sec-head">
+      <h2 class="sec-title" id="games-h" lang="en">GAMES</h2>
+      <p class="sec-sub">{s['games_sub']}</p>
+    </div>
+    <div class="g-grid">
+{chr(10).join(cards)}
+    </div>
   </div>
 </section>
 
-<section class="section about" id="about" aria-labelledby="about-h">
-  <div class="container narrow">
-    <h2 class="sec-title" id="about-h">{s['about']}</h2>
-    <p class="about-p">{esc(st['about'])}</p>
-    <p class="about-mail" id="contact">{s['contact']} <a href="mailto:{MAIL}">{MAIL}</a></p>
+<section class="studio" id="studio" aria-labelledby="studio-h">
+  <span id="about"></span><span id="contact"></span>
+  <div class="container studio-grid">
+    <div>
+      <h2 class="studio-title" id="studio-h" lang="en">{s['about_h']}</h2>
+      <p class="studio-kicker">{s['studio']}</p>
+    </div>
+    <div>
+      <p class="studio-p">{esc(st['about'])}</p>
+      <p><a class="btn btn-light" href="{page_name('support', lang)}#contact">{s['contact_btn']}</a></p>
+    </div>
   </div>
 </section>
 
@@ -547,16 +705,12 @@ def index_page(lang):
             else f"Sardina Studio — {names}. A mobile game studio.")
     return shell(lang, title="Sardina Studio", desc=desc,
                  path=index_href(lang), alt=index_href(other(lang)), body=body,
-                 here="home", body_class="p-home")
+                 here="home", body_class="p-home has-hero", preload=preload_for(GAMES[0]))
 
 
 # ── 게임 한 쪽 ───────────────────────────────────────────────────────────
-# 히어로(아이콘 · 이름 · 한 줄 · 단추 하나) → 스크린샷 띠 → 소개 → 정보 → 도움 링크 → 다른 게임.
-def srcset(u, cand):
-    return ", ".join(f"{u}=w{c}-rj {c}w" for c in cand)
-
-
-def shot_img(g, u, i, n, lang, eager=False):
+# 첫 화면 키아트(같은 그림 규칙) → 소개 → 스크린샷 → 정보 → 도움 링크 → 다른 게임.
+def shot_img(g, u, i, n, lang):
     # 스크린샷은 스토어 CDN 에서 곧바로 받는다 (우리 트래픽 0).
     #  · -rj = JPEG. 안 붙이면 PNG 를 주는데 같은 장이 620KB vs 114KB 다
     #    (-rw 는 무손실 WebP 라 오히려 162KB. 이 CDN 에서는 JPEG 가 답이다)
@@ -567,10 +721,9 @@ def shot_img(g, u, i, n, lang, eager=False):
     cand = (400, 540, 800, 1080) if wide else (270, 400, 540, 720)
     sizes = "(max-width: 640px) 84vw, 560px" if wide else "(max-width: 640px) 203px, 248px"
     alt = STR[lang]["shot_alt"].format(name=g[lang]["name"], i=i, n=n)
-    # 첫 장은 첫 화면 안에 든다 — 지연 로드하지 않는다
-    load = "" if eager else 'loading="lazy" '
-    return (f'<img src="{u}=w{cand[1]}-rj" srcset="{srcset(u, cand)}" sizes="{sizes}" '
-            f'alt="{esc(alt)}" width="{w}" height="{h}" {load}decoding="async">')
+    ss = ", ".join(f"{u}=w{c}-rj {c}w" for c in cand)
+    return (f'<img src="{u}=w{cand[1]}-rj" srcset="{ss}" sizes="{sizes}" '
+            f'alt="{esc(alt)}" width="{w}" height="{h}" loading="lazy" decoding="async">')
 
 
 def game_page(g, lang):
@@ -579,19 +732,12 @@ def game_page(g, lang):
     shots = g["shots"]
     n = len(shots)
 
-    store = ""
-    if g["store"]:
-        # 구글 공식 배지 그림을 흉내 내지 않는다(배지는 고쳐 쓰지 말라는 지침) — 글자 단추.
-        store = (f'<a class="btn btn-primary" href="{g["store"]}" rel="noopener">{s["store"]}'
-                 f'<span class="sr-only"> — {esc(t["name"])}</span></a>')
-
     strip = ""
     if shots:
-        imgs = "\n".join(f"      <li>{shot_img(g, u, i + 1, n, lang, eager=(i == 0))}</li>"
-                         for i, u in enumerate(shots))
+        imgs = "\n".join(f"      <li>{shot_img(g, u, i + 1, n, lang)}</li>" for i, u in enumerate(shots))
         track = "shot-track wide" if g["shot_wide"] else "shot-track"
         strip = f"""
-<section class="shots" aria-labelledby="shots-h">
+<section class="section-sm" aria-labelledby="shots-h">
   <div class="container shots-head">
     <h2 class="sub-title" id="shots-h">{s['shots']}</h2>
     <div class="shot-nav">
@@ -619,27 +765,32 @@ def game_page(g, lang):
 
     body = f"""<main id="main">
 
-<section class="g-hero">
-  <div class="container g-head">
-    <img class="g-icon" src="assets/{g['icon']}" alt="" width="160" height="160">
-    <div class="g-text">
-      <h1>{esc(t['name'])}</h1>
-      <p class="g-line">{esc(t['tagline'])}</p>
-      {store}
+<section class="key" style="--c:{g['accent']}">
+  {art(g, lang, "hero", lazy=False)}
+  <div class="slide-body">
+    <img class="slide-icon" src="assets/{g['icon']}" alt="" width="160" height="160">
+    <h1 class="slide-name">{esc(t['name'])}</h1>
+    <p class="slide-line">{esc(t['tagline'])}</p>
+    <div class="cta">
+      {store_link(g, lang, "btn btn-light", s['store_long'])}
+      <a class="btn btn-outline" href="#help">{s['support']}</a>
     </div>
+  </div>
+</section>
+
+<section class="section-sm">
+  <div class="container narrow">
+    <h2 class="sub-title">{s['about_game']}</h2>
+    <p class="g-blurb">{esc(t['blurb'])}</p>
   </div>
 </section>
 {strip}
 <section class="section-sm">
   <div class="container narrow">
-    <h2 class="sub-title">{s['about_game']}</h2>
-    <p class="g-blurb">{esc(t['blurb'])}</p>
-
     <h2 class="sub-title">{s['info']}</h2>
     <dl class="info">
 {info}
     </dl>
-
     <p class="help-row" id="help"><span>{s['help']}</span>
       <a href="{topic_mail(lang, 'bug', t['name'])}">{s['h_bug']}</a>
       <a href="{topic_mail(lang, 'other', t['name'])}">{s['h_other']}</a>
@@ -649,7 +800,7 @@ def game_page(g, lang):
 </section>
 
 <section class="section-sm more" aria-labelledby="more-h">
-  <div class="container narrow">
+  <div class="container">
     <h2 class="sub-title" id="more-h">{s['more_games']}</h2>
     <ul class="mini-row">
 {others}
@@ -660,7 +811,7 @@ def game_page(g, lang):
 </main>"""
     return shell(lang, title=t["name"] + " · Sardina Studio", desc=t["tagline"],
                  path=page_name(g["slug"], lang), alt=page_name(g["slug"], other(lang)),
-                 body=body, here=g["slug"], body_class="p-game")
+                 body=body, here=g["slug"], body_class="p-game has-hero", preload=preload_for(g))
 
 
 # ── 고객지원 ─────────────────────────────────────────────────────────────
@@ -763,7 +914,6 @@ listing.</p>"""),
         ]),
     ]
 
-
 def support_page(lang):
     s = STR[lang]
     groups = faq(lang)
@@ -796,6 +946,7 @@ def support_page(lang):
 
 <section class="page-head">
   <div class="container">
+    <p class="kicker" lang="en">SUPPORT</p>
     <h1>{s['s_h1']}</h1>
     <p class="lede">{s['s_lede']}</p>
     <nav class="jump" aria-label="{s['faq']}">
@@ -815,7 +966,7 @@ def support_page(lang):
     <aside class="contact-box" id="contact" aria-labelledby="contact-h">
       <h2 class="sub-title" id="contact-h">{s['c_h']}</h2>
       <p class="cc-addr"><a href="mailto:{MAIL}">{MAIL}</a></p>
-      <p class="cc-copy-row"><button type="button" class="btn btn-quiet btn-sm" data-copy="{MAIL}">{icon('copy', 16)}{s['c_copy']}</button>
+      <p class="cc-copy-row"><button type="button" class="btn btn-outline btn-sm" data-copy="{MAIL}">{icon('copy', 16)}{s['c_copy']}</button>
         <span class="copy-status" role="status" aria-live="polite"></span></p>
       <div class="composer" data-composer>
         <p>{s['c_p']}</p>
@@ -831,9 +982,9 @@ def support_page(lang):
           </select>
         </label>
         <p class="composer-subject">{s['c_subject']}: <output data-subject></output></p>
-        <a class="btn btn-primary btn-block" data-mailto href="{generic}">{s['c_btn']}</a>
+        <a class="btn btn-light btn-block" data-mailto href="{generic}">{s['c_btn']}</a>
       </div>
-      <p class="cc-nojs"><a class="btn btn-primary btn-block" href="{generic}">{s['c_btn']}</a></p>
+      <p class="cc-nojs"><a class="btn btn-light btn-block" href="{generic}">{s['c_btn']}</a></p>
       <p class="cc-note">{s['c_note']}</p>
       <script type="application/json" id="composer-data">{cfg}</script>
     </aside>
@@ -1013,12 +1164,12 @@ def not_found_page():
     k, e = STR["ko"], STR["en"]
     body = f"""<main id="main" class="nf">
   <div class="container narrow">
-    <p class="nf-code">404</p>
+    <p class="kicker">404</p>
     <h1>{k['nf_title']}</h1>
     <p>{k['nf_p']}</p>
     <p lang="en" class="nf-en">{e['nf_title']}. {e['nf_p']}</p>
-    <p class="nf-links"><a class="btn btn-primary" href="./">{k['home']}</a>
-      <a class="btn btn-quiet" href="index-en.html" lang="en">Home (English)</a></p>
+    <p class="nf-links"><a class="btn btn-light" href="./">{k['home']}</a>
+      <a class="btn btn-outline" href="index-en.html" lang="en">Home (English)</a></p>
   </div>
 </main>"""
     page = shell("ko", title=k["nf_title"] + " · Sardina Studio", desc=k["nf_p"],
@@ -1050,6 +1201,12 @@ def write(name, text):
 
 
 if __name__ == "__main__":
+    # 표에 적은 키아트 파일이 실제로 있는지 먼저 본다 — 없으면 그림 없는 슬라이드가 조용히 나간다
+    for g in GAMES:
+        if g.get("hero"):
+            for f in (g["hero"], _small(g["hero"])):
+                if not os.path.exists(os.path.join(OUT, "assets", f)):
+                    raise SystemExit(f"키아트 파일이 없다: assets/{f} ({g['slug']} 의 hero 칸)")
     print("찍는다:")
     pairs = [("index.html", "index-en.html")]
     write("index.html", index_page("ko"))
