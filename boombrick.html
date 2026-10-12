@@ -1,89 +1,218 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" class="no-js">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#fbfbfd">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>붐브릭 · Sardina Studio</title>
 <meta name="description" content="우주로 날아간 토끼 «개토» 와 함께 벽돌을 부숩니다.">
-<link rel="icon" href="assets/logo_icon.png">
-<link rel="stylesheet" href="style.css?v=8e050bd3">
+<meta name="theme-color" content="#0b1020">
+<meta name="color-scheme" content="light">
+<link rel="canonical" href="https://eunchan0703.github.io/sardinastudio/boombrick.html">
+<link rel="alternate" hreflang="ko" href="https://eunchan0703.github.io/sardinastudio/boombrick.html">
+<link rel="alternate" hreflang="en" href="https://eunchan0703.github.io/sardinastudio/boombrick-en.html">
+<link rel="alternate" hreflang="x-default" href="https://eunchan0703.github.io/sardinastudio/boombrick.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Sardina Studio">
+<meta property="og:title" content="붐브릭 · Sardina Studio">
+<meta property="og:description" content="우주로 날아간 토끼 «개토» 와 함께 벽돌을 부숩니다.">
+<meta property="og:url" content="https://eunchan0703.github.io/sardinastudio/boombrick.html">
+<meta property="og:image" content="https://eunchan0703.github.io/sardinastudio/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Sardina Studio">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css" integrity="sha384-uR1wgObmx89ZQ4VVXHdzjbDJZ1PvBK01K+E3GebmaBKdZ87qRJvBWPoPbzWeEd5T" crossorigin>
+<link rel="stylesheet" href="style.css?v=b3c238c3">
+<script>document.documentElement.className='js'</script>
+<script src="site.js?v=c241ddde" defer></script>
 </head>
-<body>
-<div class="wrap">
+<body class="p-game">
+<a class="skip" href="#main">본문 바로가기</a>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="android" viewBox="0 0 24 24"><path fill="currentColor" d="M6 18c0 .55.45 1 1 1h1v3.5a1.5 1.5 0 0 0 3 0V19h2v3.5a1.5 1.5 0 0 0 3 0V19h1c.55 0 1-.45 1-1V8H6v10zM3.5 8A1.5 1.5 0 0 0 2 9.5v7a1.5 1.5 0 0 0 3 0v-7A1.5 1.5 0 0 0 3.5 8zm17 0A1.5 1.5 0 0 0 19 9.5v7a1.5 1.5 0 0 0 3 0v-7A1.5 1.5 0 0 0 20.5 8zm-4.97-5.84 1.3-1.3a.5.5 0 0 0-.71-.71l-1.48 1.48A6.9 6.9 0 0 0 12 1c-.96 0-1.86.23-2.66.63L7.85.15a.5.5 0 1 0-.71.71l1.31 1.31A5.9 5.9 0 0 0 6 7h12a5.9 5.9 0 0 0-2.47-4.84zM10 5H9V4h1v1zm5 0h-1V4h1v1z"/></symbol>
+  <defs>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-get" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M4 7l8 6 8-6"/></g></symbol>
+    <symbol id="i-bug" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="8" height="12" rx="4"/><path d="M9.5 8a2.5 2.5 0 0 1 5 0M12 12v8M4 13h4M16 13h4M5 19l3-2M19 19l-3-2M5 7l3 2M19 7l-3 2"/></g></symbol>
+    <symbol id="i-card" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 10h18M7 15h4"/></g></symbol>
+    <symbol id="i-restore" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3L4 9.5"/><path d="M4 4.5v5h5"/><path d="M12 8.5V12l2.5 1.5"/></g></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9.5 7V4.5h5V7M6.5 7l1 12.5h9l1-12.5M10 11v5.5M14 11v5.5"/></g></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.5a2.5 2.5 0 1 1 3.4 2.3c-.6.3-1 .9-1 1.6v.4M12 17h.01"/></g></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8.5" y="8.5" width="11.5" height="11.5" rx="2"/><path d="M15.5 8.5V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v9.5a1 1 0 0 0 1 1h3.5"/></g></symbol>
+  </defs>
 </svg>
 
-<header class="topbar">
-  <div class="topbar-inner">
+<header class="site-header" data-header>
+  <div class="bar">
     <a class="brand" href="./">
-      <img src="assets/logo_white.png" alt="">
-      Sardina Studio
+      <img src="assets/logo_white.png" alt="" width="40" height="33">
+      <span>Sardina Studio</span>
     </a>
-    <nav class="navlinks">
-      <div class="navmenu">
-        <a href="index.html#games">게임</a>
-        <div class="dropdown">
-          <div class="dropdown-inner">
-            <a href="catbat.html">냥방망이</a>
-            <a href="catbat2.html">냥방망이 2</a>
-            <a href="wordria.html">워드리아</a>
-            <a href="boombrick.html">붐브릭</a>
-            <a href="spacesmasher.html">우주뿌셔</a>
+    <nav class="nav" id="site-nav" aria-label="주 메뉴">
+      <ul class="nav-list">
+        <li class="nav-games">
+          <a href="index.html#games" class="is-here">게임<svg class="i chev" width="16" height="16" aria-hidden="true" focusable="false"><use href="#i-down"/></svg></a>
+          <div class="nav-panel">
+            <ul class="nav-game-list">
+              <li><a href="catbat.html"><img src="assets/game_cat.png" alt="" width="40" height="40" loading="lazy"><span><b>냥방망이</b><small>캐주얼 · 고양이 전용</small></span></a></li>
+              <li><a href="catbat2.html"><img src="assets/game_cat2.png" alt="" width="40" height="40" loading="lazy"><span><b>냥방망이 2</b><small>3D · 캐주얼</small></span></a></li>
+              <li><a href="wordria.html"><img src="assets/game_wordria.png" alt="" width="40" height="40" loading="lazy"><span><b>워드리아</b><small>워드 퍼즐 · 오프라인 플레이</small></span></a></li>
+              <li><a href="boombrick.html" aria-current="page"><img src="assets/game_boombrick.png" alt="" width="40" height="40" loading="lazy"><span><b>붐브릭</b><small>아케이드 · 벽돌깨기</small></span></a></li>
+              <li><a href="spacesmasher.html"><img src="assets/game_spacesmasher.png" alt="" width="40" height="40" loading="lazy"><span><b>우주뿌셔</b><small>캐주얼 아케이드 · 1:1 대전</small></span></a></li>
+            </ul>
           </div>
-        </div>
-      </div>
-      <a href="index.html#contact">문의</a>
-      <a class="lang" href="boombrick-en.html">EN</a>
+        </li>
+        <li><a href="support.html">고객지원</a></li>
+        <li><a href="index.html#about">회사소개</a></li>
+      </ul>
     </nav>
+    <div class="lang" role="group" aria-label="언어 선택"><a href="boombrick.html" hreflang="ko" lang="ko" aria-current="true">KO</a><a href="boombrick-en.html" hreflang="en" lang="en">EN</a></div>
+    <button class="menu-btn" type="button" aria-controls="site-nav" aria-expanded="false"
+            aria-label="메뉴 열기" data-open-label="메뉴 열기" data-close-label="메뉴 닫기">
+      <svg class="i i-open" width="22" height="22" aria-hidden="true" focusable="false"><use href="#i-menu"/></svg><svg class="i i-close" width="22" height="22" aria-hidden="true" focusable="false"><use href="#i-close"/></svg>
+    </button>
   </div>
 </header>
 
-<main class="page">
+<main id="main">
 
-  <div class="hero game-hero" style="--c:#3ac6e8">
-    <img class="icon" src="assets/game_boombrick.png" alt="" width="128" height="128">
-    <h1>붐브릭</h1>
-    <p class="lede">우주로 날아간 토끼 «개토» 와 함께 벽돌을 부숩니다.</p>
-    <ul class="facts">
-          <li>아케이드</li>
-          <li>벽돌깨기</li>
-          <li>레트로 도트</li>
-          <li>Android</li>
-    </ul>
-    <a class="btn" href="https://play.google.com/store/apps/details?id=com.BigSmileMen.BlockDestroy">Google Play 에서 받기</a>
+<section class="game-hero" style="--c:#3ac6e8">
+  <div class="container gh-grid">
+    <div class="gh-text">
+      <nav class="crumbs" aria-label="현재 위치"><ol>
+        <li><a href="./">홈</a></li>
+        <li><a href="index.html#games">게임</a></li>
+        <li aria-current="page">붐브릭</li>
+      </ol></nav>
+      <div class="gh-title">
+        <img class="gh-icon" src="assets/game_boombrick.png" alt="" width="160" height="160">
+        <div>
+          <h1>붐브릭</h1>
+          <p class="gh-dev">Sardina Studio · Android</p>
+        </div>
+      </div>
+      <p class="gh-tagline">우주로 날아간 토끼 «개토» 와 함께 벽돌을 부숩니다.</p>
+      <ul class="tags"><li>아케이드</li><li>벽돌깨기</li><li>레트로 도트</li></ul>
+      <div class="cta-row">
+        <a class="btn btn-store btn-lg" href="https://play.google.com/store/apps/details?id=com.BigSmileMen.BlockDestroy" rel="noopener"><svg class="i" width="18" height="18" aria-hidden="true" focusable="false"><use href="#i-get"/></svg><span>Google Play에서 다운로드</span><span class="sr-only"> — 붐브릭</span></a>
+        <a class="btn btn-ghost btn-lg" href="#help"><svg class="i" width="18" height="18" aria-hidden="true" focusable="false"><use href="#i-help"/></svg>고객지원</a>
+      </div>
+    </div>
+    <div class="gh-art"><div class="device portrait"><img src="https://play-lh.googleusercontent.com/RGjkScrcPV2Z9KipwLjpCfAD9fwIAOT6jiK1hFSpcxI-znz0Dti4Z2Q7WuPE2dPVtH2lvGO-60Q7GHofqc_v4A=w540-rj" srcset="https://play-lh.googleusercontent.com/RGjkScrcPV2Z9KipwLjpCfAD9fwIAOT6jiK1hFSpcxI-znz0Dti4Z2Q7WuPE2dPVtH2lvGO-60Q7GHofqc_v4A=w400-rj 400w, https://play-lh.googleusercontent.com/RGjkScrcPV2Z9KipwLjpCfAD9fwIAOT6jiK1hFSpcxI-znz0Dti4Z2Q7WuPE2dPVtH2lvGO-60Q7GHofqc_v4A=w540-rj 540w, https://play-lh.googleusercontent.com/RGjkScrcPV2Z9KipwLjpCfAD9fwIAOT6jiK1hFSpcxI-znz0Dti4Z2Q7WuPE2dPVtH2lvGO-60Q7GHofqc_v4A=w720-rj 720w" sizes="(max-width: 640px) 70vw, 300px" alt="붐브릭 스크린샷 1/3" width="540" height="960" loading="lazy" decoding="async"></div></div>
   </div>
+</section>
 
-  <div class="section">
-    <p class="blurb wide">개토와 함께 우주에 있는 벽돌을 부셔주세요! 레트로 감성의 그래픽과 시원한 타격감을 느껴보세요. 높은 점수를 획득해 1등에 도전하세요! 출퇴근길·등하굣길 심심할 때 시간을 순삭하세요.</p>
-  </div>
-
-  <div class="section">
-    <p class="section-label">스크린샷</p>
-    <div class="shots">
-        <img src="https://play-lh.googleusercontent.com/RGjkScrcPV2Z9KipwLjpCfAD9fwIAOT6jiK1hFSpcxI-znz0Dti4Z2Q7WuPE2dPVtH2lvGO-60Q7GHofqc_v4A=w400-rj" srcset="https://play-lh.googleusercontent.com/RGjkScrcPV2Z9KipwLjpCfAD9fwIAOT6jiK1hFSpcxI-znz0Dti4Z2Q7WuPE2dPVtH2lvGO-60Q7GHofqc_v4A=w270-rj 270w, https://play-lh.googleusercontent.com/RGjkScrcPV2Z9KipwLjpCfAD9fwIAOT6jiK1hFSpcxI-znz0Dti4Z2Q7WuPE2dPVtH2lvGO-60Q7GHofqc_v4A=w400-rj 400w, https://play-lh.googleusercontent.com/RGjkScrcPV2Z9KipwLjpCfAD9fwIAOT6jiK1hFSpcxI-znz0Dti4Z2Q7WuPE2dPVtH2lvGO-60Q7GHofqc_v4A=w540-rj 540w, https://play-lh.googleusercontent.com/RGjkScrcPV2Z9KipwLjpCfAD9fwIAOT6jiK1hFSpcxI-znz0Dti4Z2Q7WuPE2dPVtH2lvGO-60Q7GHofqc_v4A=w720-rj 720w" sizes="(max-width: 620px) 44vw, (max-width: 860px) 30vw, 362px" alt="" width="270" height="480" loading="lazy" decoding="async">
-        <img src="https://play-lh.googleusercontent.com/O314RmP7G3M9USJNAY56LJlBHfhnbs-XDdE2KV8CWkl1jjW1lo181ugw61pXixVNhsIo1sxWqScNKcKUQf5u4cE=w400-rj" srcset="https://play-lh.googleusercontent.com/O314RmP7G3M9USJNAY56LJlBHfhnbs-XDdE2KV8CWkl1jjW1lo181ugw61pXixVNhsIo1sxWqScNKcKUQf5u4cE=w270-rj 270w, https://play-lh.googleusercontent.com/O314RmP7G3M9USJNAY56LJlBHfhnbs-XDdE2KV8CWkl1jjW1lo181ugw61pXixVNhsIo1sxWqScNKcKUQf5u4cE=w400-rj 400w, https://play-lh.googleusercontent.com/O314RmP7G3M9USJNAY56LJlBHfhnbs-XDdE2KV8CWkl1jjW1lo181ugw61pXixVNhsIo1sxWqScNKcKUQf5u4cE=w540-rj 540w, https://play-lh.googleusercontent.com/O314RmP7G3M9USJNAY56LJlBHfhnbs-XDdE2KV8CWkl1jjW1lo181ugw61pXixVNhsIo1sxWqScNKcKUQf5u4cE=w720-rj 720w" sizes="(max-width: 620px) 44vw, (max-width: 860px) 30vw, 362px" alt="" width="270" height="480" loading="lazy" decoding="async">
-        <img src="https://play-lh.googleusercontent.com/XtbfI8MMRWAjYN0wFoMK13IW4fJ7X25SobHDu3g4ELU8PmCuoymbVhllPFHXThkvk_8lBXcUnxa3OYxZHEb40w=w400-rj" srcset="https://play-lh.googleusercontent.com/XtbfI8MMRWAjYN0wFoMK13IW4fJ7X25SobHDu3g4ELU8PmCuoymbVhllPFHXThkvk_8lBXcUnxa3OYxZHEb40w=w270-rj 270w, https://play-lh.googleusercontent.com/XtbfI8MMRWAjYN0wFoMK13IW4fJ7X25SobHDu3g4ELU8PmCuoymbVhllPFHXThkvk_8lBXcUnxa3OYxZHEb40w=w400-rj 400w, https://play-lh.googleusercontent.com/XtbfI8MMRWAjYN0wFoMK13IW4fJ7X25SobHDu3g4ELU8PmCuoymbVhllPFHXThkvk_8lBXcUnxa3OYxZHEb40w=w540-rj 540w, https://play-lh.googleusercontent.com/XtbfI8MMRWAjYN0wFoMK13IW4fJ7X25SobHDu3g4ELU8PmCuoymbVhllPFHXThkvk_8lBXcUnxa3OYxZHEb40w=w720-rj 720w" sizes="(max-width: 620px) 44vw, (max-width: 860px) 30vw, 362px" alt="" width="270" height="480" loading="lazy" decoding="async">
+<section class="section section-tight" aria-labelledby="shots-h">
+  <div class="container sec-head">
+    <h2 id="shots-h">스크린샷</h2>
+    <div class="carousel-nav">
+      <button type="button" class="round" data-dir="-1" aria-label="이전 스크린샷" aria-controls="shots-track"><svg class="i" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-left"/></svg></button>
+      <button type="button" class="round" data-dir="1" aria-label="다음 스크린샷" aria-controls="shots-track"><svg class="i" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-right"/></svg></button>
     </div>
   </div>
+  <ul class="carousel-track" id="shots-track" tabindex="0" aria-label="스크린샷">
+        <li><img src="https://play-lh.googleusercontent.com/RGjkScrcPV2Z9KipwLjpCfAD9fwIAOT6jiK1hFSpcxI-znz0Dti4Z2Q7WuPE2dPVtH2lvGO-60Q7GHofqc_v4A=w400-rj" srcset="https://play-lh.googleusercontent.com/RGjkScrcPV2Z9KipwLjpCfAD9fwIAOT6jiK1hFSpcxI-znz0Dti4Z2Q7WuPE2dPVtH2lvGO-60Q7GHofqc_v4A=w270-rj 270w, https://play-lh.googleusercontent.com/RGjkScrcPV2Z9KipwLjpCfAD9fwIAOT6jiK1hFSpcxI-znz0Dti4Z2Q7WuPE2dPVtH2lvGO-60Q7GHofqc_v4A=w400-rj 400w, https://play-lh.googleusercontent.com/RGjkScrcPV2Z9KipwLjpCfAD9fwIAOT6jiK1hFSpcxI-znz0Dti4Z2Q7WuPE2dPVtH2lvGO-60Q7GHofqc_v4A=w540-rj 540w, https://play-lh.googleusercontent.com/RGjkScrcPV2Z9KipwLjpCfAD9fwIAOT6jiK1hFSpcxI-znz0Dti4Z2Q7WuPE2dPVtH2lvGO-60Q7GHofqc_v4A=w720-rj 720w" sizes="(max-width: 640px) 214px, 248px" alt="붐브릭 스크린샷 1/3" width="540" height="960" decoding="async"></li>
+        <li><img src="https://play-lh.googleusercontent.com/O314RmP7G3M9USJNAY56LJlBHfhnbs-XDdE2KV8CWkl1jjW1lo181ugw61pXixVNhsIo1sxWqScNKcKUQf5u4cE=w400-rj" srcset="https://play-lh.googleusercontent.com/O314RmP7G3M9USJNAY56LJlBHfhnbs-XDdE2KV8CWkl1jjW1lo181ugw61pXixVNhsIo1sxWqScNKcKUQf5u4cE=w270-rj 270w, https://play-lh.googleusercontent.com/O314RmP7G3M9USJNAY56LJlBHfhnbs-XDdE2KV8CWkl1jjW1lo181ugw61pXixVNhsIo1sxWqScNKcKUQf5u4cE=w400-rj 400w, https://play-lh.googleusercontent.com/O314RmP7G3M9USJNAY56LJlBHfhnbs-XDdE2KV8CWkl1jjW1lo181ugw61pXixVNhsIo1sxWqScNKcKUQf5u4cE=w540-rj 540w, https://play-lh.googleusercontent.com/O314RmP7G3M9USJNAY56LJlBHfhnbs-XDdE2KV8CWkl1jjW1lo181ugw61pXixVNhsIo1sxWqScNKcKUQf5u4cE=w720-rj 720w" sizes="(max-width: 640px) 214px, 248px" alt="붐브릭 스크린샷 2/3" width="540" height="960" loading="lazy" decoding="async"></li>
+        <li><img src="https://play-lh.googleusercontent.com/XtbfI8MMRWAjYN0wFoMK13IW4fJ7X25SobHDu3g4ELU8PmCuoymbVhllPFHXThkvk_8lBXcUnxa3OYxZHEb40w=w400-rj" srcset="https://play-lh.googleusercontent.com/XtbfI8MMRWAjYN0wFoMK13IW4fJ7X25SobHDu3g4ELU8PmCuoymbVhllPFHXThkvk_8lBXcUnxa3OYxZHEb40w=w270-rj 270w, https://play-lh.googleusercontent.com/XtbfI8MMRWAjYN0wFoMK13IW4fJ7X25SobHDu3g4ELU8PmCuoymbVhllPFHXThkvk_8lBXcUnxa3OYxZHEb40w=w400-rj 400w, https://play-lh.googleusercontent.com/XtbfI8MMRWAjYN0wFoMK13IW4fJ7X25SobHDu3g4ELU8PmCuoymbVhllPFHXThkvk_8lBXcUnxa3OYxZHEb40w=w540-rj 540w, https://play-lh.googleusercontent.com/XtbfI8MMRWAjYN0wFoMK13IW4fJ7X25SobHDu3g4ELU8PmCuoymbVhllPFHXThkvk_8lBXcUnxa3OYxZHEb40w=w720-rj 720w" sizes="(max-width: 640px) 214px, 248px" alt="붐브릭 스크린샷 3/3" width="540" height="960" loading="lazy" decoding="async"></li>
+  </ul>
+</section>
 
-  <p class="back"><a href="index.html#games">← 게임 목록</a></p>
+<section class="section section-tight">
+  <div class="container gd-grid">
+    <article class="gd-about">
+      <h2>게임 소개</h2>
+      <p>개토와 함께 우주에 있는 벽돌을 부셔주세요! 레트로 감성의 그래픽과 시원한 타격감을 느껴보세요. 높은 점수를 획득해 1등에 도전하세요! 출퇴근길·등하굣길 심심할 때 시간을 순삭하세요.</p>
+    </article>
+    <aside class="gd-side" style="--c:#3ac6e8">
+      <div class="info-card">
+        <h2>정보</h2>
+        <dl class="info-list">
+          <div><dt>개발</dt><dd>Sardina Studio</dd></div>
+          <div><dt>플랫폼</dt><dd>Android</dd></div>
+          <div><dt>특징</dt><dd>아케이드 · 벽돌깨기 · 레트로 도트</dd></div>
+          <div><dt>다운로드</dt><dd><a href="https://play.google.com/store/apps/details?id=com.BigSmileMen.BlockDestroy" rel="noopener">Google Play<svg class="i" width="14" height="14" aria-hidden="true" focusable="false"><use href="#i-ext"/></svg></a></dd></div>
+          <div><dt>개인정보</dt><dd><a href="privacy.html">개인정보처리방침</a></dd></div>
+        </dl>
+      </div>
+      <div class="info-card" id="help">
+        <h2>도움이 필요하세요?</h2>
+        <ul class="help-links">
+          <li><a href="mailto:sardina.chans@gmail.com?subject=%5B%EB%B6%90%EB%B8%8C%EB%A6%AD%5D%20%EB%B2%84%EA%B7%B8%20%EC%8B%A0%EA%B3%A0&amp;body=%EA%B2%8C%EC%9E%84%3A%20%EB%B6%90%EB%B8%8C%EB%A6%AD%0D%0A%EA%B8%B0%EA%B8%B0%20%EB%AA%A8%EB%8D%B8%3A%20%0D%0AAndroid%20%EB%B2%84%EC%A0%84%3A%20%0D%0A%EC%95%B1%20%EB%B2%84%EC%A0%84%3A%20%0D%0A%EC%96%B8%EC%A0%9C%2C%20%EB%AC%B4%EC%97%87%EC%9D%84%20%ED%95%98%EB%8B%A4%EA%B0%80%20%EC%83%9D%EA%B2%BC%EB%82%98%EC%9A%94%3A%20%0D%0A%0D%0A%28%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%EC%9D%B4%EB%82%98%20%ED%99%94%EB%A9%B4%20%EB%85%B9%ED%99%94%EA%B0%80%20%EC%9E%88%EC%9C%BC%EB%A9%B4%20%EC%B2%A8%EB%B6%80%ED%95%B4%20%EC%A3%BC%EC%84%B8%EC%9A%94%29"><span class="i-wrap"><svg class="i" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-bug"/></svg></span>버그 신고 메일 쓰기</a></li>
+          <li><a href="mailto:sardina.chans@gmail.com?subject=%5B%EB%B6%90%EB%B8%8C%EB%A6%AD%5D%20%EA%B8%B0%ED%83%80%20%EB%AC%B8%EC%9D%98&amp;body=%EA%B2%8C%EC%9E%84%3A%20%EB%B6%90%EB%B8%8C%EB%A6%AD%0D%0A%EB%82%B4%EC%9A%A9%3A%20"><span class="i-wrap"><svg class="i" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-mail"/></svg></span>다른 문의 메일 쓰기</a></li>
+          <li><a href="support.html#faq"><span class="i-wrap"><svg class="i" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-help"/></svg></span>자주 묻는 질문 보기</a></li>
+          <li><a href="delete-account.html"><span class="i-wrap"><svg class="i" width="20" height="20" aria-hidden="true" focusable="false"><use href="#i-trash"/></svg></span>계정·데이터 삭제</a></li>
+        </ul>
+        <p class="help-mail">메일 <a href="mailto:sardina.chans@gmail.com">sardina.chans@gmail.com</a></p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section class="section section-tight" aria-labelledby="more-h">
+  <div class="container">
+    <div class="sec-head">
+      <h2 id="more-h">다른 게임</h2>
+      <a class="link-arrow" href="index.html#games">게임 전체 보기<svg class="i" width="16" height="16" aria-hidden="true" focusable="false"><use href="#i-arrow"/></svg></a>
+    </div>
+    <ul class="more-grid">
+      <li><a class="mini-card" href="catbat.html" style="--c:#e98783">
+        <img src="assets/game_cat.png" alt="" width="160" height="160" loading="lazy">
+        <span><b>냥방망이</b><small>집사야, 나도 게임하고 싶다.</small></span></a></li>
+      <li><a class="mini-card" href="catbat2.html" style="--c:#f07a2b">
+        <img src="assets/game_cat2.png" alt="" width="160" height="160" loading="lazy">
+        <span><b>냥방망이 2</b><small>집사야, 나도 게임하고 싶다 — 이번엔 3D 로.</small></span></a></li>
+      <li><a class="mini-card" href="wordria.html" style="--c:#7c4dbe">
+        <img src="assets/game_wordria.png" alt="" width="160" height="160" loading="lazy">
+        <span><b>워드리아</b><small>쓸어서 단어를 만들고, 판을 채웁니다.</small></span></a></li>
+      <li><a class="mini-card" href="spacesmasher.html" style="--c:#6d5cf0">
+        <img src="assets/game_spacesmasher.png" alt="" width="160" height="160" loading="lazy">
+        <span><b>우주뿌셔</b><small>좌우로 두드려 행성을 부수는 캐주얼 아케이드.</small></span></a></li>
+    </ul>
+  </div>
+</section>
 
 </main>
 
-<footer>
-  <div class="footer-inner">
-    <span>© 2026 Sardina Studio · Seoul, Korea</span>
-    <div class="footer-links">
-      <a href="privacy.html">개인정보처리방침</a>
-      <a href="delete-account.html">계정 삭제</a>
-      <a href="index.html#contact">문의</a>
-      <a href="index-en.html">English</a>
+<footer class="site-footer">
+  <div class="ft-inner">
+    <div class="ft-brand">
+      <a class="brand" href="./"><img src="assets/logo_white.png" alt="" width="40" height="33" loading="lazy"><span>Sardina Studio</span></a>
+      <p>서울에서 모바일 게임을 만듭니다.</p>
+      <p><a class="ft-mail" href="mailto:sardina.chans@gmail.com"><svg class="i" width="18" height="18" aria-hidden="true" focusable="false"><use href="#i-mail"/></svg>sardina.chans@gmail.com</a></p>
+      
     </div>
+    <nav class="ft-cols" aria-label="바닥글 메뉴">
+      <div><h2>게임</h2><ul><li><a href="catbat.html">냥방망이</a></li><li><a href="catbat2.html">냥방망이 2</a></li><li><a href="wordria.html">워드리아</a></li><li><a href="boombrick.html">붐브릭</a></li><li><a href="spacesmasher.html">우주뿌셔</a></li></ul></div>
+      <div><h2>고객지원</h2><ul>
+        <li><a href="support.html">고객지원</a></li>
+        <li><a href="support.html#faq">자주 묻는 질문</a></li>
+        <li><a href="delete-account.html">계정 삭제</a></li>
+        <li><a href="support.html#contact">메일 문의</a></li>
+      </ul></div>
+      <div><h2>스튜디오</h2><ul>
+        <li><a href="index.html#about">회사소개</a></li>
+        <li><a class="ft-strong" href="privacy.html">개인정보처리방침</a></li>
+      </ul></div>
+    </nav>
+  </div>
+  <div class="ft-bottom">
+    <div>
+      <p>© 2026 Sardina Studio · Seoul, Korea</p>
+      
+    </div>
+    <div class="lang lang-foot" role="group" aria-label="언어 선택"><a href="boombrick.html" hreflang="ko" lang="ko" aria-current="true">KO</a><a href="boombrick-en.html" hreflang="en" lang="en">EN</a></div>
   </div>
 </footer>
-
-</div>
 </body>
 </html>
