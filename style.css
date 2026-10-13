@@ -1,12 +1,13 @@
-/* Sardina Studio — 2026-10 4차 시안. 근거·참고 사이트는 REDESIGN_NOTES.md
-   국내 게임사 홈의 틀(게임 슬라이드 첫 화면 · 그림 카드 · 스튜디오 · 바닥글)을 밝은 바탕으로.
+/* Sardina Studio — 2026-10 5차 시안. 근거·참고 사이트는 REDESIGN_NOTES.md
+   국내 게임사 홈의 틀(회사 첫 화면 · 그림 카드 · 스튜디오 · 바닥글)을 밝은 바탕으로.
    ─ 그림은 우리 게임의 실제 그림뿐이다(Play 스크린샷 · 앱 아이콘 · 로고). 자르지도 늘리지도 않는다 —
      object-fit: cover 를 쓰지 않고, 원래 비율 그대로 판 위에 놓는다.
    ─ 바탕은 흰색과 아주 옅은 회색. 글자는 진한 잉크색과 회색 둘.
      게임 색(--c)은 그 게임의 옅은 판(--tint) 안에서만 쓴다.
    ─ 둥근 모서리 --r · 선 --line · 그림자 --lift 는 각각 한 값이다.
    ─ 작게 시작해 넓힌다(모바일 먼저). 넓힘 지점은 640 · 960 · 1100.
-   ─ 개인정보처리방침·계정 삭제의 본문 마크업(.read 아래)은 손대지 않고 여기서만 꾸민다. */
+   ─ 개인정보처리방침·계정 삭제의 본문 마크업(.read 아래)은 손대지 않고 여기서만 꾸민다.
+   ─ 5차: 첫 화면은 회사(로고 · 슬로건 · 소개 · 단추 + 실제 그림 모음). 게임 슬라이드는 걷었다. */
 
 :root {
   --bg:      #ffffff;
@@ -131,74 +132,52 @@ p { margin: 0 0 14px; }
 .show-tall.n1 .shot { width: 60%; max-width: 280px; }
 .show-icon .big-icon { width: min(46%, 280px); border-radius: 22%; box-shadow: var(--lift); }
 
-/* ── 첫 화면 슬라이드(홈) · 첫 화면(게임 쪽) ─────────────────────────── */
-/* 슬라이드를 한 칸에 겹쳐 쌓는다 — 높이가 가장 큰 것에 맞춰져서 넘길 때 아래가 들썩이지 않는다 */
-.slider { position: relative; }
-.slides { display: grid; }
-.slide, .key { --tint: color-mix(in srgb, var(--c) 13%, #fff); background: var(--tint); }
-.slide { grid-area: 1 / 1; opacity: 0; visibility: hidden; transition: opacity .7s ease, visibility 0s linear .7s; }
-.slide.is-current { opacity: 1; visibility: visible; transition: opacity .7s ease, visibility 0s; }
-.slide-inner {
-  width: min(100% - 2 * var(--gutter), var(--container)); margin-inline: auto;
-  display: grid; gap: 28px; align-items: center;
-  padding: calc(var(--header-h) + 28px) 0 112px;
+/* ── 회사 첫 화면(홈) — 로고 · 슬로건 · 소개 한 줄 · 단추 + 실제 그림 모음 ───────── */
+.home-hero { background: var(--soft); overflow: hidden; }
+.hero-grid { display: grid; gap: 40px; align-items: center; padding: calc(var(--header-h) + 36px) 0 56px; }
+.hero-brand { display: flex; align-items: center; gap: 12px; margin: 0 0 22px; font-size: 17px; font-weight: 800; letter-spacing: -0.02em; }
+.hero-brand img { width: 64px; }
+.home-hero h1 {
+  font-size: clamp(38px, 6.4vw, 84px); line-height: 1.02; letter-spacing: -0.04em;
+  text-transform: uppercase; text-wrap: balance;
 }
-.key .slide-inner { padding-bottom: 56px; }
-.slide-art { order: -1; }
-.slide-icon { display: block; width: 72px; border-radius: 22%; margin-bottom: 16px; box-shadow: var(--lift); }
-.slide-name { font-size: clamp(38px, 6.4vw, 80px); line-height: 1.05; letter-spacing: -0.045em; }
-.slide-line { margin: 12px 0 26px; font-size: clamp(17px, 1.7vw, 21px); color: var(--ink-2); font-weight: 500; }
+.hero-sub { margin: 20px 0 0; font-size: clamp(18px, 1.9vw, 23px); font-weight: 600; color: var(--ink); }
+.hero-intro { margin: 8px 0 0; font-size: clamp(16px, 1.5vw, 18px); color: var(--ink-2); }
+.home-hero .cta { margin-top: 30px; }
+/* 그림 모음 — 세 단에 원래 비율 그대로 쌓는다(자르지 않는다). 가운데 단만 조금 내려 리듬을 준다 */
+.collage { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; align-items: start; }
+.c-col { display: grid; gap: 12px; }
+.c-col:nth-child(2) { margin-top: 36px; }
+.collage img { display: block; width: 100%; height: auto; border-radius: 14px; box-shadow: var(--lift); background: #fff; }
+.collage .c-tall { border-radius: 16px; aspect-ratio: 9 / 16; }
+.collage .c-wide { aspect-ratio: 540 / 306; }
+.collage .c-icon { border-radius: 22%; aspect-ratio: 1; }
+@media (min-width: 960px) {
+  .hero-grid { grid-template-columns: 6fr 5fr; gap: 64px; min-height: min(92vh, 860px);
+               padding: calc(var(--header-h) + 48px) 0 72px; }
+  .hero-brand img { width: 76px; }
+  .collage, .c-col { gap: 16px; }
+  .c-col:nth-child(2) { margin-top: 56px; }
+  .collage img { border-radius: 16px; }
+}
+
+/* ── 게임 쪽 첫 화면 — 왼쪽 글 · 오른쪽 실제 스크린샷(그 게임의 옅은 판 위) ─── */
+.key { --tint: color-mix(in srgb, var(--c) 13%, #fff); background: var(--tint); }
+.key-inner {
+  width: min(100% - 2 * var(--gutter), var(--container)); margin-inline: auto;
+  display: grid; gap: 28px; align-items: center; padding: calc(var(--header-h) + 28px) 0 56px;
+}
+.key-art { order: -1; }
+.key-icon { display: block; width: 72px; border-radius: 22%; margin-bottom: 16px; box-shadow: var(--lift); }
+.key-name { font-size: clamp(38px, 6.4vw, 80px); line-height: 1.05; letter-spacing: -0.045em; }
+.key-line { margin: 12px 0 26px; font-size: clamp(17px, 1.7vw, 21px); color: var(--ink-2); font-weight: 500; }
 .cta { display: flex; flex-wrap: wrap; gap: 10px; }
 @media (min-width: 960px) {
-  .slide-inner { grid-template-columns: 5fr 7fr; gap: 56px; min-height: min(86vh, 820px);
-                 padding: calc(var(--header-h) + 40px) 0 128px; }
-  .key .slide-inner { min-height: min(76vh, 700px); padding-bottom: 72px; }
-  .slide-art { order: 0; }
-  .slide-icon { width: 96px; margin-bottom: 22px; }
+  .key-inner { grid-template-columns: 5fr 7fr; gap: 56px; min-height: min(76vh, 700px);
+               padding: calc(var(--header-h) + 40px) 0 72px; }
+  .key-art { order: 0; }
+  .key-icon { width: 96px; margin-bottom: 22px; }
 }
-
-/* 아래 줄 — 게임 아이콘 다섯, 지금 것 강조 + 자동 넘김 진행 막대 */
-.slider-bar {
-  position: absolute; z-index: 3; bottom: 28px;
-  left: max(var(--gutter), calc((100% - var(--container)) / 2));
-  right: max(var(--gutter), calc((100% - var(--container)) / 2));
-  display: flex; align-items: center; justify-content: space-between; gap: 16px;
-}
-/* 아주 좁은 화면(320)에서는 아이콘이 줄어든다 — 안 그러면 멈춤 단추가 화면 밖으로 밀려 가로로 넘친다 */
-.thumbs { display: flex; gap: 8px; min-width: 0; }
-.thumb {
-  position: relative; padding: 0; border: 0; background: none; cursor: pointer; border-radius: 16px;
-  flex: 0 1 48px; min-width: 30px; opacity: .55; transition: opacity .2s;
-}
-.thumb img { display: block; width: 100%; border-radius: 13px; border: 2px solid transparent; }
-.thumb:hover { opacity: .9; }
-.thumb[aria-current] { opacity: 1; }
-.thumb[aria-current] img { border-color: var(--ink); }
-.thumb .bar { position: absolute; left: 4px; right: 4px; bottom: -10px; height: 3px; border-radius: 3px; background: rgba(17,19,24,.15); overflow: hidden; visibility: hidden; }
-.thumb[aria-current] .bar { visibility: visible; }
-.thumb .bar i { display: block; height: 100%; width: 0; background: var(--ink); }
-.slider.is-playing .thumb[aria-current] .bar i { animation: fill var(--interval, 6000ms) linear forwards; }
-.slider.is-paused .thumb[aria-current] .bar i { animation-play-state: paused; }
-@keyframes fill { to { width: 100%; } }
-.slider-toggle {
-  width: 40px; height: 40px; flex: none; display: grid; place-items: center; cursor: pointer;
-  border: 1px solid rgba(17,19,24,.25); border-radius: 50%; background: rgba(255,255,255,.7); color: var(--ink);
-}
-.slider-toggle .i-play { display: none; }
-.slider:not(.is-playing) .slider-toggle .i-pause { display: none; }
-.slider:not(.is-playing) .slider-toggle .i-play { display: block; }
-.no-js .slider-bar { display: none; }
-.no-js .slide-inner { padding-bottom: 56px; }
-@media (min-width: 960px) { .thumbs { gap: 14px; } .thumb { flex-basis: 60px; } .slider-bar { bottom: 40px; } }
-
-/* ── 슬로건 띠 ───────────────────────────────────── */
-.slogan { padding: 88px 0 16px; }
-.slogan-en {
-  margin: 0; font-size: clamp(34px, 6.2vw, 88px); font-weight: 800; line-height: 1.03;
-  letter-spacing: -0.035em; text-transform: uppercase; text-wrap: balance;
-}
-.slogan-sub { margin: 18px 0 0; font-size: clamp(17px, 1.8vw, 22px); color: var(--ink-2); font-weight: 500; }
-@media (min-width: 960px) { .slogan { padding: 136px 0 24px; } }
 
 /* ── 절 ──────────────────────────────────────────── */
 .section { padding: 56px 0 96px; }
@@ -470,7 +449,7 @@ details.faq summary:hover { color: var(--ink-2); }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 @media print {
-  .site-header, .site-footer, .skip, .shot-nav, .slider-bar, nav.toc { display: none !important; }
+  .site-header, .site-footer, .skip, .shot-nav, nav.toc { display: none !important; }
   .read { width: 100%; padding: 0; }
   .read a { color: inherit; }
 }

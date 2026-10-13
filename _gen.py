@@ -14,8 +14,8 @@
 # 페이지 트래픽도 늘지 않는다. 주소는 스토어 페이지의 «스크린샷 이미지» img
 # 에서 뽑았다(shots 값).
 #
-# 2026-10 4차 시안 — 국내 게임사 홈의 틀(게임 슬라이드 첫 화면 · 그림 카드 · 스튜디오 · 바닥글)을
-# 밝은 바탕으로. 그림은 «우리 게임의 실제 그림» 만 쓴다 — Play 스토어 스크린샷 · 앱 아이콘 · 로고.
+# 2026-10 5차 시안 — 첫 화면은 «회사»(로고 · 슬로건 · 소개 한 줄 · 단추), 그 아래 GAMES 카드 ·
+# 스튜디오 · 바닥글. 밝은 바탕. 그림은 «우리 게임의 실제 그림» 만 쓴다 — Play 스토어 스크린샷 · 앱 아이콘 · 로고.
 # 사장님 지시(2026-10-13): «거짓 이미지 생성해서는 하지 마. 그냥 우리 게임 그대로 넣으면 됨».
 # 근거와 참고 사이트는 REDESIGN_NOTES.md.
 
@@ -56,23 +56,22 @@ FONT_SRI = "sha384-uR1wgObmx89ZQ4VVXHdzjbDJZ1PvBK01K+E3GebmaBKdZ87qRJvBWPoPbzWeE
 # 첫 화면 가로 스크린샷의 sizes — showcase() 와 미리 받기(preload) 가 같은 값을 써야 같은 파일을 고른다
 HERO_WIDE_SIZES = "(max-width: 959px) 92vw, 640px"
 
-# 첫 화면 슬라이드가 저절로 넘어가는 간격(밀리초). JS 가 data- 로 받는다.
-SLIDE_MS = 6000
-
 # ── 스튜디오 표 — 회사 정보는 여기만 ───────────────────────────────────────
 # 비어 있으면 화면에 아예 안 나온다. «준비 중» 같은 빈 자리를 공개 화면에 띄우지 않는다.
 # 위치(도시·주소)는 사장님 지시로 사이트 어디에도 안 적는다(2026-10-13).
 STUDIO = dict(
     # TODO(사장님): 슬로건·소개 문구는 1·2차 시안의 초안을 그대로 옮긴 것이다(새로 짓지 않았다).
-    # 슬로건은 영어 대문자 한 줄 + 그 언어의 한 줄(데브시스터즈식 띠).
+    # 첫 화면: 슬로건(영어 대문자) + slogan_sub + intro(소개 첫 문장, 없으면 안 나온다).
     slogan="Little joys, right at your fingertips",
     ko=dict(
         slogan_sub="손끝으로 즐기는 작은 즐거움",
+        intro="Sardina Studio 는 모바일 게임을 만드는 스튜디오입니다.",
         about=("Sardina Studio 는 모바일 게임을 만드는 스튜디오입니다. 고양이를 위한 게임부터 "
                "워드 퍼즐, 레트로 감성의 아케이드까지 — 짧게 켜도 즐거운 게임을 만듭니다."),
     ),
     en=dict(
         slogan_sub="Mobile games made by Sardina Studio.",
+        intro=None,   # slogan_sub 와 같은 말이 되어 비운다
         about=("Sardina Studio is a mobile game studio. From games made for cats to word "
                "puzzles and retro arcade — games that are fun even in a short break."),
     ),
@@ -89,8 +88,9 @@ STUDIO = dict(
 )
 
 # ── 게임 표 — 여기만 고친다 ─────────────────────────────────────────────
-# 한 줄 = 첫 화면 슬라이드 · 홈 카드 · 게임 쪽 · 다른 게임 줄 · 고객지원 선택칸 · 사이트맵.
-# hero — 첫 화면에 맨 앞으로 내세울 «실제 스크린샷 주소». shots 안의 주소만 된다(_gen.py 가 확인한다).
+# 한 줄 = 회사 첫 화면 그림 모음 · 홈 카드 · 게임 쪽 · 다른 게임 줄 · 고객지원 선택칸 · 사이트맵.
+# hero — 맨 앞으로 내세울 «실제 스크린샷 주소»(게임 쪽 첫 화면 · 카드 · 회사 첫 화면 그림 모음).
+#   shots 안의 주소만 된다(_gen.py 가 확인한다).
 #   비어 있으면(None) shots 의 순서 그대로. 그림은 표의 칸으로만 가른다(이름으로 안 가른다 — showcase()):
 #     가로 스크린샷(shot_wide) → 한 장을 원래 비율 그대로 크게
 #     세로 스크린샷           → 2~3장을 원래 비율 그대로 나란히(폰 화면 모양 둥근 모서리만)
@@ -249,9 +249,8 @@ STR = dict(
         home="홈", games="게임", studio="스튜디오", support="고객지원",
         privacy="개인정보처리방침", delete="계정 삭제", faq="자주 묻는 질문",
         foot_nav="바닥글 메뉴",
-        store="Google Play", store_long="Google Play에서 다운로드", detail="자세히 보기",
-        slides="추천 게임", slide_n="{i} / {n}", pick="게임 고르기",
-        pause="자동 넘김 멈추기", play="자동 넘김 다시 켜기",
+        store="Google Play", store_long="Google Play에서 다운로드",
+        see_games="게임 보기",
         games_sub="Google Play 에서 만날 수 있는 게임",
         about_h="ABOUT US", contact_btn="문의하기",
         shots="스크린샷", prev="이전 스크린샷", next="다음 스크린샷",
@@ -288,9 +287,8 @@ STR = dict(
         home="Home", games="Games", studio="Studio", support="Support",
         privacy="Privacy Policy", delete="Delete account", faq="FAQ",
         foot_nav="Footer menu",
-        store="Google Play", store_long="Get it on Google Play", detail="Learn more",
-        slides="Featured games", slide_n="{i} of {n}", pick="Choose a game",
-        pause="Pause auto-advance", play="Resume auto-advance",
+        store="Google Play", store_long="Get it on Google Play",
+        see_games="See our games",
         games_sub="Our games on Google Play",
         about_h="ABOUT US", contact_btn="Contact us",
         shots="Screenshots", prev="Previous screenshot", next="Next screenshot",
@@ -379,28 +377,25 @@ def icon(name, size=20, cls="i"):
             f'focusable="false"><use href="#i-{name}"/></svg>')
 
 
-# 아이콘은 꼭 필요한 것만 — 화살표 둘, 바깥 링크, 복사, 멈춤/재생.
+# 아이콘은 꼭 필요한 것만 — 화살표 둘, 바깥 링크, 복사.
 SPRITE = """<svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
     <symbol id="i-left" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-right" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-copy" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8.5" y="8.5" width="11.5" height="11.5" rx="2"/><path d="M15.5 8.5V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v9.5a1 1 0 0 0 1 1h3.5"/></g></symbol>
-    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
-    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></symbol>
   </defs>
 </svg>"""
 
 
 # ── 게임 그림 — 우리 게임의 실제 그림만 ───────────────────────────────────
-# 첫 화면 슬라이드 · 게임 쪽 첫 화면 · GAMES 카드가 같은 규칙을 쓴다. 자르지도(cover) 늘리지도 않는다:
+# 회사 첫 화면의 그림 모음 · 게임 쪽 첫 화면 · GAMES 카드가 같은 규칙을 쓴다. 자르지도(cover) 늘리지도 않는다:
 # width/height 를 실제 비율(가로 540×306 · 세로 540×960 — CDN 원본을 잰 값과 같은 비율)로 주고
 # 높이는 auto 로 둔다.
-BLANK = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
 
 
 def featured(g):
-    """첫 화면에 놓을 실제 스크린샷 순서 — hero 칸이 있으면 그 주소를 맨 앞으로."""
+    """맨 앞에 놓을 실제 스크린샷 순서 — hero 칸이 있으면 그 주소를 맨 앞으로."""
     shots = list(g["shots"])
     if g.get("hero"):
         shots.remove(g["hero"])
@@ -408,15 +403,10 @@ def featured(g):
     return shots
 
 
-def showcase(g, lang, where, defer=False):
-    """where — "hero"(첫 화면 오른쪽) | "card"(GAMES 카드의 옅은 판 안).
-    defer — 첫 화면 2번째부터 슬라이드: src 를 data- 에 두고 JS 가 나중에 채운다
-            (안 그러면 안 보이는 슬라이드 그림까지 첫 화면에서 한꺼번에 받는다)."""
+def showcase(g, lang, where):
+    """where — "hero"(게임 쪽 첫 화면 오른쪽) | "card"(GAMES 카드의 옅은 판 안)."""
     t = g[lang]
-    pre = "data-" if defer else ""
-    # 미룬 그림도 src 는 있어야 한다(HTML 규칙) — 1×1 투명 GIF 를 두고 JS 가 바꾼다
-    blank = f' src="{BLANK}"' if defer else ""
-    load = "" if (defer or where == "hero") else ' loading="lazy"'
+    load = "" if where == "hero" else ' loading="lazy"'
     shots = featured(g)
     n = len(shots)
     if shots and g["shot_wide"]:
@@ -425,16 +415,15 @@ def showcase(g, lang, where, defer=False):
         sizes = (HERO_WIDE_SIZES if where == "hero"
                  else "(max-width: 639px) 84vw, (max-width: 959px) 42vw, 34vw")
         alt = STR[lang]["shot_alt"].format(name=t["name"], i=1, n=n)
-        return (f'<div class="show show-wide"><img class="shot"{blank} {pre}src="{u}=w1080-rj" '
-                f'{pre}srcset="{ss}" sizes="{sizes}" alt="{esc(alt)}" width="540" height="306"'
-                f'{load} decoding="async"></div>')
+        return (f'<div class="show show-wide"><img class="shot" src="{u}=w1080-rj" srcset="{ss}" '
+                f'sizes="{sizes}" alt="{esc(alt)}" width="540" height="306"{load} decoding="async"></div>')
     if shots:
         k = min(n, 3)
         sizes = ("(max-width: 639px) 27vw, (max-width: 959px) 22vw, 210px" if where == "hero"
                  else "(max-width: 639px) 24vw, 130px")
         imgs = "".join(
-            f'<img class="shot"{blank} {pre}src="{u}=w540-rj" '
-            f'{pre}srcset="{u}=w270-rj 270w, {u}=w400-rj 400w, {u}=w540-rj 540w, {u}=w720-rj 720w" '
+            f'<img class="shot" src="{u}=w540-rj" '
+            f'srcset="{u}=w270-rj 270w, {u}=w400-rj 400w, {u}=w540-rj 540w, {u}=w720-rj 720w" '
             f'sizes="{sizes}" alt="{esc(STR[lang]["shot_alt"].format(name=t["name"], i=i + 1, n=n))}" '
             f'width="540" height="960"{load} decoding="async">'
             for i, u in enumerate(shots[:k]))
@@ -442,6 +431,35 @@ def showcase(g, lang, where, defer=False):
     # 스크린샷이 없는 게임 — 앱 아이콘만(새 그림을 만들어 채우지 않는다)
     return (f'<div class="show show-icon"><img class="big-icon" src="assets/{g["icon"]}" alt="" '
             f'width="160" height="160"{load}></div>')
+
+
+def collage(cols=3):
+    """회사 첫 화면의 그림 모음 — 게임마다 실제 그림 한 장(가로·세로 스크린샷 첫 장, 없으면 아이콘).
+    원래 비율 그대로(자르지 않는다) 세 단에 나눠 쌓는데, 높은 그림부터 «지금 가장 낮은 단» 에
+    넣어 단 높이를 맞춘다 — 표 순서대로 흘리면 한 단만 길게 늘어졌다(4차 시안 화면에서 확인).
+    꾸밈 그림이라 읽기 프로그램에는 숨긴다 — 같은 게임이 바로 아래 GAMES 에 이름과 함께 나온다."""
+    items = []
+    for g in GAMES:
+        shots = featured(g)
+        if shots and g["shot_wide"]:
+            u = shots[0]
+            items.append((306 / 540, f'<img src="{u}=w540-rj" srcset="{u}=w400-rj 400w, {u}=w540-rj 540w, '
+                          f'{u}=w800-rj 800w" sizes="(max-width: 959px) 30vw, 210px" alt="" width="540" '
+                          f'height="306" class="c-wide">'))
+        elif shots:
+            u = shots[0]
+            items.append((960 / 540, f'<img src="{u}=w400-rj" srcset="{u}=w270-rj 270w, {u}=w400-rj 400w, '
+                          f'{u}=w540-rj 540w" sizes="(max-width: 959px) 30vw, 210px" alt="" width="540" '
+                          f'height="960" class="c-tall">'))
+        else:
+            items.append((1.0, f'<img src="assets/{g["icon"]}" alt="" width="160" height="160" class="c-icon">'))
+    heights, columns = [0.0] * cols, [[] for _ in range(cols)]
+    for h, tag in sorted(items, key=lambda x: -x[0]):   # sorted 은 같은 높이끼리 표 순서를 지킨다
+        k = heights.index(min(heights))
+        heights[k] += h
+        columns[k].append(tag)
+    return ('<div class="collage" aria-hidden="true">'
+            + "".join(f'<div class="c-col">{"".join(c)}</div>' for c in columns) + "</div>")
 
 
 # ── 껍데기 ───────────────────────────────────────────────────────────────
@@ -603,7 +621,9 @@ def store_link(g, lang, cls, label=None):
 
 
 # ── 홈 ───────────────────────────────────────────────────────────────────
-# 위에서 아래로: 게임 슬라이드(왼쪽 글 · 오른쪽 실제 스크린샷) → 슬로건 띠 → GAMES 카드 → 스튜디오 띠.
+# 위에서 아래로: 회사 첫 화면(로고 · 슬로건 · 소개 한 줄 · 단추 · 실제 그림 모음) → GAMES 카드 → 스튜디오 띠.
+# 사장님(2026-10-13): «홈페이지에 보통 첫 화면에 회사가 들어가 있지 않아?» — 게임 한 개가
+# 첫 화면을 차지하던 4차의 슬라이드를 걷고 회사를 주인공으로 둔다(데브시스터즈·슈퍼센트처럼).
 def card_rows(n):
     """카드 수 → 데스크톱 줄마다 몇 장인가. 빈 칸이 안 남게 2장 줄과 3장 줄을 섞는다.
     5 → [2, 3] · 4 → [2, 2] · 6 → [3, 3] · 7 → [2, 2, 3] — 큰 줄(2장)을 앞에 둔다."""
@@ -617,30 +637,6 @@ def index_page(lang):
     s = STR[lang]
     st = STUDIO[lang]
     n = len(GAMES)
-    slides, thumbs = [], []
-    for i, g in enumerate(GAMES):
-        t = g[lang]
-        cur = " is-current" if i == 0 else ""
-        hidden = "" if i == 0 else ' aria-hidden="true"'
-        slides.append(f"""    <article class="slide{cur}" style="--c:{g['accent']}" aria-roledescription="slide" aria-label="{s['slide_n'].format(i=i + 1, n=n)}"{hidden}>
-      <div class="slide-inner">
-        <div class="slide-body">
-          <img class="slide-icon" src="assets/{g['icon']}" alt="" width="160" height="160">
-          <h2 class="slide-name">{esc(t['name'])}</h2>
-          <p class="slide-line">{esc(t['tagline'])}</p>
-          <div class="cta">
-            {store_link(g, lang, "btn btn-primary")}
-            <a class="btn btn-ghost" href="{page_name(g['slug'], lang)}">{s['detail']}<span class="sr-only"> — {esc(t['name'])}</span></a>
-          </div>
-        </div>
-        <div class="slide-art">{showcase(g, lang, "hero", defer=(i > 0))}</div>
-      </div>
-    </article>""")
-        thumbs.append(
-            f'      <button type="button" class="thumb" data-go="{i}" aria-label="{esc(t["name"])}"'
-            f'{" aria-current=" + chr(34) + "true" + chr(34) if i == 0 else ""}>'
-            f'<img src="assets/{g["icon"]}" alt="" width="160" height="160"><span class="bar"><i></i></span></button>')
-
     rows = card_rows(n)
     spans = [6 // r for r in rows for _ in range(r)]
     cards = []
@@ -659,25 +655,21 @@ def index_page(lang):
         </div>
       </article>""")
 
+    intro = f'\n      <p class="hero-intro">{esc(st["intro"])}</p>' if st.get("intro") else ""
     body = f"""<main id="main">
 
-<section class="slider" aria-roledescription="carousel" aria-label="{s['slides']}" data-slider data-interval="{SLIDE_MS}">
-  <h1 class="sr-only">Sardina Studio</h1>
-  <div class="slides">
-{chr(10).join(slides)}
-  </div>
-  <div class="slider-bar">
-    <div class="thumbs" role="group" aria-label="{s['pick']}">
-{chr(10).join(thumbs)}
+<section class="home-hero" aria-labelledby="hero-h">
+  <div class="container hero-grid">
+    <div class="hero-text">
+      <p class="hero-brand"><img src="assets/logo_ink.png" alt="" width="176" height="144"><span>Sardina Studio</span></p>
+      <h1 id="hero-h" lang="en">{esc(STUDIO['slogan'])}</h1>
+      <p class="hero-sub">{esc(st['slogan_sub'])}</p>{intro}
+      <div class="cta">
+        <a class="btn btn-primary" href="#games">{s['see_games']}</a>
+        <a class="btn btn-ghost" href="{page_name('support', lang)}#contact">{s['contact_btn']}</a>
+      </div>
     </div>
-    <button type="button" class="slider-toggle" data-toggle aria-label="{s['pause']}" data-pause="{s['pause']}" data-play="{s['play']}">{icon('pause', 18, 'i i-pause')}{icon('play', 18, 'i i-play')}</button>
-  </div>
-</section>
-
-<section class="slogan" aria-label="Slogan">
-  <div class="container">
-    <p class="slogan-en" lang="en">{esc(STUDIO['slogan'])}</p>
-    <p class="slogan-sub">{esc(st['slogan_sub'])}</p>
+    {collage()}
   </div>
 </section>
 
@@ -713,11 +705,11 @@ def index_page(lang):
             else f"Sardina Studio — {names}. A mobile game studio.")
     return shell(lang, title="Sardina Studio", desc=desc,
                  path=index_href(lang), alt=index_href(other(lang)), body=body,
-                 here="home", body_class="p-home has-hero", preload=preload_for(GAMES[0]))
+                 here="home", body_class="p-home has-hero")
 
 
 # ── 게임 한 쪽 ───────────────────────────────────────────────────────────
-# 첫 화면(왼쪽 글 · 오른쪽 실제 스크린샷 — 슬라이드와 같은 규칙) → 소개 → 스크린샷 → 정보 → 도움 → 다른 게임.
+# 첫 화면(왼쪽 글 · 오른쪽 실제 스크린샷) → 소개 → 스크린샷 → 정보 → 도움 → 다른 게임.
 def shot_img(g, u, i, n, lang):
     # 스크린샷은 스토어 CDN 에서 곧바로 받는다 (우리 트래픽 0).
     #  · -rj = JPEG. 안 붙이면 PNG 를 주는데 같은 장이 620KB vs 114KB 다
@@ -774,17 +766,17 @@ def game_page(g, lang):
     body = f"""<main id="main">
 
 <section class="key" style="--c:{g['accent']}">
-  <div class="slide-inner">
-    <div class="slide-body">
-      <img class="slide-icon" src="assets/{g['icon']}" alt="" width="160" height="160">
-      <h1 class="slide-name">{esc(t['name'])}</h1>
-      <p class="slide-line">{esc(t['tagline'])}</p>
+  <div class="key-inner">
+    <div class="key-body">
+      <img class="key-icon" src="assets/{g['icon']}" alt="" width="160" height="160">
+      <h1 class="key-name">{esc(t['name'])}</h1>
+      <p class="key-line">{esc(t['tagline'])}</p>
       <div class="cta">
         {store_link(g, lang, "btn btn-primary", s['store_long'])}
         <a class="btn btn-ghost" href="#help">{s['support']}</a>
       </div>
     </div>
-    <div class="slide-art">{showcase(g, lang, "hero")}</div>
+    <div class="key-art">{showcase(g, lang, "hero")}</div>
   </div>
 </section>
 
