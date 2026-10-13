@@ -17,7 +17,7 @@
 # 2026-10 5차 시안 — 첫 화면은 «회사»(로고 · 슬로건 · 소개 한 줄 · 단추), 그 아래 GAMES 카드 ·
 # 스튜디오 · 바닥글. 밝은 바탕. 그림은 «우리 게임의 실제 그림» 만 쓴다 — Play 스토어 스크린샷 · 앱 아이콘 · 로고.
 # 사장님 지시(2026-10-13): «거짓 이미지 생성해서는 하지 마. 그냥 우리 게임 그대로 넣으면 됨».
-# 근거와 참고 사이트는 REDESIGN_NOTES.md.
+# 근거와 참고 사이트는 _REDESIGN_NOTES.md.
 
 import datetime, hashlib, html, io, json, os, re
 from urllib.parse import quote
@@ -43,10 +43,10 @@ def _hash(name):
 CSS_V = _hash("style.css")
 JS_V = _hash("site.js")
 
-# 홈 첫 화면 배너의 색 — "a"(밝은 쪽 #e0dbff→#c2b9ff) | "b"(가운데 #c3bbff→#968bf6).
-# style.css 의 .home-hero[data-tone] 과 짝이다. 6차(아주 옅은 라벤더)는 «너무 약함», 7차(진한 남보라)는
-# «너무 셈» — b 가 그 둘의 가운데 밝기라 b 를 쓴다(8차, 화면 비교는 _review/v8/).
-HERO_TONE = "b"
+# 홈 첫 화면 배너의 색 — "a"(밝은 라벤더 #e0dbff→#c2b9ff) | "b"(가운데 남보라 #c3bbff→#968bf6) | "c"(연하늘 #eef6ff→#d4e7fc).
+# style.css 의 .home-hero[data-tone] 과 짝이다. 6차(아주 옅은 라벤더)는 «너무 약함», 7차(진한 남보라)는 «너무 셈»,
+# 8차 b 는 «보라 말고 연한 다른 색» — 9차에서 연하늘 c 를 골랐다(화면 비교는 _review/v9/).
+HERO_TONE = "c"
 
 # 웹폰트 — Pretendard(OFL) 를 jsDelivr 에서 받는다. 버전을 못박고(1.3.9, 2023-11 배포)
 # SRI 로 내용까지 묶는다. «dynamic-subset» 이라 화면에 쓰인 글자 묶음만 받는다.
@@ -65,7 +65,7 @@ HERO_WIDE_SIZES = "(max-width: 959px) 92vw, 640px"
 # 비어 있으면 화면에 아예 안 나온다. «준비 중» 같은 빈 자리를 공개 화면에 띄우지 않는다.
 # 위치(도시·주소)는 사장님 지시로 사이트 어디에도 안 적는다(2026-10-13).
 STUDIO = dict(
-    # TODO(사장님): 첫 화면 슬로건은 7차 후보 1번이다(후보 셋은 REDESIGN_NOTES.md «v7»).
+    # TODO(사장님): 첫 화면 슬로건은 7차 후보 1번이다(후보 셋은 _REDESIGN_NOTES.md «v7»).
     #   숫자·수상·순위 같은 지어낸 사실은 넣지 않았다.
     #   2번: «SMALL GAMES, BIG SMILES» / «작은 게임, 큰 웃음»
     #   3번: «PLAY FOR CATS AND HUMANS» / «고양이와 사람, 모두의 놀이»
