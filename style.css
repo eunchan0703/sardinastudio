@@ -132,33 +132,42 @@ p { margin: 0 0 14px; }
 .show-tall.n1 .shot { width: 60%; max-width: 280px; }
 .show-icon .big-icon { width: min(46%, 280px); border-radius: 22%; box-shadow: var(--lift); }
 
-/* ── 회사 첫 화면(홈) — 로고 · 슬로건 · 소개 한 줄 · 단추 + 실제 그림 모음 ───────── */
-.home-hero { background: var(--soft); overflow: hidden; }
-.hero-grid { display: grid; gap: 40px; align-items: center; padding: calc(var(--header-h) + 36px) 0 56px; }
-.hero-brand { display: flex; align-items: center; gap: 12px; margin: 0 0 22px; font-size: 17px; font-weight: 800; letter-spacing: -0.02em; }
-.hero-brand img { width: 64px; }
-.home-hero h1 {
-  font-size: clamp(38px, 6.4vw, 84px); line-height: 1.02; letter-spacing: -0.04em;
-  text-transform: uppercase; text-wrap: balance;
+/* ── 회사 첫 화면(홈) — 로고 · 문구 · 게임 이름 줄 · 단추 + 실제 그림 모음 ───────── */
+/* 아래 GAMES 와의 경계를 분명히 — 옅은 브랜드색 그라데이션 판을 화면 높이 가까이 키우고
+   아래 끝을 둥글게 닫는다. 4차·5차는 옅은 회색 판이 뚝 끊기고 흰 바탕이 이어져 어색했다(사장님). */
+.home-hero {
+  overflow: hidden; border-radius: 0 0 32px 32px;
+  background:
+    radial-gradient(70% 60% at 85% 20%, rgba(109,92,241,.16), transparent 70%),
+    radial-gradient(60% 50% at 0% 100%, rgba(109,92,241,.10), transparent 70%),
+    linear-gradient(180deg, #f3f1ff 0%, #f8f7ff 100%);
 }
-.hero-sub { margin: 20px 0 0; font-size: clamp(18px, 1.9vw, 23px); font-weight: 600; color: var(--ink); }
-.hero-intro { margin: 8px 0 0; font-size: clamp(16px, 1.5vw, 18px); color: var(--ink-2); }
+.hero-grid { display: grid; gap: 40px; align-items: center; padding: calc(var(--header-h) + 32px) 0 48px; }
+.hero-brand { display: flex; align-items: center; gap: 12px; margin: 0 0 22px; font-size: 17px; font-weight: 800; letter-spacing: -0.02em; }
+.hero-brand img { width: 60px; }
+.home-hero h1 { font-size: clamp(36px, 5.6vw, 72px); line-height: 1.1; letter-spacing: -0.045em; text-wrap: balance; }
+.hero-sub { margin: 20px 0 0; font-size: clamp(16px, 1.6vw, 19px); font-weight: 700; color: var(--ink); }
+.hero-intro { margin: 6px 0 0; font-size: clamp(16px, 1.5vw, 18px); color: var(--ink-2); }
 .home-hero .cta { margin-top: 30px; }
 /* 그림 모음 — 세 단에 원래 비율 그대로 쌓는다(자르지 않는다). 가운데 단만 조금 내려 리듬을 준다 */
-.collage { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; align-items: start; }
+.collage { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; align-items: start;
+           width: min(100%, 420px); margin-inline: auto; }
 .c-col { display: grid; gap: 12px; }
-.c-col:nth-child(2) { margin-top: 36px; }
+.c-col:nth-child(2) { margin-top: 28px; }
 .collage img { display: block; width: 100%; height: auto; border-radius: 14px; box-shadow: var(--lift); background: #fff; }
 .collage .c-tall { border-radius: 16px; aspect-ratio: 9 / 16; }
 .collage .c-wide { aspect-ratio: 540 / 306; }
 .collage .c-icon { border-radius: 22%; aspect-ratio: 1; }
 @media (min-width: 960px) {
-  .hero-grid { grid-template-columns: 6fr 5fr; gap: 64px; min-height: min(92vh, 860px);
-               padding: calc(var(--header-h) + 48px) 0 72px; }
-  .hero-brand img { width: 76px; }
-  .collage, .c-col { gap: 16px; }
+  .home-hero { border-radius: 0 0 56px 56px; }
+  /* 화면 높이 가까이 — 넓은 화면에서도 1000px 을 넘기지 않는다 */
+  .hero-grid { grid-template-columns: 1fr 1fr; gap: 72px; min-height: min(100vh, 1000px); min-height: min(100svh, 1000px);
+               padding: calc(var(--header-h) + 40px) 0 72px; }
+  .hero-brand img { width: 72px; }
+  .collage { width: min(100%, 560px); gap: 16px; }
+  .c-col { gap: 16px; }
   .c-col:nth-child(2) { margin-top: 56px; }
-  .collage img { border-radius: 16px; }
+  .collage img { border-radius: 18px; }
 }
 
 /* ── 게임 쪽 첫 화면 — 왼쪽 글 · 오른쪽 실제 스크린샷(그 게임의 옅은 판 위) ─── */
@@ -181,6 +190,7 @@ p { margin: 0 0 14px; }
 
 /* ── 절 ──────────────────────────────────────────── */
 .section { padding: 56px 0 96px; }
+.home-hero + .section { padding-top: 72px; }
 .section-sm { padding: 48px 0; }
 .section-sm + .section-sm:not(.more) { padding-top: 8px; }
 @media (min-width: 960px) { .section { padding: 88px 0 136px; } .section-sm { padding: 64px 0; } }

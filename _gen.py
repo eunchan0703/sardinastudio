@@ -60,20 +60,23 @@ HERO_WIDE_SIZES = "(max-width: 959px) 92vw, 640px"
 # 비어 있으면 화면에 아예 안 나온다. «준비 중» 같은 빈 자리를 공개 화면에 띄우지 않는다.
 # 위치(도시·주소)는 사장님 지시로 사이트 어디에도 안 적는다(2026-10-13).
 STUDIO = dict(
-    # TODO(사장님): 슬로건·소개 문구는 1·2차 시안의 초안을 그대로 옮긴 것이다(새로 짓지 않았다).
-    # 첫 화면: 슬로건(영어 대문자) + slogan_sub + intro(소개 첫 문장, 없으면 안 나온다).
-    slogan="Little joys, right at your fingertips",
+    # TODO(사장님): 첫 화면 문구(hero)는 6차 후보 1번이다. 후보 셋은 REDESIGN_NOTES.md «v6» —
+    #   사실만 담았다(고양이가 하는 게임 · 워드 퍼즐 · 레트로 벽돌깨기 · 캐주얼 아케이드). 숫자·수상·순위 없음.
+    #   2번: «고양이 놀이부터 워드 퍼즐, 레트로 아케이드까지» / «From cat play to word puzzles and retro arcade»
+    #   3번: «Sardina Studio 가 만든 모바일 게임» / «Mobile games by Sardina Studio»
+    # 첫 화면: hero(큰 제목) → 게임 이름 줄(게임 표에서 저절로) → intro(소개 첫 문장, 없으면 안 나온다).
     ko=dict(
-        slogan_sub="손끝으로 즐기는 작은 즐거움",
+        hero="고양이도, 사람도 즐기는 모바일 게임",
         intro="Sardina Studio 는 모바일 게임을 만드는 스튜디오입니다.",
         about=("Sardina Studio 는 모바일 게임을 만드는 스튜디오입니다. 고양이를 위한 게임부터 "
-               "워드 퍼즐, 레트로 감성의 아케이드까지 — 짧게 켜도 즐거운 게임을 만듭니다."),
+               "워드 퍼즐, 레트로 감성의 아케이드까지 — 지금은 Android 용 게임을 Google Play 에 "
+               "내고 있습니다."),
     ),
     en=dict(
-        slogan_sub="Mobile games made by Sardina Studio.",
-        intro=None,   # slogan_sub 와 같은 말이 되어 비운다
+        hero="Mobile games for cats — and their humans",
+        intro="Sardina Studio is a mobile game studio.",
         about=("Sardina Studio is a mobile game studio. From games made for cats to word "
-               "puzzles and retro arcade — games that are fun even in a short break."),
+               "puzzles and retro arcade — our games are on Google Play for Android."),
     ),
     # TODO(사장님): SNS 가 생기면 (이름, 주소) 로 넣는다. 예: ("YouTube", "https://…")
     sns=[],
@@ -656,14 +659,16 @@ def index_page(lang):
       </article>""")
 
     intro = f'\n      <p class="hero-intro">{esc(st["intro"])}</p>' if st.get("intro") else ""
+    # 게임 이름 줄 — 표에서 저절로 나온다(게임을 늘리면 여기도 는다)
+    names = " · ".join(g[lang]["name"] for g in GAMES)
     body = f"""<main id="main">
 
 <section class="home-hero" aria-labelledby="hero-h">
   <div class="container hero-grid">
     <div class="hero-text">
       <p class="hero-brand"><img src="assets/logo_ink.png" alt="" width="176" height="144"><span>Sardina Studio</span></p>
-      <h1 id="hero-h" lang="en">{esc(STUDIO['slogan'])}</h1>
-      <p class="hero-sub">{esc(st['slogan_sub'])}</p>{intro}
+      <h1 id="hero-h">{esc(st['hero'])}</h1>
+      <p class="hero-sub">{esc(names)}</p>{intro}
       <div class="cta">
         <a class="btn btn-primary" href="#games">{s['see_games']}</a>
         <a class="btn btn-ghost" href="{page_name('support', lang)}#contact">{s['contact_btn']}</a>
@@ -700,7 +705,6 @@ def index_page(lang):
 </section>
 
 </main>"""
-    names = " · ".join(g[lang]["name"] for g in GAMES)
     desc = (f"Sardina Studio — {names}. 모바일 게임 스튜디오." if lang == "ko"
             else f"Sardina Studio — {names}. A mobile game studio.")
     return shell(lang, title="Sardina Studio", desc=desc,
