@@ -159,10 +159,6 @@ p { margin: 0 0 14px; }
               linear-gradient(135deg, #eef6ff 0%, #e2efff 55%, #d4e7fc 100%);
 }
 .hero-grid { display: grid; gap: 40px; align-items: center; padding: calc(var(--header-h) + 32px) 0 48px; }
-.hero-brand { display: flex; align-items: center; gap: 12px; margin: 0 0 22px; font-size: 17px; font-weight: 800; letter-spacing: -0.02em; }
-/* 로고는 남보라라 같은 계열 판 위에서 묻힌다 — 흰 둥근 판에 올려 또렷하게 */
-.hero-mark { display: grid; place-items: center; width: 60px; height: 60px; border-radius: 18px; background: #fff; box-shadow: var(--lift); }
-.hero-mark img { width: 44px; }
 .home-hero h1 { font-size: clamp(52px, 9vw, 128px); line-height: .95; letter-spacing: -0.045em; text-transform: uppercase; text-wrap: balance; }
 .hero-line { margin: 22px 0 0; font-size: clamp(20px, 2.2vw, 28px); font-weight: 700; letter-spacing: -0.02em; }
 .hero-sub { margin: 14px 0 0; font-size: clamp(14px, 1.3vw, 16px); font-weight: 600; color: #2b2e3a; }
@@ -183,7 +179,6 @@ p { margin: 0 0 14px; }
   /* 화면 높이 가까이 — 넓은 화면에서도 1000px 을 넘기지 않는다 */
   .hero-grid { grid-template-columns: 1fr 1fr; gap: 72px; min-height: min(100vh, 1000px); min-height: min(100svh, 1000px);
                padding: calc(var(--header-h) + 40px) 0 72px; }
-  .hero-mark { width: 72px; height: 72px; border-radius: 20px; } .hero-mark img { width: 52px; }
   .collage { width: min(100%, 560px); gap: 16px; }
   .c-col { gap: 16px; }
   .c-col:nth-child(2) { margin-top: 56px; }

@@ -270,11 +270,11 @@ STR = dict(
         s_title="고객지원", s_h1="무엇을 도와드릴까요?",
         s_lede="먼저 자주 묻는 질문을 확인해 주세요. 해결되지 않으면 메일로 알려 주세요.",
         c_h="메일 문의",
-        c_p="게임과 문의 종류를 고르면 제목과 적을 내용이 채워진 메일이 열립니다.",
+        c_p="게임과 문의 종류를 고르면 제목과 적을 내용이 채워진 메일 쓰기 화면이 열립니다.",
         c_game="게임", c_none="고르지 않음", c_topic="문의 종류", c_btn="메일 쓰기",
         c_subject="제목", c_copy="주소 복사", c_copied="주소를 복사했습니다.",
         c_copy_fail="복사하지 못했습니다. 주소를 직접 선택해 주세요.",
-        c_note="메일 앱이 열리지 않으면 위 주소로 직접 보내 주세요.",
+        c_note="PC 에서는 Gmail 쓰기 화면이, 폰에서는 메일 앱이 열립니다. 열리지 않으면 위 주소로 직접 보내 주세요.",
         nf_title="페이지를 찾을 수 없습니다", nf_p="주소가 바뀌었거나 없는 페이지입니다.",
         topics=dict(
             bug=("버그 신고",
@@ -308,12 +308,12 @@ STR = dict(
         s_title="Support", s_h1="How can we help?",
         s_lede="Please check the FAQ first. If it does not answer your question, email us.",
         c_h="Email us",
-        c_p="Pick the game and the topic, and your mail app opens with the subject and "
+        c_p="Pick the game and the topic, and a new email opens with the subject and "
             "the details we need already filled in.",
         c_game="Game", c_none="Not selected", c_topic="Topic", c_btn="Write email",
         c_subject="Subject", c_copy="Copy address", c_copied="Address copied.",
         c_copy_fail="Could not copy. Please select the address manually.",
-        c_note="If no mail app opens, send your message to the address above.",
+        c_note="On a computer this opens Gmail; on a phone, your mail app. If nothing opens, send your message to the address above.",
         nf_title="Page not found", nf_p="The address may have changed, or the page does not exist.",
         topics=dict(
             bug=("Bug report",
@@ -671,7 +671,6 @@ def index_page(lang):
 <section class="home-hero" data-tone="{HERO_TONE}" aria-labelledby="hero-h">
   <div class="container hero-grid">
     <div class="hero-text">
-      <p class="hero-brand"><span class="hero-mark"><img src="assets/logo_ink.png" alt="" width="176" height="144"></span><span>Sardina Studio</span></p>
       <h1 id="hero-h" lang="en">{esc(STUDIO['slogan'])}</h1>{line}
       <p class="hero-sub">{esc(names)}</p>
       <div class="cta">

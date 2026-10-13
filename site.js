@@ -60,14 +60,24 @@
     };
     pick(game, params.get('game'));
     pick(topic, params.get('topic'));
+    // 손가락 화면(폰 · 태블릿)은 mailto 그대로 — 안드로이드는 Gmail 앱이 열린다. 웹 Gmail 로 보내면 폰에서는 앱 대신 좁은 웹 화면이 뜬다
+    var gmail = !(window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches);
+    if (gmail) { link.target = '_blank'; link.rel = 'noopener'; }
     var build = function () {
       var t = cfg.topics && cfg.topics[topic.value];
       if (!t) return;
       var g = game.value;
       var subject = (g ? '[' + g + '] ' : '[Sardina Studio] ') + t.label;
       var body = t.body.replace('{game}', g).replace(/\n/g, '\r\n');
-      link.href = 'mailto:' + cfg.mail + '?subject=' + encodeURIComponent(subject) +
-                  '&body=' + encodeURIComponent(body);
+      if (gmail) {
+        // PC — Gmail 쓰기 화면을 새 탭으로(사장님 2026-10-13 «메일 쓰기 하면 구글 메일로»).
+        //   PC 에는 메일 앱이 없는 경우가 많아 mailto 가 아무 일도 안 했다
+        link.href = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(cfg.mail) +
+                    '&su=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+      } else {
+        link.href = 'mailto:' + cfg.mail + '?subject=' + encodeURIComponent(subject) +
+                    '&body=' + encodeURIComponent(body);
+      }
       out.textContent = subject;
     };
     game.addEventListener('change', build);
