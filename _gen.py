@@ -60,21 +60,21 @@ HERO_WIDE_SIZES = "(max-width: 959px) 92vw, 640px"
 # 비어 있으면 화면에 아예 안 나온다. «준비 중» 같은 빈 자리를 공개 화면에 띄우지 않는다.
 # 위치(도시·주소)는 사장님 지시로 사이트 어디에도 안 적는다(2026-10-13).
 STUDIO = dict(
-    # TODO(사장님): 첫 화면 문구(hero)는 6차 후보 1번이다. 후보 셋은 REDESIGN_NOTES.md «v6» —
-    #   사실만 담았다(고양이가 하는 게임 · 워드 퍼즐 · 레트로 벽돌깨기 · 캐주얼 아케이드). 숫자·수상·순위 없음.
-    #   2번: «고양이 놀이부터 워드 퍼즐, 레트로 아케이드까지» / «From cat play to word puzzles and retro arcade»
-    #   3번: «Sardina Studio 가 만든 모바일 게임» / «Mobile games by Sardina Studio»
-    # 첫 화면: hero(큰 제목) → 게임 이름 줄(게임 표에서 저절로) → intro(소개 첫 문장, 없으면 안 나온다).
+    # TODO(사장님): 첫 화면 슬로건은 7차 후보 1번이다(후보 셋은 REDESIGN_NOTES.md «v7»).
+    #   숫자·수상·순위 같은 지어낸 사실은 넣지 않았다.
+    #   2번: «SMALL GAMES, BIG SMILES» / «작은 게임, 큰 웃음»
+    #   3번: «PLAY FOR CATS AND HUMANS» / «고양이와 사람, 모두의 놀이»
+    # 첫 화면: slogan(영어 대문자 큰 제목, 두 언어 공통) → slogan_line(그 언어의 한 줄, 없으면 안 나온다)
+    #          → 게임 이름 줄(게임 표에서 저절로, 작게).
+    slogan="We make play",
     ko=dict(
-        hero="고양이도, 사람도 즐기는 모바일 게임",
-        intro="Sardina Studio 는 모바일 게임을 만드는 스튜디오입니다.",
+        slogan_line="우리는 놀이를 만듭니다",
         about=("Sardina Studio 는 모바일 게임을 만드는 스튜디오입니다. 고양이를 위한 게임부터 "
                "워드 퍼즐, 레트로 감성의 아케이드까지 — 지금은 Android 용 게임을 Google Play 에 "
                "내고 있습니다."),
     ),
     en=dict(
-        hero="Mobile games for cats — and their humans",
-        intro="Sardina Studio is a mobile game studio.",
+        slogan_line=None,   # 영어 쪽은 큰 제목이 곧 그 말이다
         about=("Sardina Studio is a mobile game studio. From games made for cats to word "
                "puzzles and retro arcade — our games are on Google Play for Android."),
     ),
@@ -525,13 +525,15 @@ def lang_switch(lang, self_href, alt_href):
 def header(lang, here, self_href, alt_href):
     # 메뉴는 셋(게임 · 스튜디오 · 고객지원). 좁은 화면에서도 한 줄에 들어가므로 햄버거가 없다.
     # 첫 화면 위에서는 투명했다가, 내려가면 흰 단색 띠가 된다(site.js · style.css).
+    # 홈의 진한 첫 화면(hero-dark) 위에서는 흰 글자·흰 로고, 흰 띠가 되면 잉크색으로 돌아온다.
     s = STR[lang]
     g_cur = ' class="is-here"' if here in [g["slug"] for g in GAMES] else ""
     sup_cur = ' aria-current="page"' if here == "support" else ""
     return f"""<header class="site-header" data-header>
   <div class="bar">
     <a class="brand" href="{home_href(lang)}">
-      <img src="assets/logo_ink.png" alt="" width="44" height="36">
+      <img class="logo-ink" src="assets/logo_ink.png" alt="" width="44" height="36">
+      <img class="logo-white" src="assets/logo_white.png" alt="" width="44" height="36" loading="lazy">
       <span class="brand-name">Sardina Studio</span>
     </a>
     <nav class="nav" aria-label="{s['nav_label']}">
@@ -658,7 +660,7 @@ def index_page(lang):
         </div>
       </article>""")
 
-    intro = f'\n      <p class="hero-intro">{esc(st["intro"])}</p>' if st.get("intro") else ""
+    line = f'\n      <p class="hero-line">{esc(st["slogan_line"])}</p>' if st.get("slogan_line") else ""
     # 게임 이름 줄 — 표에서 저절로 나온다(게임을 늘리면 여기도 는다)
     names = " · ".join(g[lang]["name"] for g in GAMES)
     body = f"""<main id="main">
@@ -666,9 +668,9 @@ def index_page(lang):
 <section class="home-hero" aria-labelledby="hero-h">
   <div class="container hero-grid">
     <div class="hero-text">
-      <p class="hero-brand"><img src="assets/logo_ink.png" alt="" width="176" height="144"><span>Sardina Studio</span></p>
-      <h1 id="hero-h">{esc(st['hero'])}</h1>
-      <p class="hero-sub">{esc(names)}</p>{intro}
+      <p class="hero-brand"><img src="assets/logo_white.png" alt="" width="176" height="144"><span>Sardina Studio</span></p>
+      <h1 id="hero-h" lang="en">{esc(STUDIO['slogan'])}</h1>{line}
+      <p class="hero-sub">{esc(names)}</p>
       <div class="cta">
         <a class="btn btn-primary" href="#games">{s['see_games']}</a>
         <a class="btn btn-ghost" href="{page_name('support', lang)}#contact">{s['contact_btn']}</a>
@@ -709,7 +711,7 @@ def index_page(lang):
             else f"Sardina Studio — {names}. A mobile game studio.")
     return shell(lang, title="Sardina Studio", desc=desc,
                  path=index_href(lang), alt=index_href(other(lang)), body=body,
-                 here="home", body_class="p-home has-hero")
+                 here="home", body_class="p-home has-hero hero-dark")
 
 
 # ── 게임 한 쪽 ───────────────────────────────────────────────────────────
