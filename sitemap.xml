@@ -72,4 +72,12 @@
     <xhtml:link rel="alternate" hreflang="ko" href="https://eunchan0703.github.io/sardinastudio/privacy.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://eunchan0703.github.io/sardinastudio/privacy-en.html"/>
   </url>
+  <url><loc>https://eunchan0703.github.io/sardinastudio/terms.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://eunchan0703.github.io/sardinastudio/terms.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eunchan0703.github.io/sardinastudio/terms-en.html"/>
+  </url>
+  <url><loc>https://eunchan0703.github.io/sardinastudio/terms-en.html</loc>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://eunchan0703.github.io/sardinastudio/terms.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://eunchan0703.github.io/sardinastudio/terms-en.html"/>
+  </url>
 </urlset>

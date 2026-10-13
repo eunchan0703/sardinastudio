@@ -68,7 +68,8 @@
       Studio — what we handle, why, and how it is protected.
       <strong>What is handled differs from game to game.</strong></p>
     <ul class="meta">
-      <li><b>Effective</b> 27 August 2026</li>
+      <li><b>Effective</b> 13 October 2026</li>
+      <li><b>Revised</b> Added Nyangtori, overseas transfer and promotional messages (previous version effective 27 August 2026)</li>
     </ul>
   </div>
 
@@ -76,16 +77,18 @@
     <h2>Contents</h2>
     <ol>
       <li><a href="#s1">1. Information We Collect</a></li>
-      <li><a href="#s2">2. What We Do Not Collect</a></li>
-      <li><a href="#s3">3. Where Information Is Stored</a></li>
-      <li><a href="#s4">4. Sharing With Third Parties</a></li>
-      <li><a href="#s5">5. What Other Players See</a></li>
-      <li><a href="#s6">6. Retention and Deletion</a></li>
-      <li><a href="#s7">7. Your Rights</a></li>
-      <li><a href="#s8">8. Children’s Privacy</a></li>
-      <li><a href="#s9">9. Security</a></li>
-      <li><a href="#s10">10. Changes</a></li>
-      <li><a href="#s11">11. Contact</a></li>
+      <li><a href="#nyangtori">2. Information Processed in Nyangtori</a></li>
+      <li><a href="#s2">3. What We Do Not Collect</a></li>
+      <li><a href="#s3">4. Where Information Is Stored</a></li>
+      <li><a href="#s4">5. Sharing With Third Parties</a></li>
+      <li><a href="#s5">6. What Other Players See</a></li>
+      <li><a href="#s6">7. Retention and Deletion</a></li>
+      <li><a href="#s7">8. Your Rights</a></li>
+      <li><a href="#marketing">9. Promotional Messages</a></li>
+      <li><a href="#s8">10. Children’s Privacy</a></li>
+      <li><a href="#s9">11. Security</a></li>
+      <li><a href="#s10">12. Changes</a></li>
+      <li><a href="#s11">13. Contact</a></li>
     </ol>
   </nav>
 
@@ -170,8 +173,82 @@
     starts, and can change that choice at any time from the in-game settings.</p>
   </section>
 
+  <section id="nyangtori">
+    <h2><span class="num">02</span> Information Processed in Nyangtori</h2>
+    <div class="callout">
+      <p><strong>Nyangtori</strong> (Android · <code>com.sardinastudio.nyangtori</code>) uses
+      <strong>Google Firebase</strong> (sign-in, data storage and server functions) as its backend. For Nyangtori,
+      the table below applies instead of the “Unity Gaming Services” rows in section 1.</p>
+    </div>
+    <div class="table">
+      <table>
+        <thead><tr><th>Item</th><th>Details</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr>
+            <td data-label="Item">Account identifier</td>
+            <td data-label="Details">A random string issued by Firebase Authentication (guest and Google), and an 8-digit in-game player number</td>
+            <td data-label="Purpose">Telling accounts apart, saving progress, identifying your account when you contact us</td>
+          </tr>
+          <tr>
+            <td data-label="Item">Google account details <small>(only if you link a Google account)</small></td>
+            <td data-label="Details">Email address, name and profile picture URL — received and stored by Firebase Authentication when it processes Google sign-in</td>
+            <td data-label="Purpose">Sign-in and account linking. Never shown in the game or to other players</td>
+          </tr>
+          <tr>
+            <td data-label="Item">Nickname <small>(2–12 characters)</small></td>
+            <td data-label="Details">The name you choose</td>
+            <td data-label="Purpose">Shown on your profile</td>
+          </tr>
+          <tr>
+            <td data-label="Item">Copy of game progress</td>
+            <td data-label="Details">Level, stage, upgrades, equipment, missions, attendance and other progress, app version, a 30-day progress summary</td>
+            <td data-label="Purpose">Restoring progress on a new device or reinstall, checking that progress is legitimate</td>
+          </tr>
+          <tr>
+            <td data-label="Item">Currency, holdings and transaction records</td>
+            <td data-label="Details">Server-managed currency such as rubies, owned equipment, artifacts and costumes, and results of draws, merges and mail claims</td>
+            <td data-label="Purpose">Accurate grants and deductions, handling inquiries</td>
+          </tr>
+          <tr>
+            <td data-label="Item">Mail</td>
+            <td data-label="Details">Mail received and claim records</td>
+            <td data-label="Purpose">Delivering rewards</td>
+          </tr>
+          <tr>
+            <td data-label="Item">Consent record</td>
+            <td data-label="Details">The version and time of the Terms of Service you accepted, and whether and when you opted in to promotional messages</td>
+            <td data-label="Purpose">Keeping evidence of consent</td>
+          </tr>
+          <tr>
+            <td data-label="Item">Cheat detection record</td>
+            <td data-label="Details">A signal that tampering with saved values or speed manipulation was detected, and its type</td>
+            <td data-label="Purpose">Preventing cheating, keeping the game fair</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tablenote">* Nyangtori currently <strong>uses no advertising, payment or analytics tools.</strong> If we add any,
+      we will update this policy first. Before you sign in (first launch) data stays on the device; it is uploaded after you
+      start as a guest or sign in with Google.</p>
+
+    <h3>Overseas transfer</h3>
+    <p>Because Nyangtori uses Firebase, the information above is transferred to and stored on Google’s servers.</p>
+    <div class="table">
+      <table>
+        <tbody>
+          <tr><td data-label="">Recipient</td><td data-label="">Google LLC (Firebase) — <a href="https://firebase.google.com/support/privacy" rel="noopener">firebase.google.com/support/privacy</a></td></tr>
+          <tr><td data-label="">Countries</td><td data-label="">Republic of Korea (Seoul region) and other countries where Google has data centers, such as the United States</td></tr>
+          <tr><td data-label="">When and how</td><td data-label="">Continuously while you play, over encrypted connections (HTTPS)</td></tr>
+          <tr><td data-label="">Items and purpose</td><td data-label="">As in the table above</td></tr>
+          <tr><td data-label="">Retention</td><td data-label="">Until you delete your account</td></tr>
+          <tr><td data-label="">How to refuse</td><td data-label="">Stop using the game or delete your account. Nyangtori cannot be played without its server</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
   <section id="s2">
-    <h2><span class="num">02</span> What We Do Not Collect</h2>
+    <h2><span class="num">03</span> What We Do Not Collect</h2>
     <ul>
       <li>Name · date of birth · gender · phone number · postal address · email address</li>
       <li>Government-issued identifiers</li>
@@ -182,11 +259,13 @@
     <p>Even if you sign in with a Google account, our games do
     <strong>not receive your email address, Google account name, or profile
     picture.</strong> The only thing received at sign-in is a one-time authentication
-    code used to link the account.</p>
+    code used to link the account. <strong>Nyangtori is the exception</strong> — when you link a Google account,
+    Firebase Authentication, which processes the sign-in, receives and stores your email address, name and profile
+    picture URL (<a href="#nyangtori">Nyangtori section</a>).</p>
   </section>
 
   <section id="s3">
-    <h2><span class="num">03</span> Where Information Is Stored</h2>
+    <h2><span class="num">04</span> Where Information Is Stored</h2>
     <div class="table">
       <table>
         <thead><tr><th>Where</th><th>What</th></tr></thead>
@@ -194,6 +273,10 @@
           <tr>
             <td data-label="Where">Your device</td>
             <td data-label="What">Game progress (encrypted save file), sound and language settings, selected character and items</td>
+          </tr>
+          <tr>
+            <td data-label="Where">Google Firebase <small>(Nyangtori)</small></td>
+            <td data-label="What">Account identifier, linked Google account details, nickname, copy of game progress, currency, holdings and transaction records, mail, consent record, cheat detection record (<a href="#nyangtori">Nyangtori section</a>)</td>
           </tr>
           <tr>
             <td data-label="Where">Unity Gaming Services</td>
@@ -215,14 +298,14 @@
   </section>
 
   <section id="s4">
-    <h2><span class="num">04</span> Sharing With Third Parties</h2>
+    <h2><span class="num">05</span> Sharing With Third Parties</h2>
     <p>We do not sell your information. Apart from the processors listed in section 3
     (advertising, analytics and backend operation), we do not share your information
     with third parties, except where required by law.</p>
   </section>
 
   <section id="s5">
-    <h2><span class="num">05</span> What Other Players See</h2>
+    <h2><span class="num">06</span> What Other Players See</h2>
     <p><strong>This applies only to games that have versus play or leaderboards.</strong>
     In games without those features, nothing about you is shown to other players.</p>
     <p>When you play a match with another player, your <strong>nickname, profile
@@ -234,16 +317,17 @@
   </section>
 
   <section id="s6">
-    <h2><span class="num">06</span> Retention and Deletion</h2>
+    <h2><span class="num">07</span> Retention and Deletion</h2>
     <ul>
       <li>Information stored on your device is <strong>deleted when you uninstall the app</strong>.</li>
       <li>Information stored on the backend is retained until you request deletion.</li>
       <li>Statistical information is retained in a non-identifying form to improve the service.</li>
+          <li>In Nyangtori, <strong>Settings &gt; Delete account</strong> <strong>immediately deletes</strong> the server account, progress copy, currency, mail, records and sign-in account.</li>
     </ul>
   </section>
 
   <section id="s7">
-    <h2><span class="num">07</span> Your Rights</h2>
+    <h2><span class="num">08</span> Your Rights</h2>
     <p>You may request <strong>access to, correction of, deletion of, or restriction of
     processing of</strong> your information by any of the following means:</p>
     <ul>
@@ -253,6 +337,7 @@
           your in-game nickname so we can identify the anonymous record.</li>
       <li><strong>Opt out of personalised ads</strong> — on Android, go to
           Settings &gt; Privacy &gt; Ads to delete or reset your advertising ID.</li>
+          <li><strong>Delete a Nyangtori account</strong> — do it yourself in Settings &gt; Delete account (this cannot be undone).</li>
     </ul>
     <p>Users in the EEA and the UK have rights under the GDPR, including data
     portability and the right to object to processing. California residents have rights
@@ -261,8 +346,21 @@
     <strong>We do not sell personal information.</strong></p>
   </section>
 
+  <section id="marketing">
+    <h2><span class="num">09</span> Promotional Messages</h2>
+    <ul>
+      <li>On first launch, Nyangtori asks for <strong>[Optional] consent to game news and promotional messages</strong>.
+          Saying no does not limit your play in any way.</li>
+      <li>What we may send: news about events, updates and offers, by app push notification.
+          <strong>We do not send any yet.</strong> Before we start, we will announce it here and in the game.</li>
+      <li>We do not send them between 9 p.m. and 8 a.m. unless you separately agree.</li>
+      <li>Whether and when you consented is kept on your device and, once you sign in, in your account’s server copy.</li>
+      <li>To withdraw consent, email us at the address below. When we add notifications, you will also be able to turn them off in the game settings.</li>
+    </ul>
+  </section>
+
   <section id="s8">
-    <h2><span class="num">08</span> Children’s Privacy</h2>
+    <h2><span class="num">10</span> Children’s Privacy</h2>
     <p>Our games are not directed at children under 13 (under 14 in the Republic of
     Korea), and we do not knowingly collect personal information from them. If we learn
     that we have collected such information, we delete it promptly. Parents and
@@ -271,24 +369,25 @@
   </section>
 
   <section id="s9">
-    <h2><span class="num">09</span> Security</h2>
+    <h2><span class="num">11</span> Security</h2>
     <ul>
       <li>Game progress stored on the device is protected with
           <strong>AES-256 encryption and HMAC integrity verification</strong>.</li>
       <li>Cloud backups are transmitted and stored in encrypted form, so the backend
-          operator cannot read their contents.</li>
+          operator cannot read their contents. <strong>Nyangtori is the exception</strong>: it stores its progress copy in a
+          readable form so the server can check that progress is legitimate, and access is limited to people with operator rights.</li>
       <li>All communication with the backend is encrypted using HTTPS.</li>
     </ul>
   </section>
 
   <section id="s10">
-    <h2><span class="num">10</span> Changes to This Policy</h2>
+    <h2><span class="num">12</span> Changes to This Policy</h2>
     <p>If this policy changes, we will post the change and its effective date on this
     page. Material changes will also be announced in the game.</p>
   </section>
 
   <section id="s11">
-    <h2><span class="num">11</span> Contact</h2>
+    <h2><span class="num">13</span> Contact</h2>
     <div class="contact">
       <p class="who">Sardina Studio</p>
       <p class="mail"><a href="mailto:sardina.chans@gmail.com">sardina.chans@gmail.com</a></p>
@@ -306,6 +405,7 @@
     </div>
     <nav class="ft-links" aria-label="Footer menu">
       <a href="support-en.html">Support</a>
+      <a href="terms-en.html">Terms of Service</a>
       <a class="ft-strong" href="privacy-en.html">Privacy Policy</a>
       <a href="delete-account-en.html">Delete account</a>
     </nav>

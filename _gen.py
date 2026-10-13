@@ -7,7 +7,7 @@
 #   python3 _gen.py && python3 _check.py
 #
 # 찍는 것 (전부 한/영 짝, 이름은 옛 주소 그대로 — 플레이 콘솔이 이 주소들을 물고 있다):
-#   index · <게임>.html · support · delete-account · privacy(본문은 손글, 껍데기만)
+#   index · <게임>.html · support · delete-account · privacy · terms(이 둘은 본문이 손글, 껍데기만)
 #   + 404.html · sitemap.xml
 #
 # 스크린샷은 우리가 담지 않고 Play 스토어 CDN 을 그대로 가리킨다 — 저장소도
@@ -255,7 +255,7 @@ STR = dict(
     ko=dict(
         lang="ko", skip="본문 바로가기", nav_label="주 메뉴", lang_label="언어 선택",
         home="홈", games="게임", studio="스튜디오", support="고객지원",
-        privacy="개인정보처리방침", delete="계정 삭제", faq="자주 묻는 질문",
+        privacy="개인정보처리방침", terms="이용약관", delete="계정 삭제", faq="자주 묻는 질문",
         foot_nav="바닥글 메뉴",
         store="Google Play", store_long="Google Play에서 다운로드",
         see_games="게임 보기",
@@ -293,7 +293,7 @@ STR = dict(
     en=dict(
         lang="en", skip="Skip to content", nav_label="Main menu", lang_label="Language",
         home="Home", games="Games", studio="Studio", support="Support",
-        privacy="Privacy Policy", delete="Delete account", faq="FAQ",
+        privacy="Privacy Policy", terms="Terms of Service", delete="Delete account", faq="FAQ",
         foot_nav="Footer menu",
         store="Google Play", store_long="Get it on Google Play",
         see_games="See our games",
@@ -568,6 +568,7 @@ def footer(lang, self_href, alt_href):
     </div>
     <nav class="ft-links" aria-label="{s['foot_nav']}">
       <a href="{page_name('support', lang)}">{s['support']}</a>
+      <a href="{page_name('terms', lang)}">{s['terms']}</a>
       <a class="ft-strong" href="{page_name('privacy', lang)}">{s['privacy']}</a>
       <a href="{page_name('delete-account', lang)}">{s['delete']}</a>{sns}
     </nav>
@@ -1152,17 +1153,18 @@ def delete_page(lang):
                  body=body, here="delete", body_class="p-doc")
 
 
-# ── 개인정보처리방침 — 손으로 쓴 본문, 껍데기만 갈아 끼운다 ───────────────
-def privacy_page(lang):
+# ── 개인정보처리방침 · 이용약관 — 손으로 쓴 본문, 껍데기만 갈아 끼운다 ───────────
+def legal_page(slug, lang):
     # 본문(<main>…</main>)·제목·설명은 파일에 적힌 그대로 옮긴다. 법적 문구라
     # 이 도구가 한 글자도 만들거나 고치지 않는다. 고칠 때는 html 파일의 <main> 안을 고친다.
-    name = page_name("privacy", lang)
+    # 이용약관(terms)은 2026-10-13 에 같은 방식으로 붙였다 — 게임의 첫 실행 동의 창 › 가 이 주소를 연다.
+    name = page_name(slug, lang)
     src = io.open(os.path.join(OUT, name), encoding="utf-8").read()
     main = re.search(r"<main\b.*?</main>", src, flags=re.S).group(0)
     title = html.unescape(re.search(r"<title>(.*?)</title>", src, flags=re.S).group(1))
     desc = html.unescape(re.search(r'<meta name="description" content="(.*?)">', src).group(1))
-    return shell(lang, title=title, desc=desc, path=name, alt=page_name("privacy", other(lang)),
-                 body=main, here="privacy", body_class="p-doc p-privacy")
+    return shell(lang, title=title, desc=desc, path=name, alt=page_name(slug, other(lang)),
+                 body=main, here=slug, body_class="p-doc p-" + slug)
 
 
 # ── 404 ──────────────────────────────────────────────────────────────────
@@ -1227,12 +1229,14 @@ if __name__ == "__main__":
     write("support-en.html", support_page("en"))
     write("delete-account.html", delete_page("ko"))
     write("delete-account-en.html", delete_page("en"))
-    # 개인정보처리방침은 두 장을 먼저 다 읽고 나서 쓴다
-    priv = {lang: privacy_page(lang) for lang in ("ko", "en")}
-    write("privacy.html", priv["ko"])
-    write("privacy-en.html", priv["en"])
+    # 개인정보처리방침 · 이용약관은 두 장을 먼저 다 읽고 나서 쓴다(읽는 파일이 곧 쓰는 파일이다)
+    for slug in ("privacy", "terms"):
+        doc = {lang: legal_page(slug, lang) for lang in ("ko", "en")}
+        write(page_name(slug, "ko"), doc["ko"])
+        write(page_name(slug, "en"), doc["en"])
     write("404.html", not_found_page())
     pairs += [("support.html", "support-en.html"),
               ("delete-account.html", "delete-account-en.html"),
-              ("privacy.html", "privacy-en.html")]
+              ("privacy.html", "privacy-en.html"),
+              ("terms.html", "terms-en.html")]
     write("sitemap.xml", sitemap(pairs))
