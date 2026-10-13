@@ -1,4 +1,4 @@
-/* Sardina Studio — 2026-10 7차 시안. 근거·참고 사이트는 REDESIGN_NOTES.md
+/* Sardina Studio — 2026-10 8차 시안. 근거·참고 사이트는 REDESIGN_NOTES.md
    국내 게임사 홈의 틀(회사 첫 화면 · 그림 카드 · 스튜디오 · 바닥글)을 밝은 바탕으로.
    ─ 그림은 우리 게임의 실제 그림뿐이다(Play 스크린샷 · 앱 아이콘 · 로고). 자르지도 늘리지도 않는다 —
      object-fit: cover 를 쓰지 않고, 원래 비율 그대로 판 위에 놓는다.
@@ -8,7 +8,7 @@
    ─ 작게 시작해 넓힌다(모바일 먼저). 넓힘 지점은 640 · 960 · 1100.
    ─ 개인정보처리방침·계정 삭제의 본문 마크업(.read 아래)은 손대지 않고 여기서만 꾸민다.
    ─ 5차: 첫 화면은 회사(로고 · 슬로건 · 단추 + 실제 그림 모음). 게임 슬라이드는 걷었다.
-   ─ 7차: 첫 화면만 진한 브랜드색 판 + 흰 글자. 나머지는 밝은 그대로. */
+   ─ 8차: 첫 화면은 가운데 밝기의 브랜드색 판 + 진한 글자(7차의 진한 판은 너무 셌다). */
 
 :root {
   --bg:      #ffffff;
@@ -112,22 +112,12 @@ p { margin: 0 0 14px; }
 .lang a { padding: 4px 6px; color: var(--ink-3); text-decoration: none; letter-spacing: .04em; }
 .lang a:hover, .lang a[aria-current] { color: var(--ink); }
 /* 좁은 화면 — 로고 옆 글자만 숨긴다(읽기 프로그램에는 남긴다). 메뉴 셋은 그대로 한 줄 */
-/* 진한 첫 화면(홈) 위에서는 흰 글자 · 흰 로고. 흰 띠(is-solid)가 되면 잉크색으로.
-   JS 가 없으면 is-solid 가 안 붙으므로 처음부터 흰 띠로 둔다(아래 흰 바탕에서 흰 글자가 안 보이게 되므로) */
-.brand .logo-white { display: none; }
-.hero-dark .site-header:not(.is-solid) .logo-ink { display: none; }
-.hero-dark .site-header:not(.is-solid) .logo-white { display: block; }
-.hero-dark .site-header:not(.is-solid) .brand,
-.hero-dark .site-header:not(.is-solid) .nav a,
-.hero-dark .site-header:not(.is-solid) .lang a[aria-current] { color: #fff; }
-.hero-dark .site-header:not(.is-solid) .lang a { color: rgba(255,255,255,.7); }
-.hero-dark .site-header:not(.is-solid) :focus-visible { outline-color: #fff; }
-.no-js .hero-dark .site-header { background: rgba(255,255,255,.96); border-color: var(--line); }
-.no-js .hero-dark .site-header .logo-ink { display: block; }
-.no-js .hero-dark .site-header .logo-white { display: none; }
-.no-js .hero-dark .site-header .brand, .no-js .hero-dark .site-header .nav a { color: var(--ink); }
-.no-js .hero-dark .site-header .lang a { color: var(--ink-3); }
-.no-js .hero-dark .site-header .lang a[aria-current] { color: var(--ink); }
+/* 홈 배너(브랜드색 판) 위 머리띠 — 회색 글자는 판 위에서 대비가 4.5:1 아래로 떨어진다(b 판 #aba1ff 위 3.9:1).
+   판 위에서는 메뉴를 잉크색(8:1 이상), 언어 단추를 진한 회색(4.7:1 이상)으로 */
+.p-home .site-header:not(.is-solid) .nav a { color: var(--ink); }
+.p-home .site-header:not(.is-solid) .lang a { color: #2b2e3a; }
+/* JS 가 없으면 is-solid 가 붙지 않는다 — 내려가도 투명한 띠가 글 위에 겹치지 않게 처음부터 흰 띠로 */
+.no-js .has-hero .site-header { background: rgba(255,255,255,.96); border-color: var(--line); }
 @media (max-width: 519px) {
   .bar { gap: 14px; }
   .nav { gap: 14px; }
@@ -150,29 +140,29 @@ p { margin: 0 0 14px; }
 .show-icon .big-icon { width: min(46%, 280px); border-radius: 22%; box-shadow: var(--lift); }
 
 /* ── 회사 첫 화면(홈) — 로고 · 슬로건 · 게임 이름 줄 · 단추 + 실제 그림 모음 ───────── */
-/* 진한 브랜드색 판 + 흰 글자 — 아래 흰 바탕과 확실히 갈린다(7차: «색 대비 더 되게»).
-   흰 글자 대비: #3d2bd6 위 8.7:1 · #5b4cf0 위 5.6:1. 아래 끝은 둥글게 닫는다. */
-.home-hero {
-  overflow: hidden; border-radius: 0 0 32px 32px; color: #fff;
-  background:
-    radial-gradient(60% 70% at 85% 15%, rgba(255,255,255,.14), transparent 70%),
-    linear-gradient(135deg, #3d2bd6 0%, #4f3fe8 55%, #5b4cf0 100%);
+/* 가운데 밝기의 브랜드색 판 + 진한 글자. 6차(아주 옅은 라벤더)는 아래 흰 바탕과 잘 안 갈렸고,
+   7차(진한 남보라)는 눈에 셌다(사장님) — 그 사이 두 판(a · b)을 두고 _gen.py 의 HERO_TONE 으로 고른다.
+   잉크 글자 대비(가장 진한 끝 기준): a 판 위 10.3:1 · b 판 위 6.5:1, 작은 줄 #2b2e3a 는 a 7.5:1 · b 4.7:1. 아래 끝은 둥글게 닫는다. */
+.home-hero { overflow: hidden; border-radius: 0 0 32px 32px; color: var(--ink); }
+.home-hero[data-tone="a"] {
+  background: radial-gradient(60% 70% at 85% 15%, rgba(255,255,255,.45), transparent 70%),
+              linear-gradient(135deg, #e0dbff 0%, #cdc5ff 55%, #c2b9ff 100%);
 }
-.home-hero :focus-visible { outline-color: #fff; }
+.home-hero[data-tone="b"] {
+  background: radial-gradient(60% 70% at 85% 15%, rgba(255,255,255,.35), transparent 70%),
+              linear-gradient(135deg, #c3bbff 0%, #aba1ff 55%, #968bf6 100%);
+}
 .hero-grid { display: grid; gap: 40px; align-items: center; padding: calc(var(--header-h) + 32px) 0 48px; }
-.hero-brand { display: flex; align-items: center; gap: 12px; margin: 0 0 22px; font-size: 17px; font-weight: 800; letter-spacing: -0.02em; color: #fff; }
-.hero-brand img { width: 60px; }
-.home-hero h1 {
-  color: #fff; font-size: clamp(52px, 9vw, 128px); line-height: .95; letter-spacing: -0.045em;
-  text-transform: uppercase; text-wrap: balance;
-}
-.hero-line { margin: 22px 0 0; font-size: clamp(20px, 2.2vw, 28px); font-weight: 700; letter-spacing: -0.02em; color: #fff; }
-.hero-sub { margin: 14px 0 0; font-size: clamp(14px, 1.3vw, 16px); font-weight: 500; color: rgba(255,255,255,.82); }
+.hero-brand { display: flex; align-items: center; gap: 12px; margin: 0 0 22px; font-size: 17px; font-weight: 800; letter-spacing: -0.02em; }
+/* 로고는 남보라라 같은 계열 판 위에서 묻힌다 — 흰 둥근 판에 올려 또렷하게 */
+.hero-mark { display: grid; place-items: center; width: 60px; height: 60px; border-radius: 18px; background: #fff; box-shadow: var(--lift); }
+.hero-mark img { width: 44px; }
+.home-hero h1 { font-size: clamp(52px, 9vw, 128px); line-height: .95; letter-spacing: -0.045em; text-transform: uppercase; text-wrap: balance; }
+.hero-line { margin: 22px 0 0; font-size: clamp(20px, 2.2vw, 28px); font-weight: 700; letter-spacing: -0.02em; }
+.hero-sub { margin: 14px 0 0; font-size: clamp(14px, 1.3vw, 16px); font-weight: 600; color: #2b2e3a; }
 .home-hero .cta { margin-top: 32px; }
-.home-hero .btn-primary { background: #fff; color: var(--ink); }
-.home-hero .btn-primary:hover { background: #ecebff; }
-.home-hero .btn-ghost { background: transparent; color: #fff; border-color: rgba(255,255,255,.6); }
-.home-hero .btn-ghost:hover { border-color: #fff; background: rgba(255,255,255,.1); }
+.home-hero .btn-ghost { background: rgba(255,255,255,.35); border-color: rgba(17,19,24,.45); }
+.home-hero .btn-ghost:hover { background: rgba(255,255,255,.6); border-color: var(--ink); }
 /* 그림 모음 — 세 단에 원래 비율 그대로 쌓는다(자르지 않는다). 가운데 단만 조금 내려 리듬을 준다 */
 .collage { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; align-items: start;
            width: min(100%, 420px); margin-inline: auto; }
@@ -187,7 +177,7 @@ p { margin: 0 0 14px; }
   /* 화면 높이 가까이 — 넓은 화면에서도 1000px 을 넘기지 않는다 */
   .hero-grid { grid-template-columns: 1fr 1fr; gap: 72px; min-height: min(100vh, 1000px); min-height: min(100svh, 1000px);
                padding: calc(var(--header-h) + 40px) 0 72px; }
-  .hero-brand img { width: 72px; }
+  .hero-mark { width: 72px; height: 72px; border-radius: 20px; } .hero-mark img { width: 52px; }
   .collage { width: min(100%, 560px); gap: 16px; }
   .c-col { gap: 16px; }
   .c-col:nth-child(2) { margin-top: 56px; }

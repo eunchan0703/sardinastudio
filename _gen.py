@@ -43,6 +43,11 @@ def _hash(name):
 CSS_V = _hash("style.css")
 JS_V = _hash("site.js")
 
+# 홈 첫 화면 배너의 색 — "a"(밝은 쪽 #e0dbff→#c2b9ff) | "b"(가운데 #c3bbff→#968bf6).
+# style.css 의 .home-hero[data-tone] 과 짝이다. 6차(아주 옅은 라벤더)는 «너무 약함», 7차(진한 남보라)는
+# «너무 셈» — b 가 그 둘의 가운데 밝기라 b 를 쓴다(8차, 화면 비교는 _review/v8/).
+HERO_TONE = "b"
+
 # 웹폰트 — Pretendard(OFL) 를 jsDelivr 에서 받는다. 버전을 못박고(1.3.9, 2023-11 배포)
 # SRI 로 내용까지 묶는다. «dynamic-subset» 이라 화면에 쓰인 글자 묶음만 받는다.
 # ⚠ 2026-08 에는 «외부 폰트 없음(트래픽 최소)» 이 사장님 지시였다(커밋 3571de3).
@@ -524,16 +529,14 @@ def lang_switch(lang, self_href, alt_href):
 
 def header(lang, here, self_href, alt_href):
     # 메뉴는 셋(게임 · 스튜디오 · 고객지원). 좁은 화면에서도 한 줄에 들어가므로 햄버거가 없다.
-    # 첫 화면 위에서는 투명했다가, 내려가면 흰 단색 띠가 된다(site.js · style.css).
-    # 홈의 진한 첫 화면(hero-dark) 위에서는 흰 글자·흰 로고, 흰 띠가 되면 잉크색으로 돌아온다.
+    # 첫 화면 위에서는 투명했다가, 내려가면 흰 단색 띠가 된다(site.js · style.css). 글자는 늘 진한 색이다.
     s = STR[lang]
     g_cur = ' class="is-here"' if here in [g["slug"] for g in GAMES] else ""
     sup_cur = ' aria-current="page"' if here == "support" else ""
     return f"""<header class="site-header" data-header>
   <div class="bar">
     <a class="brand" href="{home_href(lang)}">
-      <img class="logo-ink" src="assets/logo_ink.png" alt="" width="44" height="36">
-      <img class="logo-white" src="assets/logo_white.png" alt="" width="44" height="36" loading="lazy">
+      <img src="assets/logo_ink.png" alt="" width="44" height="36">
       <span class="brand-name">Sardina Studio</span>
     </a>
     <nav class="nav" aria-label="{s['nav_label']}">
@@ -665,10 +668,10 @@ def index_page(lang):
     names = " · ".join(g[lang]["name"] for g in GAMES)
     body = f"""<main id="main">
 
-<section class="home-hero" aria-labelledby="hero-h">
+<section class="home-hero" data-tone="{HERO_TONE}" aria-labelledby="hero-h">
   <div class="container hero-grid">
     <div class="hero-text">
-      <p class="hero-brand"><img src="assets/logo_white.png" alt="" width="176" height="144"><span>Sardina Studio</span></p>
+      <p class="hero-brand"><span class="hero-mark"><img src="assets/logo_ink.png" alt="" width="176" height="144"></span><span>Sardina Studio</span></p>
       <h1 id="hero-h" lang="en">{esc(STUDIO['slogan'])}</h1>{line}
       <p class="hero-sub">{esc(names)}</p>
       <div class="cta">
@@ -711,7 +714,7 @@ def index_page(lang):
             else f"Sardina Studio — {names}. A mobile game studio.")
     return shell(lang, title="Sardina Studio", desc=desc,
                  path=index_href(lang), alt=index_href(other(lang)), body=body,
-                 here="home", body_class="p-home has-hero hero-dark")
+                 here="home", body_class="p-home has-hero")
 
 
 # ── 게임 한 쪽 ───────────────────────────────────────────────────────────
