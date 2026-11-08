@@ -68,8 +68,8 @@
       Studio — what we handle, why, and how it is protected.
       <strong>What is handled differs from game to game.</strong></p>
     <ul class="meta">
-      <li><b>Effective</b> 5 November 2026</li>
-      <li><b>Revised</b> Added Nyangtori server operation logs and their retention period (previous version effective 13 October 2026)</li>
+      <li><b>Effective</b> 8 November 2026</li>
+      <li><b>Revised</b> Added Nyangtori server operation logs, usage statistics, crash reports, transaction record retention and legally required records (previous version effective 13 October 2026)</li>
     </ul>
   </div>
 
@@ -210,6 +210,11 @@
             <td data-label="Purpose">Accurate grants and deductions, handling inquiries</td>
           </tr>
           <tr>
+            <td data-label="Item">Legally retained transaction records</td>
+            <td data-label="Details">Records of transactions involving payments or rubies, and of draws (type, time, items granted, ruby change) — stored under a pseudonym derived from the account identifier instead of the identifier itself</td>
+            <td data-label="Purpose">Keeping transaction records required by law, handling payment and draw-probability disputes</td>
+          </tr>
+          <tr>
             <td data-label="Item">Mail</td>
             <td data-label="Details">Mail received and claim records</td>
             <td data-label="Purpose">Delivering rewards</td>
@@ -229,12 +234,26 @@
             <td data-label="Details">Records created while handling requests — account identifier, request type, result (such as the reason for a rejection), app version, device type (Android · iOS)</td>
             <td data-label="Purpose">Finding the cause of errors, detecting cheating</td>
           </tr>
+          <tr>
+            <td data-label="Item">Usage statistics <small>(Firebase Analytics)</small></td>
+            <td data-label="Details">In-game activity (screens viewed, progress steps, currency earned and spent, error types), app installation identifier, device model, OS and app version, approximate location such as country, account identifier</td>
+            <td data-label="Purpose">Improving the service — seeing where players struggle and what to fix</td>
+          </tr>
+          <tr>
+            <td data-label="Item">Crash reports <small>(Firebase Crashlytics)</small></td>
+            <td data-label="Details">Technical records when the game stops or hits an error (where it happened, recent actions), device model, OS and app version, installation identifier, account identifier</td>
+            <td data-label="Purpose">Finding and fixing crashes and errors</td>
+          </tr>
         </tbody>
       </table>
     </div>
-    <p class="tablenote">* Nyangtori currently <strong>uses no advertising, payment or analytics tools.</strong> If we add any,
-      we will update this policy first. Before you sign in (first launch) data stays on the device; it is uploaded after you
-      start as a guest or sign in with Google.</p>
+    <p class="tablenote">* Nyangtori currently <strong>uses no advertising or payment tools.</strong> If we add any,
+      we will update this policy first. Before you sign in (first launch) game progress stays on the device; it is uploaded after you
+      start as a guest or sign in with Google. Usage statistics and crash reports never include your name, email, nickname, contact details or precise location.</p>
+    <h3>Automatic collection</h3>
+    <p>Usage statistics and crash reports are sent automatically by the Firebase tools built into the game, which create an installation identifier on the device.
+      We do not use the advertising identifier (Android advertising ID). To refuse, contact us at the address below or stop using the game —
+      we will update this policy when we add an in-game switch to turn this off.</p>
 
     <h3>Overseas transfer</h3>
     <p>Because Nyangtori uses Firebase, the information above is transferred to and stored on Google’s servers.</p>
@@ -245,7 +264,7 @@
           <tr><td data-label="">Countries</td><td data-label="">Republic of Korea (Seoul region) and other countries where Google has data centers, such as the United States</td></tr>
           <tr><td data-label="">When and how</td><td data-label="">Continuously while you play, over encrypted connections (HTTPS)</td></tr>
           <tr><td data-label="">Items and purpose</td><td data-label="">As in the table above</td></tr>
-          <tr><td data-label="">Retention</td><td data-label="">Until you delete your account</td></tr>
+          <tr><td data-label="">Retention</td><td data-label="">Until you delete your account, except for records with their own period in section 7</td></tr>
           <tr><td data-label="">How to refuse</td><td data-label="">Stop using the game or delete your account. Nyangtori cannot be played without its server</td></tr>
         </tbody>
       </table>
@@ -327,8 +346,11 @@
       <li>Information stored on your device is <strong>deleted when you uninstall the app</strong>.</li>
       <li>Information stored on the backend is retained until you request deletion.</li>
       <li>Statistical information is retained in a non-identifying form to improve the service.</li>
-          <li>In Nyangtori, <strong>Settings &gt; Delete account</strong> <strong>immediately deletes</strong> the server account, progress copy, currency, mail, records and sign-in account.</li>
+          <li>In Nyangtori, <strong>Settings &gt; Delete account</strong> <strong>immediately deletes</strong> the server account, progress copy, currency, mail, records and sign-in account. <strong>Legally retained transaction records</strong> are the exception: they are kept under a pseudonym for the period the law requires, then deleted.</li>
+          <li>Nyangtori <strong>transaction records</strong> (results of draws, merges, mail claims and so on) are kept on the game server for <strong>31 days</strong> and then deleted automatically.</li>
+          <li>Nyangtori <strong>legally retained transaction records</strong> are moved to separate storage (Google BigQuery, Seoul region): transactions involving payments or rubies and ruby/key draws are kept for <strong>5 years</strong> (Enforcement Decree of the Korean Act on Consumer Protection in Electronic Commerce, Article 6 — records of payment and supply of goods, 5 years); ad and free draws for <strong>1 year</strong> (handling probability disputes). They are then deleted automatically.</li>
           <li>Nyangtori <strong>server operation logs</strong> are kept for <strong>30 days</strong> and then deleted automatically. Logs already written remain until then even if you delete your account.</li>
+          <li>Nyangtori <strong>usage statistics</strong> are kept for up to <strong>14 months</strong> and <strong>crash reports</strong> for <strong>90 days</strong>, then deleted automatically.</li>
     </ul>
   </section>
 
