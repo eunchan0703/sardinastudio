@@ -68,8 +68,8 @@
       Studio — what we handle, why, and how it is protected.
       <strong>What is handled differs from game to game.</strong></p>
     <ul class="meta">
-      <li><b>Effective</b> 8 November 2026</li>
-      <li><b>Revised</b> Added Nyangtori server operation logs, usage statistics, crash reports, transaction record retention and legally required records (previous version effective 13 October 2026)</li>
+      <li><b>Effective</b> 17 November 2026</li>
+      <li><b>Revised</b> Added Nyangtori access logs (access time and IP address, 3 months) (previous version effective 8 November 2026)</li>
     </ul>
   </div>
 
@@ -215,6 +215,11 @@
             <td data-label="Purpose">Keeping transaction records required by law, handling payment and draw-probability disputes</td>
           </tr>
           <tr>
+            <td data-label="Item">Access logs</td>
+            <td data-label="Details">The time you open the app and the IP address it connected from — stored with a pseudonym derived from the account identifier instead of the identifier itself</td>
+            <td data-label="Purpose">Keeping log records required by the Korean Protection of Communications Secrets Act, handling abuse and disputes</td>
+          </tr>
+          <tr>
             <td data-label="Item">Mail</td>
             <td data-label="Details">Mail received and claim records</td>
             <td data-label="Purpose">Delivering rewards</td>
@@ -300,7 +305,7 @@
           </tr>
           <tr>
             <td data-label="Where">Google Firebase <small>(Nyangtori)</small></td>
-            <td data-label="What">Account identifier, linked Google account details, nickname, copy of game progress, currency, holdings and transaction records, mail, consent record, cheat detection record (<a href="#nyangtori">Nyangtori section</a>)</td>
+            <td data-label="What">Account identifier, linked Google account details, nickname, copy of game progress, currency, holdings and transaction records, mail, consent record, cheat detection record, access logs (<a href="#nyangtori">Nyangtori section</a>)</td>
           </tr>
           <tr>
             <td data-label="Where">Unity Gaming Services</td>
@@ -349,6 +354,7 @@
           <li>In Nyangtori, <strong>Settings &gt; Delete account</strong> <strong>immediately deletes</strong> the server account, progress copy, currency, mail, records and sign-in account. <strong>Legally retained transaction records</strong> are the exception: they are kept under a pseudonym for the period the law requires, then deleted.</li>
           <li>Nyangtori <strong>transaction records</strong> (results of draws, merges, mail claims and so on) are kept on the game server for <strong>31 days</strong> and then deleted automatically.</li>
           <li>Nyangtori <strong>legally retained transaction records</strong> are moved to separate storage (Google BigQuery, Seoul region): transactions involving payments or rubies and ruby/key draws are kept for <strong>5 years</strong> (Enforcement Decree of the Korean Act on Consumer Protection in Electronic Commerce, Article 6 — records of payment and supply of goods, 5 years); ad and free draws for <strong>1 year</strong> (handling probability disputes). They are then deleted automatically.</li>
+          <li>Nyangtori <strong>access logs</strong> (access time and IP address) are kept for <strong>3 months</strong> (Enforcement Decree of the Korean Protection of Communications Secrets Act, Article 41 — internet log records and access location tracking data, 3 months) and then deleted automatically. Logs already written remain until then even if you delete your account.</li>
           <li>Nyangtori <strong>server operation logs</strong> are kept for <strong>30 days</strong> and then deleted automatically. Logs already written remain until then even if you delete your account.</li>
           <li>Nyangtori <strong>usage statistics</strong> are kept for up to <strong>14 months</strong> and <strong>crash reports</strong> for <strong>90 days</strong>, then deleted automatically.</li>
     </ul>
